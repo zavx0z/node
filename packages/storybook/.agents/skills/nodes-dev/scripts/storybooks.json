@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "selectors": {
+    "nodes": {
+      "supported": true,
+      "package": "@nodes/storybook",
+      "cwd": "packages/storybook",
+      "command": ["bun", "server.ts"],
+      "host": "127.0.0.1",
+      "hostEnv": "NODES_STORYBOOK_HOST",
+      "port": 4018,
+      "portEnv": "NODES_STORYBOOK_PORT",
+      "origin": "http://127.0.0.1:4018",
+      "httpMarker": "<title>Nodes storybook</title>",
+      "ready": {"kind": "dataset", "name": "nodesStorybook", "value": "ready"},
+      "canvas": {"selector": "canvas", "capability": "none", "touch": false},
+      "pages": [
+        {"mountPath": "/editor", "canvas": {"selector": "#nodes-storybook-canvas", "capability": "webgpu", "touch": true}},
+        {"mountPath": "/ui", "canvas": {"selector": "#nodes-storybook-canvas", "capability": "webgpu", "touch": true}},
+        {"mountPath": "/core", "canvas": {"selector": "canvas", "capability": "none", "touch": false}},
+        {"mountPath": "/layout", "canvas": {"selector": "canvas", "capability": "none", "touch": false}},
+        {"mountPath": "/worker", "canvas": {"selector": "canvas", "capability": "none", "touch": false}},
+        {"mountPath": "/", "canvas": {"selector": "canvas", "capability": "none", "touch": false}}
+      ],
+      "routes": {"default": "/"},
+      "stateKey": "nodes",
+      "logName": "nodes.log"
+    }
+  }
+}

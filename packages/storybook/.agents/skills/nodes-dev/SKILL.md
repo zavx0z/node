@@ -1,0 +1,66 @@
+---
+name: nodes-dev
+description: "Develop and verify the standalone Nodes repository, its Core, Editor, Layout, Worker, UI, and centralized static Storybook. Use metafor-dev only for product integration."
+---
+
+# Nodes development
+
+Built for [MetaFor](https://github.com/zavx0z/metafor) as reusable node-system infrastructure.
+
+Use the exact Nodes checkout supplied for the task. Preserve its branch or detached HEAD, unrelated changes, listeners, and browser targets. `@nodes/storybook` owns one no-HMR process, one origin, and one target; package isolation comes from routes and separate bundles rather than extra servers.
+
+Before changing a contract, read repository `ARCHITECTURE.md`, the owning package `requirements.md` or layout requirement, public types, and focused tests. A new law belongs in its real owner before implementation.
+
+## Package catalog
+
+| Package page | Overview | Presentation |
+| --- | --- | --- |
+| catalog | `/` | DOM package catalog |
+| `@nodes/core` | `/core/` | DOM runtime/document |
+| `@nodes/editor` | `/editor/` | WebGPU authoring editor |
+| `@nodes/layout` | `/layout/` | DOM/SVG solver |
+| `@nodes/worker` | `/worker/` | DOM wire protocol |
+| `@nodes/ui` | `/ui/` | WebGPU story catalog |
+
+Every overview ends in `/`; exact leaves do not. Unknown suffixes fail closed.
+
+- Read [references/catalog-dom.md](references/catalog-dom.md) for catalog, Core, and Worker evidence.
+- Read [references/editor-webgpu.md](references/editor-webgpu.md) for authoring, cache, and topology evidence.
+- Read [references/layout-svg.md](references/layout-svg.md) for fixed/adaptive geometry and SVG evidence.
+- Read [references/ui-webgpu.md](references/ui-webgpu.md) for Node UI, accepted-reference readiness, and retained evidence.
+
+## Lifecycle
+
+```bash
+SKILL=packages/storybook/.agents/skills/nodes-dev
+"$SKILL/scripts/nodes-dev.sh" status  "$PWD"
+"$SKILL/scripts/nodes-dev.sh" ensure  "$PWD"
+"$SKILL/scripts/nodes-dev.sh" restart "$PWD"
+```
+
+Run read-only `status` first and `ensure` before the first lifecycle or browser operation. `ensure`, `start`, and `restart` may remain foreground owners of the exact Bun child, so retain their long-lived PTY. Foreign listeners are never adopted or stopped.
+
+For an isolated test that must not inspect the real browser, use tests, typecheck, the static build, and an ephemeral HTTP server. `NODES_DEV_TEST_MODE=1` permits a separate lifecycle port; browser actions additionally require an explicitly isolated `NODES_DEV_CDP_PORT`.
+
+If the request forbids starting or stopping any process, do not run lifecycle commands beyond `status`, browser helpers, `server.test.ts`, the static HTTP smoke, or any broad test selection that may spawn Bun. Use typecheck and only focused pure tests whose implementation has been inspected for process creation.
+
+After an applicable change under `packages/**` or a linked Engine, Layout, or UI dependency, finish a stable source checkpoint, restart once, and reload every route needed for evidence.
+
+## Background browser evidence
+
+```bash
+bun "$SKILL/scripts/nodes-browser.ts" targets "$PWD"
+bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \
+  --route /layout/fixed-adaptive --target-id "$target_id"
+bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
+  --route /editor/live-node-tree --target-id "$target_id" \
+  --output /tmp/nodes-editor.png
+```
+
+Run `targets` first. Open `/` only when the origin has no target. Multiple targets are explicit ambiguity. The helpers never focus an OS window. Catalog, Core, Layout, and Worker reject canvas, touch, profile, and interaction actions. Editor and UI require an exact non-black canvas; Layout requires the ready marker and a real `#svg-view svg`.
+
+## Static and acceptance evidence
+
+`bun run build` must produce a self-contained `dist` for Pages base `/node/`, including all six page shells, lazy chunks, the Engine font, accepted reference catalog and raster, deep-link recovery, and `Built for MetaFor` header/footer links.
+
+Tests and typechecks prove package contracts. DOM, console, page, and canvas evidence prove only the exact route and target. Reference assets remain evidence-only; automated captures do not become owner acceptance. Product runtime behavior and GPU timing require their own scoped verification.

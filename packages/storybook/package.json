@@ -1,0 +1,33 @@
+{
+  "name": "@nodes/storybook",
+  "version": "0.0.1",
+  "description": "Static and local Storybook for every Nodes package. Built for MetaFor.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zavx0z/node.git",
+    "directory": "packages/storybook"
+  },
+  "homepage": "https://zavx0z.github.io/node/",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "metafor": "https://github.com/zavx0z/metafor",
+  "scripts": {
+    "storybook": "bun server.ts",
+    "build": "bun build.ts",
+    "test": "bun test .",
+    "typecheck": "tsc --noEmit --pretty false"
+  },
+  "dependencies": {
+    "@engine/core": "link:@engine/core",
+    "@layout/core": "link:@layout/core",
+    "@nodes/core": "workspace:*",
+    "@nodes/editor": "workspace:*",
+    "@nodes/layout": "workspace:*",
+    "@nodes/worker": "workspace:*",
+    "@nodes/ui": "workspace:*",
+    "@ui/components": "link:@ui/components",
+    "@ui/elements": "link:@ui/elements",
+    "@ui/storybook": "link:@ui/storybook"
+  }
+}

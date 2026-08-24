@@ -1,0 +1,99 @@
+name: Nodes Storybook Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: node-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Nodes
+        uses: actions/checkout@v6
+        with:
+          path: node
+
+      - name: Check out Engine dependency
+        uses: actions/checkout@v6
+        with:
+          repository: zavx0z/engine
+          ref: 43339040252e75c0403d2c6b2837ececb24de2b4
+          path: engine
+
+      - name: Check out UI dependencies
+        uses: actions/checkout@v6
+        with:
+          repository: zavx0z/ui
+          ref: 7e83cca452ebc27ecdfcb16b89d5db10c722a2eb
+          path: ui
+
+      - name: Check out Layout dependency
+        uses: actions/checkout@v6
+        with:
+          repository: zavx0z/layout
+          ref: 2e3ceec6df46b7a5de873bfc6255aa760fb85fc3
+          path: layout
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: node/.bun-version
+
+      - name: Register Engine link
+        working-directory: engine/packages/core
+        run: bun link
+
+      - name: Install Layout workspace
+        working-directory: layout
+        run: bun install --frozen-lockfile
+
+      - name: Register Layout link
+        working-directory: layout/packages/core
+        run: bun link
+
+      - name: Install UI workspace
+        working-directory: ui
+        run: bun install --frozen-lockfile
+
+      - name: Register UI links
+        run: |
+          (cd ui/packages/elements && bun link)
+          (cd ui/packages/components && bun link)
+          (cd ui/packages/storybook && bun link)
+
+      - name: Install locked Nodes dependencies
+        working-directory: node
+        run: bun install --frozen-lockfile
+
+      - name: Verify and build static Storybook
+        working-directory: node
+        run: bun run check
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: node/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
