@@ -214,7 +214,11 @@ export function createStorybookRetainedObserver(editor: RetainedEditor): Storybo
       },
       components,
       representativeNode,
-      links: root === null ? [] : editor.tree.links.map((entry) => linkEvidence(editor, root, entry.link.id, objectId, geometryId)),
+      links: root === null
+        ? []
+        : editor.tree.links
+          .filter((entry) => root.children.some(({name}) => name === `NodeCanvas.link:${entry.link.id}`))
+          .map((entry) => linkEvidence(editor, root, entry.link.id, objectId, geometryId)),
     }
   }
 
