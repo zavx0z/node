@@ -189,9 +189,9 @@ describe("universal node-system package boundaries", () => {
       sha256: "8ca3dc0a037c2ad40181b7fa8708dbdfe15331c76852c41803194de6e40cb013",
     })
     expect(topDownLayout).toMatchObject({
-      bytes: 9_573,
-      gzipBytes: 3_346,
-      sha256: "e37c1d6d0b4db77d8e3f1b6ab24abfb5c0adf1e053a07916c3c39a85cdace897",
+      bytes: 11_387,
+      gzipBytes: 3_947,
+      sha256: "df3f14e39659246fc9f251d3a4784ffd1d54b3345c0790ca0fe6c13c4d69d044",
     })
     expect(nodeEditor.bytes).toBeLessThan(350_000)
     expect(nodeEditor.gzipBytes).toBeLessThan(100_000)
