@@ -10,7 +10,7 @@ This page proves `NodeTreeEditor → NodeTree → projection → NodeEditor` whi
 layout remains explicitly gated.
 
 ```bash
-SKILL=packages/storybook/.agents/skills/nodes-dev
+SKILL=.agents/skills/nodes-dev
 bun test packages/core packages/editor \
   packages/ui/projection.test.ts \
   packages/storybook/pages/editor
@@ -28,7 +28,7 @@ For value-cache evidence after an exact reload:
 ```bash
 bun "$SKILL/scripts/nodes-browser.ts" interact "$PWD" \
   --route /editor/live-node-tree --target-id "$target_id" \
-  --plan packages/storybook/.agents/skills/nodes-dev/references/editor-cache-invalidation.plan.json
+  --plan .agents/skills/nodes-dev/references/editor-cache-invalidation.plan.json
 ```
 
 For structural authoring and manual layout:
@@ -36,7 +36,7 @@ For structural authoring and manual layout:
 ```bash
 bun "$SKILL/scripts/nodes-browser.ts" interact "$PWD" \
   --route /editor/live-node-tree --target-id "$target_id" \
-  --plan packages/storybook/.agents/skills/nodes-dev/references/editor-topology.plan.json
+  --plan .agents/skills/nodes-dev/references/editor-topology.plan.json
 ```
 
 Before F9, tree/topology revisions advance while projection revisions stay old

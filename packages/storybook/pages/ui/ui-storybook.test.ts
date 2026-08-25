@@ -540,11 +540,11 @@ describe("Node component storybook", () => {
     const production = await Bun.file(join(storybookRoot, "../../../ui/node-editor.ts")).text()
     const browser = await Bun.file(join(
       nodesStorybookRoot,
-      ".agents/skills/nodes-dev/scripts/storybook-browser.ts",
+      "../../.agents/skills/nodes-dev/scripts/storybook-browser.ts",
     )).text()
     const registry = await Bun.file(join(
       nodesStorybookRoot,
-      ".agents/skills/nodes-dev/scripts/storybooks.json",
+      "../../.agents/skills/nodes-dev/scripts/storybooks.json",
     )).json() as {selectors: Record<string, {pages?: unknown[]}>}
 
     expect(client).toContain("createStorybookRetainedObserver(editor)")

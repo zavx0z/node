@@ -18,7 +18,7 @@
     "storybook": "bun run --cwd packages/storybook storybook",
     "build": "bun run --cwd packages/storybook build",
     "typecheck": "tsc --project tsconfig.json --pretty false",
-    "test": "bun test packages tests ./packages/storybook/.agents/skills/nodes-dev/tests/nodes-dev.test.ts",
+    "test": "bun test packages tests ./.agents/skills/nodes-dev/tests/nodes-dev.test.ts",
     "check": "bun run typecheck && bun run test && bun run build"
   },
   "devDependencies": {

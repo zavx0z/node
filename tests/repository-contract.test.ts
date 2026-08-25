@@ -58,7 +58,7 @@ describe("standalone Nodes repository contract", () => {
   })
 
   test("uses lowercase kebab-case source names with only conventional document exceptions", async () => {
-    const allowed = new Set(["README.md", "ARCHITECTURE.md", "CONTRIBUTING.md", "LICENSE", "SKILL.md"])
+    const allowed = new Set(["README.md", "ARCHITECTURE.md", "CONTRIBUTING.md", "AGENTS.md", "LICENSE", "SKILL.md"])
     for (const path of await allFiles(repositoryRoot)) {
       const name = basename(path)
       if (allowed.has(name)) continue

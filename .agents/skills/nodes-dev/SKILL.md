@@ -32,7 +32,7 @@ Every overview ends in `/`; exact leaves do not. Unknown suffixes fail closed.
 ## Lifecycle
 
 ```bash
-SKILL=packages/storybook/.agents/skills/nodes-dev
+SKILL=.agents/skills/nodes-dev
 "$SKILL/scripts/nodes-dev.sh" status  "$PWD"
 "$SKILL/scripts/nodes-dev.sh" ensure  "$PWD"
 "$SKILL/scripts/nodes-dev.sh" restart "$PWD"

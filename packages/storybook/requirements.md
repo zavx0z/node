@@ -82,9 +82,9 @@
 2. Server no-HMR: после source checkpoint выполняются один restart и exact
    route reload. Он обслуживает общие font/reference assets и отдельные
    browser bundles/styles каждого package page.
-3. `$nodes-dev` находится внутри `@nodes/storybook`, владеет одним selector
-   `nodes`, одним process и одним origin. Lifecycle-команды больше не принимают
-   `--storybook`.
+3. Корневой repo-local `$nodes-dev` обслуживает `@nodes/storybook`, владеет
+   одним selector `nodes`, одним process и одним origin. Lifecycle-команды
+   больше не принимают `--storybook`.
 4. Browser wrapper принимает exact `--route`, выводит package из центрального
    manifest, fail-closed отклоняет неизвестный route и canvas/touch/profile
    actions для DOM/SVG pages. Неканоническая форма overview без `/` либо leaf с

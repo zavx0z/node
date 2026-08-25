@@ -4,8 +4,8 @@ import {join, resolve} from "node:path"
 import {
   NODES_CATALOG_ROUTE,
   nodesPackageForPath,
-} from "../../../../catalog/package-catalog.ts"
-import {resolveNodesPackageRoute} from "../../../../catalog/package-route-manifest.ts"
+} from "../../../../packages/storybook/catalog/package-catalog.ts"
+import {resolveNodesPackageRoute} from "../../../../packages/storybook/catalog/package-route-manifest.ts"
 
 const [action, checkoutInput, ...args] = Bun.argv.slice(2)
 if (action === undefined || checkoutInput === undefined) {

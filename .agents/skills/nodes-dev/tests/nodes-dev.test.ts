@@ -6,7 +6,7 @@ import {join, resolve} from "node:path"
 type RunResult = Readonly<{exitCode: number; stdout: string; stderr: string}>
 
 const skillRoot = resolve(import.meta.dir, "..")
-const checkout = resolve(skillRoot, "../../../../..")
+const checkout = resolve(skillRoot, "../../..")
 const lifecycleWrapper = join(skillRoot, "scripts/nodes-dev.sh")
 const browserWrapper = join(skillRoot, "scripts/nodes-browser.ts")
 const registryPath = join(skillRoot, "scripts/storybooks.json")
