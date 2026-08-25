@@ -78,7 +78,6 @@ try {
   let retainedObserver: StorybookRetainedObserver | null = null
   let preparingReference = true
   const runtime = await UiRuntime.create(canvas, {
-    fontUrl: storybookPublicPath("/fonts/jetbrains-mono-bold.ttf"),
     virtualDisplay: {initial: "near", surfaceDisplay: true, grid: false},
   })
   const router = new StorybookRouteTreeRouter(NODE_STORYBOOK_ROUTE_TREE, {

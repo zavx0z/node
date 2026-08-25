@@ -73,6 +73,9 @@
    UI stories/assets/tests; централизация lifecycle не уменьшает покрытие.
 5. На одном document монтируется ровно один package page. Editor и UI создают
    один UiRuntime своего canvas; DOM pages не загружают Engine/WebGPU chunks.
+   Общий HTML shell объявляет Engine-owned default font URL один раз через
+   inert meta. Editor/UI pages не передают font path, а custom font полностью
+   обходит default request.
 
 ## Server и browser evidence
 
@@ -80,7 +83,7 @@
    фактического первого результата. Package-specific datasets остаются
    дополнительной диагностикой.
 2. Server no-HMR: после source checkpoint выполняются один restart и exact
-   route reload. Он обслуживает общие font/reference assets и отдельные
+   route reload. Он обслуживает один общий Engine font asset, reference assets и отдельные
    browser bundles/styles каждого package page.
 3. Корневой repo-local `$nodes-dev` обслуживает `@nodes/storybook`, владеет
    одним selector `nodes`, одним process и одним origin. Lifecycle-команды

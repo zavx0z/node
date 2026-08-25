@@ -79,6 +79,7 @@ Performance-sensitive work should record CPU layout and materialization time, al
 
 ## Static Storybook pipeline
 
-`packages/storybook/build.ts` builds six source entrypoints into independent `dist/@storybook-assets/<page>/` directories, writes package HTML shells, copies the Engine font and accepted evidence, emits `.nojekyll`, and creates a project-base-aware 404 recovery page. The Pages workflow checks out and registers Engine, Layout, and UI before installing Nodes from its frozen lockfile.
+`packages/storybook/build.ts` builds six source entrypoints into independent `dist/@storybook-assets/<page>/` directories, writes package HTML shells, copies one exact Engine font asset and accepted evidence, emits `.nojekyll`, and creates a project-base-aware 404 recovery page. Each shell declares the shared font URL once through inert meta; Editor and UI create `UiRuntime` without package-owned font paths, while a custom runtime font bypasses the default request.
 
-The workflow file does not enable Pages or mutate repository settings. Deployment remains an owner-controlled GitHub setting.
+The workflow file does not enable Pages or mutate repository settings and has
+no push trigger. Build and deployment run only after an explicit owner dispatch.

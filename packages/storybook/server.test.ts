@@ -50,6 +50,7 @@ describe("parent nodes storybook server", () => {
         const html = await response.text()
         expect(response.status, route).toBe(200)
         expect(html, route).toContain(`<title>Nodes storybook · ${packageName}</title>`)
+        expect(html, route).toContain('<meta name="engine-default-font" content="/fonts/jetbrains-mono-bold.ttf">')
         expect(html, route).toContain(marker)
         expect(html, route).toContain(`/@storybook-assets/${pageId}/entry.js`)
         const entry = await fetch(`${origin}/@storybook-assets/${pageId}/entry.js`)

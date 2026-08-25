@@ -44,6 +44,11 @@ The Storybook is a real application with six independent browser bundles:
 
 Static output is built for the GitHub Pages project base `/node/`. Deep links recover through the same route manifest, while reference metadata and the accepted raster remain separate evidence assets under `dist/references/`.
 
+The default TTF remains owned by Engine. The shared Storybook HTML shell
+declares its served URL once, and both WebGPU pages let `UiRuntime` load the
+shared font lazily. Node packages and story modules do not own font routes; a
+custom runtime font skips the default request.
+
 ## Repository family
 
 | Repository | Role | Pages |

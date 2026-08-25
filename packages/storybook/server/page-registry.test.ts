@@ -73,6 +73,7 @@ describe("central Nodes storybook page registry", () => {
     expect(editor).toContain('<base href="/node/editor/">')
     for (const html of [catalog, editor]) {
       expect(html).toContain('<span>Nodes</span>')
+      expect(html).toContain('<meta name="engine-default-font" content="/node/fonts/jetbrains-mono-bold.ttf">')
       expect(html).toContain('href="https://github.com/zavx0z/metafor">Built for MetaFor</a>')
       expect(html).toContain("node systems for agents, complex systems &amp; immersive WebGPU")
       expect(html).not.toContain("<span>Visual UI</span>")

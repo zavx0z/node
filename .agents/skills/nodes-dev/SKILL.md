@@ -11,6 +11,12 @@ Use the exact Nodes checkout supplied for the task. Preserve its branch or detac
 
 Before changing a contract, read repository `ARCHITECTURE.md`, the owning package `requirements.md` or layout requirement, public types, and focused tests. A new law belongs in its real owner before implementation.
 
+The shared HTML shell declares one Engine-owned `engine-default-font` meta URL.
+Editor and UI pages call `UiRuntime.create()` without a package font path; a
+custom runtime font bypasses the meta request. The build copies one exact Engine
+asset into application output, while production Nodes packages never own or
+eagerly load it.
+
 ## Package catalog
 
 | Package page | Overview | Presentation |
