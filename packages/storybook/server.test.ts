@@ -24,7 +24,7 @@ describe("parent nodes storybook server", () => {
       expect(catalog.headers.get("cache-control")).toBe("no-cache")
       expect(catalogHtml).toContain("<title>Nodes storybook</title>")
       expect(catalogHtml).toContain('id="nodes-package-catalog"')
-      expect(catalogHtml).toContain('<span>Nodes</span>')
+      expect(catalogHtml).not.toContain("data-storybook-brand")
       expect(catalogHtml).toContain('<a href="https://github.com/zavx0z/metafor">Built for MetaFor</a>')
       expect(catalogHtml).toContain("node systems for agents, complex systems &amp; immersive WebGPU")
 

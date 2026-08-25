@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: zavx0z/ui
-          ref: 274ad86bb7c5f3784443c4964f41d4bdb55abb81
+          ref: bc8ffd249f2d1b4897ba659e404a75ea1c86a656
           path: ui
 
       - name: Check out Layout dependency

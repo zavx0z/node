@@ -130,7 +130,6 @@ async function brandResponse(response: Response | null): Promise<Response | null
   if (response === null || !response.headers.get("content-type")?.startsWith("text/html")) return response
   const html = await response.text()
   return new Response(html
-    .replace("<span>Visual UI</span>", "<span>Nodes</span>")
     .replace("reusable WebGPU UI", "node systems for agents, complex systems &amp; immersive WebGPU"), {
       status: response.status,
       statusText: response.statusText,
