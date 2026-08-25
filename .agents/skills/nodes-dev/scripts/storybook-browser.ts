@@ -574,6 +574,8 @@ async function readDom(cdp: CdpConnection, canvasSelector: string): Promise<Json
   return evaluate<JsonObject>(cdp, `(() => {
     const canvas = document.querySelector(${JSON.stringify(canvasSelector)})
     const home = document.querySelector("[data-storybook-home]")
+    const footer = document.querySelector("[data-storybook-footer]")
+    const svg = document.querySelector("#svg-view svg")
     return {
       url: location.href,
       title: document.title,
@@ -588,6 +590,12 @@ async function readDom(cdp: CdpConnection, canvasSelector: string): Promise<Json
         : null,
       home: home instanceof HTMLAnchorElement
         ? {href:home.getAttribute("href"), url:home.href, text:home.textContent, visible:home.getClientRects().length > 0}
+        : null,
+      footer: footer instanceof HTMLElement
+        ? {text:footer.textContent?.replace(/\\s+/g, " ").trim() ?? "", visible:footer.getClientRects().length > 0}
+        : null,
+      svg: svg instanceof SVGSVGElement
+        ? {viewBox:svg.getAttribute("viewBox"), children:svg.childElementCount, visible:svg.getClientRects().length > 0}
         : null,
     }
   })()`)

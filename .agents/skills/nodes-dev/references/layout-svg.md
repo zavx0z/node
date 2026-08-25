@@ -11,7 +11,7 @@ frozen RIGHT/DOWN fixtures. It must not load Engine, WebGPU, NodeTree or editor.
 
 ```bash
 SKILL=.agents/skills/nodes-dev
-bun test packages/storybook/pages/layout packages/layout/src
+bun test packages/layout/storybook packages/layout/src
 bun run --cwd packages/layout typecheck
 bun run typecheck
 "$SKILL/scripts/nodes-dev.sh" restart "$PWD"

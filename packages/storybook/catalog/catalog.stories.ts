@@ -1,4 +1,4 @@
-import {storybookPublicPath} from "@ui/storybook/environment"
+import {storybookPublicPath} from "@zavx0z/storybook/environment"
 import {NODES_PACKAGE_CATALOG} from "./package-catalog.ts"
 
 const cards = document.getElementById("package-cards")
@@ -26,7 +26,7 @@ for (const entry of NODES_PACKAGE_CATALOG) {
   meta.className = "package-meta"
   meta.textContent = `${entry.presentation.toUpperCase()} · ${entry.defaultRoute}`
   const link = document.createElement("a")
-  link.href = storybookPublicPath(entry.defaultRoute)
+  link.href = storybookPublicPath("node", entry.defaultRoute)
   link.textContent = "Открыть обзор"
   link.setAttribute("aria-label", `Открыть обзор storybook ${entry.packageName}`)
 

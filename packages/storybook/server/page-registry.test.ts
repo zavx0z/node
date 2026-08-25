@@ -74,9 +74,11 @@ describe("central Nodes storybook page registry", () => {
     for (const html of [catalog, editor]) {
       expect(html).not.toContain("data-storybook-brand")
       expect(html).toContain('<meta name="engine-default-font" content="/node/fonts/jetbrains-mono-bold.ttf">')
-      expect(html).toContain('href="https://github.com/zavx0z/metafor">Built for MetaFor</a>')
-      expect(html).toContain("node systems for agents, complex systems &amp; immersive WebGPU")
+      expect(html).toContain('Создано для&nbsp;<a href="https://github.com/zavx0z/metafor">MetaFor</a>')
+      expect(html).toContain("системы узлов для агентов, сложных систем и иммерсивного WebGPU")
     }
+    expect(editor).toContain('data-storybook-home href="/node/"')
+    expect(editor).toContain(">Главная</a>")
   })
 })
 

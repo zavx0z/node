@@ -1,6 +1,6 @@
 # Требования @nodes/storybook
 
-**Built for [MetaFor](https://github.com/zavx0z/metafor).**
+**Создано для [MetaFor](https://github.com/zavx0z/metafor).**
 
 `@nodes/storybook` владеет единым dev-каталогом всех production-пакетов
 семейства Nodes. Production contracts остаются у своих пакетов; storybook не
@@ -20,8 +20,8 @@
 4. Один browser target этого origin переходит между package routes. Навигация
    не создаёт второй target или второй runtime process.
 5. На каждом package overview, prefix overview и detail route видна общая
-   кнопка `Home`, возвращающая на главный каталог `/`; она не рисуется отдельно
-   в DOM, SVG и WebGPU consumers.
+   кнопка `Главная`, возвращающая на главный каталог `/`. Кнопку и русский
+   footer создаёт общий shell, а не отдельные DOM, SVG и WebGPU consumers.
 
 ## Package routes
 
@@ -61,21 +61,26 @@
 
 ## Структура модулей
 
-1. Package pages находятся только в `pages/<package>/` центрального
-   storybook. Имя production package явно присутствует в directory и public
-   module name; общие файлы вроде безымянных `client.ts`, `fixtures.ts` или
-   `types.ts` вне package directory запрещены.
-2. Общие catalog, route manifest и server modules не содержат NodeTree, layout
-   policy, renderer или story semantics конкретного пакета.
+1. Stories, fixtures, styles и focused tests каждого production package
+   находятся рядом с владельцем в `packages/<package>/storybook/**`.
+   Центральный `@nodes/storybook` только собирает их routes и browser entries;
+   он не копирует package semantics к себе.
+2. Общие catalog, route manifest и Node-owned app manifest не содержат
+   NodeTree, layout policy, renderer или story semantics конкретного пакета.
 3. Package page импортирует production только через exact public entrypoints.
    Относительный импорт обратно в production source запрещён.
-4. Перенос в центральный каталог сохраняет все layout fixtures/baselines и все
-   UI stories/assets/tests; централизация lifecycle не уменьшает покрытие.
+4. Сборка в один repository Storybook сохраняет все layout fixtures/baselines
+   и все UI stories/assets/tests; общий lifecycle не уменьшает покрытие.
 5. На одном document монтируется ровно один package page. Editor и UI создают
    один UiRuntime своего canvas; DOM pages не загружают Engine/WebGPU chunks.
    Общий HTML shell объявляет Engine-owned default font URL один раз через
    inert meta. Editor/UI pages не передают font path, а custom font полностью
    обходит default request.
+6. Router, typed app manifest, общий HTML shell, server и static builder
+   импортируются только из точных subpaths `@zavx0z/storybook/*`. Старый
+   `@ui/storybook` и compatibility imports не используются.
+7. `@zavx0z/storybook` остаётся dev-only зависимостью private repository app.
+   Ни один production package Nodes не экспортирует и не импортирует его.
 
 ## Server и browser evidence
 
@@ -95,3 +100,17 @@
 5. Catalog, core, layout и worker требуют route/DOM/console evidence;
    editor и UI дополнительно требуют non-black exact canvas. Layout отдельно
    доказывает наличие SVG.
+
+## Static build
+
+1. `bun run build` создаёт один самостоятельный artifact под base `/node/`.
+   Шесть pages собираются независимо, поэтому DOM/SVG pages не получают
+   WebGPU-код других packages.
+2. `storybook-manifest.json` имеет schema version 1 и хранит app id, base,
+   source revision/dirty-state, точные revisions Engine, Layout, UI,
+   Highlighter и `@zavx0z/storybook`, pages, routes, capabilities, readiness,
+   entries, chunks, размеры и SHA-256 всех emitted assets.
+3. `404.html` восстанавливает только route, присутствующий в typed route tree.
+   Неизвестный suffix остаётся 404 и не открывает fallback story.
+4. Static output содержит Engine-owned font и Node-owned reference catalog и
+   raster. В manifest и browser output не попадают локальные пути checkout.

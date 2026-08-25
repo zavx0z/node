@@ -32,7 +32,8 @@ describe("central Nodes storybook scaffold", () => {
       "@nodes/ui": "workspace:*",
       "@ui/components": "link:@ui/components",
       "@ui/elements": "link:@ui/elements",
-      "@ui/storybook": "link:@ui/storybook",
+      "@zavx0z/highlighter": "link:@zavx0z/highlighter",
+      "@zavx0z/storybook": "link:@zavx0z/storybook",
     })
     expect(manifest.exports).toBeUndefined()
   })
@@ -42,25 +43,26 @@ describe("central Nodes storybook scaffold", () => {
     const registry = await Bun.file(join(storybookRoot, "server/page-registry.ts")).text()
     const catalog = await Bun.file(join(storybookRoot, "catalog/package-catalog.ts")).text()
 
-    expect(server).toContain('from "@ui/storybook/server"')
+    expect(server).toContain('from "@zavx0z/storybook/server"')
     expect(server).toContain("startStorybookHubServer({")
-    expect(server).toContain("createNodesStorybookPages()")
+    expect(server).toContain("app: createNodesStorybookApp()")
     expect(server).toContain("Bun.env.NODES_STORYBOOK_HOST")
     expect(server).toContain("Bun.env.NODES_STORYBOOK_PORT ?? 4018")
     expect(server).not.toContain("Bun.serve")
     expect(server).not.toContain("hmr: true")
     expect(registry).toContain('mountPath: "/"')
     expect(registry).toContain('canvasId: "nodes-storybook-canvas"')
+    expect(registry).toContain("...NODES_PACKAGE_CATALOG.map((entry) =>")
     for (const id of ["core", "editor", "layout", "worker", "ui"]) {
       expect(catalog).toContain(`id: ${JSON.stringify(id)}`)
-      expect(registry).toContain(id === "worker" ? '"worker":' : `${id}:`)
+      expect(registry).toContain(`${id}: pageFiles({`)
     }
   })
 
   test("keeps editor integration isolated in its clearly named package module", async () => {
     const entry = await Bun.file(join(
       storybookRoot,
-      "pages/editor/live-node-tree.stories.ts",
+      "../editor/storybook/live-node-tree.stories.ts",
     )).text()
 
     expect(entry).toContain('from "@nodes/core/node-tree"')

@@ -22,7 +22,8 @@ Cross-repository owners:
 | --- | --- | --- |
 | Engine | [zavx0z/engine](https://github.com/zavx0z/engine) | `@engine/core` retained scene and renderer |
 | Layout UI runtime | [zavx0z/layout](https://github.com/zavx0z/layout) | `@layout/core` runtime, surfaces, Flex, and polyline geometry |
-| UI | [zavx0z/ui](https://github.com/zavx0z/ui) | `@ui/elements`, `@ui/components`, and `@ui/storybook` |
+| UI | [zavx0z/ui](https://github.com/zavx0z/ui) | `@ui/elements` and `@ui/components` |
+| Shared Storybook | private `@zavx0z/storybook` owner repository | dev-only router, Workbench, server and static builder through exact `@zavx0z/storybook/*` subpaths |
 | Nodes | [zavx0z/node](https://github.com/zavx0z/node) | graph, editor, solver, worker, view, and Storybook packages |
 | Product | [zavx0z/metafor](https://github.com/zavx0z/metafor) | authorized product integration only |
 
@@ -50,7 +51,13 @@ UI owns retained NodeCanvas and NodeEditor views, render-plan contracts, culling
 
 ### `@nodes/storybook`
 
-Storybook consumes only public package entrypoints. Its DOM, SVG, and WebGPU pages remain independent bundles. Static output uses `/node/`, copies the accepted reference catalog verbatim, and keeps raster evidence outside production exports.
+Each package owns its dev-only stories under `packages/<owner>/storybook/**`.
+The repository Storybook consumes those descriptors and production code only
+through exact public entrypoints. Shared application infrastructure comes from
+exact `@zavx0z/storybook/*` subpaths and remains a private app dependency. Its
+DOM, SVG, and WebGPU pages remain independent bundles. Static output uses
+`/node/`, copies the accepted reference catalog verbatim, and keeps raster
+evidence outside production exports.
 
 ## Naming and icon associations
 
@@ -79,7 +86,16 @@ Performance-sensitive work should record CPU layout and materialization time, al
 
 ## Static Storybook pipeline
 
-`packages/storybook/build.ts` builds six source entrypoints into independent `dist/@storybook-assets/<page>/` directories, writes package HTML shells, copies one exact Engine font asset and accepted evidence, emits `.nojekyll`, and creates a project-base-aware 404 recovery page. Each shell declares the shared font URL once through inert meta; Editor and UI create `UiRuntime` without package-owned font paths, while a custom runtime font bypasses the default request.
+`packages/storybook/build.ts` passes the Node-owned typed app manifest to
+`@zavx0z/storybook/build`. The shared builder builds six source entrypoints into
+independent `dist/@storybook-assets/<page>/` directories, writes package HTML
+shells, copies one exact Engine font asset and accepted evidence, emits
+`.nojekyll`, and creates a project-base-aware fail-closed 404 recovery page.
+`storybook-manifest.json` records exact source/dependency revisions, page
+graphs, emitted sizes and SHA-256 hashes. Each shell declares the shared font
+URL once through inert meta; Editor and UI create `UiRuntime` without
+package-owned font paths, while a custom runtime font bypasses the default
+request.
 
 The workflow file does not enable Pages or mutate repository settings and has
 no push trigger. Build and deployment run only after an explicit owner dispatch.

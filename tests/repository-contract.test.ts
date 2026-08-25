@@ -46,10 +46,12 @@ describe("standalone Nodes repository contract", () => {
 
   test("contains no compatibility package names or source-branded production API", async () => {
     const files = await sourceFiles(join(repositoryRoot, "packages"))
-    const productionUi = await readAll(files.filter((path) => path.startsWith(join(repositoryRoot, "packages/ui"))))
+    const productionFiles = files.filter((path) => !path.includes("/storybook/"))
+    const productionUi = await readAll(productionFiles
+      .filter((path) => path.startsWith(join(repositoryRoot, "packages/ui"))))
     expect(productionUi).not.toMatch(/\b(?:Blender|blender|BLENDER)\b/)
 
-    const production = await readAll(files.filter((path) => !path.endsWith(".test.ts")))
+    const production = await readAll(productionFiles.filter((path) => !path.endsWith(".test.ts")))
     expect(production).not.toMatch(/^export\s*\{[^\n]*\bas\b/m)
 
     const repositoryText = await readAll(files.filter((path) => !path.endsWith(".png")))

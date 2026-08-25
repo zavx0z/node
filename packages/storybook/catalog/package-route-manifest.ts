@@ -3,20 +3,20 @@ import {
   resolveStorybookRouteTree,
   type StorybookRouteTree,
   type StorybookRouteTreeResolution,
-} from "@ui/storybook/route-tree"
+} from "@zavx0z/storybook/route-tree"
 import {
   NODE_EDITOR_STORYBOOK_ROUTE_TREE,
-} from "../pages/editor/editor-navigation.ts"
+} from "../../editor/storybook/editor-navigation.ts"
 import {
   CORE_STORYBOOK_ROUTE_TREE,
-} from "../pages/core/core-navigation.ts"
+} from "../../core/storybook/core-navigation.ts"
 import {
   LAYOUT_STORYBOOK_ROUTE_TREE,
-} from "../pages/layout/layout-navigation.ts"
+} from "../../layout/storybook/layout-navigation.ts"
 import {
   WORKER_STORYBOOK_ROUTE_TREE,
-} from "../pages/worker/worker-navigation.ts"
-import {NODE_STORYBOOK_ROUTE_TREE} from "../pages/ui/ui-navigation.ts"
+} from "../../worker/storybook/worker-navigation.ts"
+import {NODE_STORYBOOK_ROUTE_TREE} from "../../ui/storybook/ui-navigation.ts"
 import {
   nodesPackageCatalogEntry,
   nodesPackageForPath,

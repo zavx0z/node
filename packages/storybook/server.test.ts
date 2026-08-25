@@ -25,8 +25,9 @@ describe("parent nodes storybook server", () => {
       expect(catalogHtml).toContain("<title>Nodes storybook</title>")
       expect(catalogHtml).toContain('id="nodes-package-catalog"')
       expect(catalogHtml).not.toContain("data-storybook-brand")
-      expect(catalogHtml).toContain('<a href="https://github.com/zavx0z/metafor">Built for MetaFor</a>')
-      expect(catalogHtml).toContain("node systems for agents, complex systems &amp; immersive WebGPU")
+      expect(catalogHtml).toContain('data-storybook-footer')
+      expect(catalogHtml).toContain('Создано для&nbsp;<a href="https://github.com/zavx0z/metafor">MetaFor</a>')
+      expect(catalogHtml).toContain("системы узлов для агентов, сложных систем и иммерсивного WebGPU")
 
       const overviewCases = [
         ["/core/", "@nodes/core", 'id="core-snapshot"', "core"],
@@ -51,6 +52,8 @@ describe("parent nodes storybook server", () => {
         expect(response.status, route).toBe(200)
         expect(html, route).toContain(`<title>Nodes storybook · ${packageName}</title>`)
         expect(html, route).toContain('<meta name="engine-default-font" content="/fonts/jetbrains-mono-bold.ttf">')
+        expect(html, route).toContain('data-storybook-home href="/"')
+        expect(html, route).toContain(">Главная</a>")
         expect(html, route).toContain(marker)
         expect(html, route).toContain(`/@storybook-assets/${pageId}/entry.js`)
         const entry = await fetch(`${origin}/@storybook-assets/${pageId}/entry.js`)

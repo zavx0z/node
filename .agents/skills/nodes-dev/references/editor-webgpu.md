@@ -13,7 +13,7 @@ layout remains explicitly gated.
 SKILL=.agents/skills/nodes-dev
 bun test packages/core packages/editor \
   packages/ui/projection.test.ts \
-  packages/storybook/pages/editor
+  packages/editor/storybook
 bun run typecheck
 "$SKILL/scripts/nodes-dev.sh" restart "$PWD"
 bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \

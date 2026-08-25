@@ -11,7 +11,7 @@ accepted-reference comparison story ids. Strip only the `ui/` mount when choosin
 
 ```bash
 SKILL=.agents/skills/nodes-dev
-bun test packages/ui packages/storybook/pages/ui
+bun test packages/ui packages/ui/storybook
 bun run --cwd packages/ui typecheck
 bun run typecheck
 "$SKILL/scripts/nodes-dev.sh" restart "$PWD"

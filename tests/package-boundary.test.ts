@@ -19,6 +19,7 @@ describe("universal node-system package boundaries", () => {
 
     const files = (await sourceFiles(coreRoot))
       .filter((path) => !path.endsWith(".test.ts"))
+      .filter((path) => !path.includes("/storybook/"))
     const source = await readAll(files)
     expect(source).not.toMatch(/from ["']@nodes\//)
     expect(source).not.toMatch(/from ["']@ui\//)

@@ -2,4 +2,10 @@
 
 **Built for [MetaFor](https://github.com/zavx0z/metafor).**
 
-The Nodes Storybook owns one local no-HMR catalog and one static `/node/` Pages artifact. Core, Editor, Layout, Worker, and UI remain independent browser bundles selected by exact routes. Reference evidence is dev-only and described by an accepted manifest under `assets/references/`.
+Один private Storybook всего репозитория Nodes работает без HMR на `4018` и
+собирается как static `/node/`. Core, Editor, Layout, Worker и UI хранят свои
+stories рядом с собой в `packages/<owner>/storybook/**`; это приложение только
+соединяет их routes и отдельные browser bundles. Общие router, shell, server и
+builder приходят из точных subpaths `@zavx0z/storybook/*`.
+
+Node-owned reference evidence остаётся dev-only в `assets/references/`.

@@ -67,7 +67,12 @@ Run `targets` first. Open `/` only when the origin has no target. Multiple targe
 
 ## Static and acceptance evidence
 
-`bun run build` must produce a self-contained `dist` for Pages base `/node/`, including all six page shells, lazy chunks, the Engine font, accepted reference catalog and raster, deep-link recovery, and a `Built for MetaFor` footer link without a floating header badge over the work area.
+`bun run build` must produce a self-contained `dist` for Pages base `/node/`,
+including all six page shells, lazy chunks, the Engine font, accepted reference
+catalog and raster, fail-closed deep-link recovery, and schema-1 manifest with
+exact revisions, emitted sizes and SHA-256 hashes. The shared shell shows the
+Russian `Главная` action and `Создано для MetaFor` footer without a floating
+header badge over the work area.
 
 GitHub Pages deployment is manual and owner-gated. Never dispatch
 `.github/workflows/pages.yml`, run `gh workflow run`, change repository Pages

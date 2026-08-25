@@ -138,6 +138,8 @@ describe("standalone nodes-dev boundary", () => {
       expect(source).not.toContain("<skill-name>")
       expect(source).not.toContain("pkg/nodes/")
     }
+    expect(sources.at(-1)).toContain('document.querySelector("#svg-view svg")')
+    expect(sources.at(-1)).toContain('document.querySelector("[data-storybook-footer]")')
     const plan = await Bun.file(join(skillRoot, "references/editor-cache-invalidation.plan.json")).json() as {
       version?: number
       steps?: Array<{kind?: string; code?: string; dom?: boolean}>
