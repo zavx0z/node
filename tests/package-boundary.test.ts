@@ -100,7 +100,19 @@ describe("universal node-system package boundaries", () => {
       "./adaptive/executor",
       "./fixed/client",
       "./fixed/executor",
+      "./top-down/client",
+      "./top-down/executor",
       "./transport",
+      "./types",
+    ])
+    const layoutManifest = await Bun.file(join(packagesRoot, "layout/package.json")).json() as {
+      exports: Record<string, unknown>
+    }
+    expect(Object.keys(layoutManifest.exports).sort()).toEqual([
+      ".",
+      "./adaptive",
+      "./fixed",
+      "./top-down",
       "./types",
     ])
     for (const legacy of [
@@ -119,6 +131,7 @@ describe("universal node-system package boundaries", () => {
     const authoring = await buildFixture("editor-consumer.ts")
     const fixedLayout = await buildFixture("fixed-layout-consumer.ts")
     const adaptiveLayout = await buildFixture("adaptive-layout-consumer.ts")
+    const topDownLayout = await buildFixture("top-down-layout-consumer.ts")
     const nodeEditor = await buildFixture("node-editor-consumer.ts")
     const projection = await buildFixture("projection-consumer.ts")
 
@@ -140,6 +153,13 @@ describe("universal node-system package boundaries", () => {
     expect(adaptiveLayout.source).not.toContain("NodeSystemSurface")
     expect(adaptiveLayout.source).not.toContain("NodeInspectorSurface")
     expect(adaptiveLayout.source).not.toContain("struct GlobalUniforms")
+    expect(fixedLayout.source).not.toContain("TOP_DOWN_CYCLE_DETECTED")
+    expect(adaptiveLayout.source).not.toContain("TOP_DOWN_CYCLE_DETECTED")
+    expect(topDownLayout.source).toContain("TOP_DOWN_CYCLE_DETECTED")
+    expect(topDownLayout.source).not.toContain("NO_LEGAL_LAYOUT")
+    expect(topDownLayout.source).not.toContain("NO_LEGAL_ADAPTIVE_SIDE_ASSIGNMENT")
+    expect(topDownLayout.source).not.toContain("Port has conflicting edge roles")
+    expect(topDownLayout.source).not.toContain("sparse visibility")
     expect(nodeEditor.source).toContain("NodeEditor")
     expect(nodeEditor.source).toContain("NodeCanvas")
     expect(nodeEditor.source).toContain("Socket is detached")
@@ -158,10 +178,21 @@ describe("universal node-system package boundaries", () => {
     expect(core.bytes).toBeLessThan(20_000)
     expect(authoring.bytes).toBeLessThan(40_000)
     expect(authoring.gzipBytes).toBeLessThan(12_000)
-    expect(fixedLayout.bytes).toBeLessThan(100_000)
-    expect(fixedLayout.gzipBytes).toBeLessThan(32_000)
-    expect(adaptiveLayout.bytes).toBeLessThan(120_000)
-    expect(adaptiveLayout.gzipBytes).toBeLessThan(36_000)
+    expect(fixedLayout).toMatchObject({
+      bytes: 75_644,
+      gzipBytes: 23_493,
+      sha256: "fe6e05f5bf48d06089be134d2764a9d228a15f2477bb29ef2f20c6a3df043401",
+    })
+    expect(adaptiveLayout).toMatchObject({
+      bytes: 81_141,
+      gzipBytes: 25_309,
+      sha256: "8ca3dc0a037c2ad40181b7fa8708dbdfe15331c76852c41803194de6e40cb013",
+    })
+    expect(topDownLayout).toMatchObject({
+      bytes: 9_573,
+      gzipBytes: 3_346,
+      sha256: "e37c1d6d0b4db77d8e3f1b6ab24abfb5c0adf1e053a07916c3c39a85cdace897",
+    })
     expect(nodeEditor.bytes).toBeLessThan(350_000)
     expect(nodeEditor.gzipBytes).toBeLessThan(100_000)
     expect(projection.bytes).toBeLessThan(520_000)
@@ -169,7 +200,12 @@ describe("universal node-system package boundaries", () => {
   })
 })
 
-async function buildFixture(name: string): Promise<{source: string; bytes: number; gzipBytes: number}> {
+async function buildFixture(name: string): Promise<{
+  source: string
+  bytes: number
+  gzipBytes: number
+  sha256: string
+}> {
   const directory = await mkdtemp(join(tmpdir(), "nodes-package-bundle-"))
   const output = join(directory, "bundle.js")
   try {
@@ -193,6 +229,7 @@ async function buildFixture(name: string): Promise<{source: string; bytes: numbe
       source: new TextDecoder().decode(bytes),
       bytes: bytes.byteLength,
       gzipBytes: Bun.gzipSync(bytes).byteLength,
+      sha256: new Bun.CryptoHasher("sha256").update(bytes).digest("hex"),
     }
   } finally {
     await rm(directory, {recursive: true, force: true})

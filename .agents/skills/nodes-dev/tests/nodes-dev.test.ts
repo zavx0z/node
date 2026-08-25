@@ -54,7 +54,8 @@ describe("standalone nodes-dev boundary", () => {
       "/core/",
       "/core/live-node-tree",
       "/layout/",
-      "/layout/fixed-adaptive",
+      "/layout/fixed/baseline/right",
+      "/layout/top-down/blender-area/default",
       "/worker/",
       "/worker/protocol",
       "/editor/",
@@ -64,7 +65,7 @@ describe("standalone nodes-dev boundary", () => {
       "/ui/socket/boolean/",
       "/ui/socket/boolean/input",
     ]) {
-      const action = route.startsWith("/editor/") || route.startsWith("/ui/") ? "canvas" : "dom"
+      const action = route.startsWith("/editor/") || route.startsWith("/layout/") || route.startsWith("/ui/") ? "canvas" : "dom"
       const browser = await run([
         process.execPath,
         browserWrapper,
@@ -125,7 +126,7 @@ describe("standalone nodes-dev boundary", () => {
       "SKILL.md",
       "agents/openai.yaml",
       "references/editor-webgpu.md",
-      "references/layout-svg.md",
+      "references/layout-webgpu.md",
       "references/ui-webgpu.md",
       "scripts/nodes-dev.sh",
       "scripts/nodes-browser.ts",
@@ -138,7 +139,7 @@ describe("standalone nodes-dev boundary", () => {
       expect(source).not.toContain("<skill-name>")
       expect(source).not.toContain("pkg/nodes/")
     }
-    expect(sources.at(-1)).toContain('document.querySelector("#svg-view svg")')
+    expect(sources.at(-1)).toContain('document.querySelector(${JSON.stringify(canvasSelector)})')
     expect(sources.at(-1)).toContain('document.querySelector("[data-storybook-footer]")')
     const plan = await Bun.file(join(skillRoot, "references/editor-cache-invalidation.plan.json")).json() as {
       version?: number

@@ -12,7 +12,7 @@ The accepted implementation was migrated from `pkg/nodes` at MetaFor revision `2
 
 - Live `NodeTree` identity with Parameter-owned values and immutable snapshots.
 - Atomic ID-addressed authoring through bounded JSON Patch transactions.
-- Deterministic fixed and adaptive compound layout with orthogonal routes.
+- Deterministic fixed/adaptive compound layout and isolated top-down DAG layout.
 - Worker clients that remain solver-free and executors that remain policy-exact.
 - Retained WebGPU node views where pan and zoom update one transform hierarchy.
 - Independent package entrypoints, browser bundles, and measurable integration boundaries.
@@ -25,7 +25,7 @@ The accepted implementation was migrated from `pkg/nodes` at MetaFor revision `2
 | `@nodes/core` | Live graph entities, Parameter stores, snapshots, revisions, and projection coordination | none | Internal |
 | `@nodes/editor` | Headless transactional authoring and explicit layout freshness gates | `@nodes/core` | Internal |
 | `@nodes/layout` | Pure numeric placement and orthogonal routing policies | none | Internal |
-| `@nodes/worker` | Serializable fixed/adaptive worker clients, transports, and executors | `@nodes/layout` | Internal |
+| `@nodes/worker` | Serializable fixed/adaptive/top-down worker clients, transports, and executors | `@nodes/layout` | Internal |
 | `@nodes/ui` | Retained NodeCanvas, NodeEditor, Frame, Node, Parameter, Socket, and Link views | Engine, Layout, UI, Core | Internal |
 | `@nodes/storybook` | Static and local package catalog, visual stories, and accepted evidence | all package owners above | Internal |
 
@@ -38,14 +38,14 @@ The Storybook is a real application with six independent browser bundles:
 - `/` — package catalog;
 - `/core/` — live graph document and snapshot evidence;
 - `/editor/` — transactional authoring projected into a WebGPU editor;
-- `/layout/` — fixed/adaptive numeric fixtures rendered as DOM/SVG;
+- `/layout/` — standard UI Workbench with lazy fixed, adaptive and top-down geometry stories;
 - `/worker/` — serializable request, response, generation, and failure envelopes;
 - `/ui/` — the complete retained Node UI story catalog and accepted-reference comparison.
 
 Static output is built for the GitHub Pages project base `/node/`. Deep links recover through the same route manifest, while reference metadata and the accepted raster remain separate evidence assets under `dist/references/`.
 
 The default TTF remains owned by Engine. The shared Storybook HTML shell
-declares its served URL once, and both WebGPU pages let `UiRuntime` load the
+declares its served URL once, and all WebGPU pages let `UiRuntime` load the
 shared font lazily. Node packages and story modules do not own font routes; a
 custom runtime font skips the default request.
 

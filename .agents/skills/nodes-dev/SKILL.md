@@ -24,7 +24,7 @@ eagerly load it.
 | catalog | `/` | DOM package catalog |
 | `@nodes/core` | `/core/` | DOM runtime/document |
 | `@nodes/editor` | `/editor/` | WebGPU authoring editor |
-| `@nodes/layout` | `/layout/` | DOM/SVG solver |
+| `@nodes/layout` | `/layout/` | WebGPU Workbench + numeric policies |
 | `@nodes/worker` | `/worker/` | DOM wire protocol |
 | `@nodes/ui` | `/ui/` | WebGPU story catalog |
 
@@ -32,7 +32,7 @@ Every overview ends in `/`; exact leaves do not. Unknown suffixes fail closed.
 
 - Read [references/catalog-dom.md](references/catalog-dom.md) for catalog, Core, and Worker evidence.
 - Read [references/editor-webgpu.md](references/editor-webgpu.md) for authoring, cache, and topology evidence.
-- Read [references/layout-svg.md](references/layout-svg.md) for fixed/adaptive geometry and SVG evidence.
+- Read [references/layout-webgpu.md](references/layout-webgpu.md) for fixed, adaptive and top-down Workbench evidence.
 - Read [references/ui-webgpu.md](references/ui-webgpu.md) for Node UI, accepted-reference readiness, and retained evidence.
 
 ## Lifecycle
@@ -57,13 +57,13 @@ After an applicable change under `packages/**` or a linked Engine, Layout, or UI
 ```bash
 bun "$SKILL/scripts/nodes-browser.ts" targets "$PWD"
 bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \
-  --route /layout/fixed-adaptive --target-id "$target_id"
+  --route /layout/top-down/blender-area/default --target-id "$target_id"
 bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
-  --route /editor/live-node-tree --target-id "$target_id" \
-  --output /tmp/nodes-editor.png
+  --route /layout/top-down/blender-area/default --target-id "$target_id" \
+  --output /tmp/nodes-layout-top-down.png
 ```
 
-Run `targets` first. Open `/` only when the origin has no target. Multiple targets are explicit ambiguity. The helpers never focus an OS window. Catalog, Core, Layout, and Worker reject canvas, touch, profile, and interaction actions. Editor and UI require an exact non-black canvas; Layout requires the ready marker and a real `#svg-view svg`.
+Run `targets` first. Open `/` only when the origin has no target. Multiple targets are explicit ambiguity. The helpers never focus an OS window. Catalog, Core and Worker reject canvas, touch, profile, and interaction actions. Editor, Layout and UI require an exact non-black `#nodes-storybook-canvas`; package-specific interaction plans remain explicit.
 
 ## Static and acceptance evidence
 

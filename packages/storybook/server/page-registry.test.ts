@@ -40,11 +40,11 @@ describe("central Nodes storybook page registry", () => {
     }
   })
 
-  test("keeps DOM/SVG pages canvas-free and both visual pages on one selector", () => {
-    for (const id of ["catalog", "core", "layout", "worker"] as const) {
+  test("keeps DOM pages canvas-free and all visual pages on one selector", () => {
+    for (const id of ["catalog", "core", "worker"] as const) {
       expect(nodesStorybookPageFiles(id).body.kind, id).toBe("html")
     }
-    for (const id of ["editor", "ui"] as const) {
+    for (const id of ["editor", "layout", "ui"] as const) {
       expect(nodesStorybookPageFiles(id).body).toEqual({kind: "canvas", canvasId: "nodes-storybook-canvas"})
     }
   })

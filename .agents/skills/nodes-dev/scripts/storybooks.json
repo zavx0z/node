@@ -18,7 +18,7 @@
         {"mountPath": "/editor", "canvas": {"selector": "#nodes-storybook-canvas", "capability": "webgpu", "touch": true}},
         {"mountPath": "/ui", "canvas": {"selector": "#nodes-storybook-canvas", "capability": "webgpu", "touch": true}},
         {"mountPath": "/core", "canvas": {"selector": "canvas", "capability": "none", "touch": false}},
-        {"mountPath": "/layout", "canvas": {"selector": "canvas", "capability": "none", "touch": false}},
+        {"mountPath": "/layout", "canvas": {"selector": "#nodes-storybook-canvas", "capability": "webgpu", "touch": true}},
         {"mountPath": "/worker", "canvas": {"selector": "canvas", "capability": "none", "touch": false}},
         {"mountPath": "/", "canvas": {"selector": "canvas", "capability": "none", "touch": false}}
       ],

@@ -47,9 +47,9 @@ const PAGE_FILES: Readonly<Record<NodesStorybookPageId, PageFiles>> = Object.fre
     body: {kind: "canvas", canvasId: "nodes-storybook-canvas"},
   }),
   layout: pageFiles({
-    entrypoint: join(packagesRoot, "layout/storybook/fixed-adaptive.stories.ts"),
+    entrypoint: join(packagesRoot, "layout/storybook/layout.stories.ts"),
     stylePath: join(packagesRoot, "layout/storybook/layout-storybook.css"),
-    body: {kind: "html", bodyHtmlPath: join(packagesRoot, "layout/storybook/layout-storybook-body.html")},
+    body: {kind: "canvas", canvasId: "nodes-storybook-canvas"},
   }),
   worker: pageFiles({
     entrypoint: join(packagesRoot, "worker/storybook/protocol.stories.ts"),
@@ -126,8 +126,7 @@ export function nodesStorybookPageFiles(id: NodesStorybookPageId): PageFiles {
 }
 
 function capabilityFor(id: NodesPackageStorybookId): StorybookCapability {
-  if (id === "editor" || id === "ui") return "webgpu"
-  if (id === "layout") return "svg"
+  if (id === "editor" || id === "layout" || id === "ui") return "webgpu"
   return "dom"
 }
 

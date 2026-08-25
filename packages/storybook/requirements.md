@@ -30,10 +30,12 @@
 2. `editor` показывает полный authoring path NodeTreeEditor → NodeTree →
    projection → NodeEditor, изменение Node/Parameter/Link и явную кнопку
    перестройки layout.
-3. `layout` сохраняет независимый числовой fixed/adaptive стенд и настоящий
-   DOM/SVG output без Engine, WebGPU, NodeTree или editor.
+3. `layout` использует общий retained WebGPU Workbench, UI Elements/Components
+   и package-owned preview для независимых fixed, adaptive и top-down stories.
+   Story modules лениво импортируют только точный policy entrypoint; NodeTree и
+   editor в эту страницу не входят.
 4. `worker` показывает exact serializable request/result/error envelopes
-   fixed и adaptive executors без UI или main-thread fallback semantics.
+   fixed, adaptive и top-down executors без UI или main-thread fallback semantics.
 5. `ui` сохраняет полный каталог NodeEditor, Frame, Node, Parameter, Socket и
    Link stories. Story route получает prefix `ui/`, но story identity и lazy
    source module не меняются.
@@ -71,8 +73,9 @@
    Относительный импорт обратно в production source запрещён.
 4. Сборка в один repository Storybook сохраняет все layout fixtures/baselines
    и все UI stories/assets/tests; общий lifecycle не уменьшает покрытие.
-5. На одном document монтируется ровно один package page. Editor и UI создают
-   один UiRuntime своего canvas; DOM pages не загружают Engine/WebGPU chunks.
+5. На одном document монтируется ровно один package page. Editor, Layout и UI
+   создают по одному UiRuntime своего canvas; DOM pages не загружают
+   Engine/WebGPU chunks.
    Общий HTML shell объявляет Engine-owned default font URL один раз через
    inert meta. Editor/UI pages не передают font path, а custom font полностью
    обходит default request.
@@ -95,16 +98,15 @@
    больше не принимают `--storybook`.
 4. Browser wrapper принимает exact `--route`, выводит package из центрального
    manifest, fail-closed отклоняет неизвестный route и canvas/touch/profile
-   actions для DOM/SVG pages. Неканоническая форма overview без `/` либо leaf с
+   actions для DOM pages. Неканоническая форма overview без `/` либо leaf с
    `/` нормализуется server redirect, но не является вторым route.
-5. Catalog, core, layout и worker требуют route/DOM/console evidence;
-   editor и UI дополнительно требуют non-black exact canvas. Layout отдельно
-   доказывает наличие SVG.
+5. Catalog, core и worker требуют route/DOM/console evidence; editor, layout и
+   UI дополнительно требуют non-black exact canvas.
 
 ## Static build
 
 1. `bun run build` создаёт один самостоятельный artifact под base `/node/`.
-   Шесть pages собираются независимо, поэтому DOM/SVG pages не получают
+   Шесть pages собираются независимо, поэтому DOM pages не получают
    WebGPU-код других packages.
 2. `storybook-manifest.json` имеет schema version 1 и хранит app id, base,
    source revision/dirty-state, точные revisions Engine, Layout, UI,

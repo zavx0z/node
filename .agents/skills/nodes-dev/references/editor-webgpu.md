@@ -7,7 +7,7 @@
 | Canvas | `#nodes-storybook-canvas` |
 
 This page proves `NodeTreeEditor → NodeTree → projection → NodeEditor` while
-layout remains explicitly gated.
+the layout calculation remains explicitly gated by F9.
 
 ```bash
 SKILL=.agents/skills/nodes-dev

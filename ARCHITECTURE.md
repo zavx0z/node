@@ -39,11 +39,19 @@ Editor creates bounded forward and inverse JSON Patch operations against a fresh
 
 ### `@nodes/layout`
 
-Layout accepts only finite numeric graph data. Fixed and adaptive policies own placement, socket sides, compound boundaries, route clearance, deterministic ordering, and machine-readable failure witnesses. It never reads a live NodeTree or renderer.
+Layout accepts only finite numeric graph data. Fixed and adaptive policies share
+the compound `WEST/EAST` solver. The independent top-down policy owns a flat
+acyclic graph, `SOUTH/NORTH` endpoints and bounded layered routing without
+importing that compound solver. Every policy is a separate public module graph;
+there is no production registry or runtime policy switch. Layout never reads a
+live NodeTree or renderer.
 
 ### `@nodes/worker`
 
-Worker owns structured-clone-safe transports and exact fixed/adaptive client and executor entrypoints. Client bundles contain no solver. There are no compatibility package aliases or legacy package paths.
+Worker owns structured-clone-safe transports and exact fixed, adaptive and
+top-down client and executor entrypoints. Each executor imports one layout
+policy, while client bundles contain no solver. There are no compatibility
+package aliases or legacy package paths.
 
 ### `@nodes/ui`
 
@@ -83,6 +91,15 @@ Directory and file names are lowercase; multiword names use kebab-case. Story en
 One live tree may have several simultaneous projections. A projection separates intrinsic measurement, global placement/routing, and final local render plans. Cache keys distinguish these phases. Value-only changes that do not affect intrinsic geometry do not rerun global layout. Pan and zoom update only the retained content-root transform.
 
 Performance-sensitive work should record CPU layout and materialization time, allocations, upload bytes, draw calls, frame p50/p95/p99, input-to-present latency, and retained memory. A smaller demo is not proof if it changes route geometry, clipping, picking, or identity.
+
+Production layout policies are optimized as isolated artifacts rather than as
+branches of one universal engine. Under the pinned build toolchain, adding a
+policy must preserve the exact bytes, hashes and source markers of existing
+policy executors. Shared runtime code is
+allowed only for policy-neutral leaf primitives whose extraction is proven not
+to pull another solver into a bundle. Search budgets are fixed and bounded;
+input size may increase work, but consumer options may not unlock an
+unbounded algorithm.
 
 ## Static Storybook pipeline
 

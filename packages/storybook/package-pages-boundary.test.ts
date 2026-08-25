@@ -5,7 +5,7 @@ import {join} from "node:path"
 import {nodesStorybookPageFiles, type NodesStorybookPageId} from "./server/page-registry.ts"
 
 describe("central Nodes storybook bundle boundaries", () => {
-  test("keeps DOM, SVG and WebGPU package pages in independent browser bundles", async () => {
+  test("keeps DOM and standard WebGPU package pages in independent browser bundles", async () => {
     const builds = new Map<NodesStorybookPageId, Awaited<ReturnType<typeof buildPage>>>()
     for (const id of ["catalog", "core", "editor", "layout", "worker", "ui"] as const) {
       builds.set(id, await buildPage(id))
@@ -17,7 +17,7 @@ describe("central Nodes storybook bundle boundaries", () => {
     const editor = builds.get("editor")!
     const ui = builds.get("ui")!
 
-    for (const page of [core, layout, worker]) {
+    for (const page of [core, worker]) {
       expect(page.source).not.toContain("struct GlobalUniforms")
       expect(page.source).not.toContain("navigator.gpu")
       expect(page.source).not.toContain("NodeCanvas.contentRoot")
@@ -25,8 +25,13 @@ describe("central Nodes storybook bundle boundaries", () => {
     expect(core.source).toContain("NodeTree revision conflict")
     expect(core.source).not.toContain("NO_LEGAL_LAYOUT")
     expect(layout.source).toContain("NO_LEGAL_LAYOUT")
+    expect(layout.source).toContain("NO_LEGAL_ADAPTIVE_SIDE_ASSIGNMENT")
+    expect(layout.source).toContain("TOP_DOWN_CYCLE_DETECTED")
+    expect(layout.source).toContain("struct GlobalUniforms")
+    expect(layout.source).toContain("navigator.gpu")
     expect(layout.source).not.toContain("NodeTree revision conflict")
     expect(layout.source).not.toContain("NodeEditor")
+    expect(layout.outputs).toBeGreaterThan(1)
     expect(worker.source).toContain("layout-result")
     expect(worker.source).not.toContain("NodeEditor")
     expect(editor.source).toContain("NodeTreeEditor")
@@ -35,7 +40,7 @@ describe("central Nodes storybook bundle boundaries", () => {
     expect(ui.outputs).toBeGreaterThan(1)
 
     expect(core.bytes).toBeLessThan(45_000)
-    expect(layout.bytes).toBeLessThan(135_000)
+    expect(layout.bytes).toBeLessThan(750_000)
     expect(worker.bytes).toBeLessThan(135_000)
     expect(editor.bytes).toBeLessThan(620_000)
     expect(ui.bytes).toBeLessThan(750_000)
