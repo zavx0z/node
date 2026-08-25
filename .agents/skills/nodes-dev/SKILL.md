@@ -63,4 +63,10 @@ Run `targets` first. Open `/` only when the origin has no target. Multiple targe
 
 `bun run build` must produce a self-contained `dist` for Pages base `/node/`, including all six page shells, lazy chunks, the Engine font, accepted reference catalog and raster, deep-link recovery, and `Built for MetaFor` header/footer links.
 
+GitHub Pages deployment is manual and owner-gated. Never dispatch
+`.github/workflows/pages.yml`, run `gh workflow run`, change repository Pages
+settings, or deploy an artifact unless the owner explicitly requests deployment
+in the current task. `bun run build` and checks verify `dist`; they do not
+authorize publishing it.
+
 Tests and typechecks prove package contracts. DOM, console, page, and canvas evidence prove only the exact route and target. Reference assets remain evidence-only; automated captures do not become owner acceptance. Product runtime behavior and GPU timing require their own scoped verification.
