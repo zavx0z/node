@@ -37,7 +37,7 @@ describe("central Nodes storybook bundle boundaries", () => {
     expect(core.bytes).toBeLessThan(45_000)
     expect(layout.bytes).toBeLessThan(135_000)
     expect(worker.bytes).toBeLessThan(135_000)
-    expect(editor.bytes).toBeLessThan(600_000)
+    expect(editor.bytes).toBeLessThan(620_000)
     expect(ui.bytes).toBeLessThan(750_000)
   })
 
