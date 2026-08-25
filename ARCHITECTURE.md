@@ -115,4 +115,8 @@ package-owned font paths, while a custom runtime font bypasses the default
 request.
 
 The workflow file does not enable Pages or mutate repository settings and has
-no push trigger. Build and deployment run only after an explicit owner dispatch.
+no push trigger. Its cold build checks out every external owner at an exact Git
+revision, registers Highlighter and the shared Storybook directly, and never
+registers the removed `@ui/storybook` implementation. The frozen Nodes install
+and check run only after those links exist. Build and deployment run only after
+an explicit owner dispatch.

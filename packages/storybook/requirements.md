@@ -116,3 +116,7 @@
    Неизвестный suffix остаётся 404 и не открывает fallback story.
 4. Static output содержит Engine-owned font и Node-owned reference catalog и
    raster. В manifest и browser output не попадают локальные пути checkout.
+5. Pages cold build получает Engine, Layout, Elements, Components, Highlighter
+   и `@zavx0z/storybook` только из checkout с точным Git revision. До frozen
+   Nodes install он регистрирует прямые Bun links этих владельцев; удалённый
+   `@ui/storybook` не регистрируется и не используется как bootstrap fallback.

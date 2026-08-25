@@ -64,7 +64,8 @@ Dependencies point toward their real owner: Nodes consumes Engine, Layout, and U
 ## Requirements
 
 - [Bun](https://bun.sh/) `1.4.0`
-- sibling `engine`, `layout`, and `ui` checkouts registered through Bun links
+- sibling `engine`, `layout`, `ui`, `highlighter`, and `storybook` checkouts
+  registered through Bun links
 - a WebGPU-capable browser for Editor and UI stories
 
 ## Development
@@ -76,7 +77,8 @@ Register the sibling packages once in a coordinated local checkout:
 (cd ../layout/packages/core && bun link)
 (cd ../ui/packages/elements && bun link)
 (cd ../ui/packages/components && bun link)
-(cd ../ui/packages/storybook && bun link)
+(cd ../highlighter && bun link)
+(cd ../storybook && bun link)
 ```
 
 Then install and verify Nodes:
