@@ -57,10 +57,10 @@ After an applicable change under `packages/**` or a linked Engine, Layout, or UI
 ```bash
 bun "$SKILL/scripts/nodes-browser.ts" targets "$PWD"
 bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \
-  --route /layout/top-down/blender-area/default --target-id "$target_id"
+  --route /layout/coffman-graham/default/default --target-id "$target_id"
 bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
-  --route /layout/top-down/blender-area/default --target-id "$target_id" \
-  --output /tmp/nodes-layout-top-down.png
+  --route /layout/coffman-graham/default/default --target-id "$target_id" \
+  --output /tmp/nodes-layout-coffman-graham.png
 ```
 
 Run `targets` first. Open `/` only when the origin has no target. Multiple targets are explicit ambiguity. The helpers never focus an OS window. Catalog, Core and Worker reject canvas, touch, profile, and interaction actions. Editor, Layout and UI require an exact non-black `#nodes-storybook-canvas`; package-specific interaction plans remain explicit.

@@ -2,16 +2,16 @@
 
 | Property | Value |
 | --- | --- |
-| Reference route | `/layout/top-down/blender-area/default` |
-| Dense stress route | `/layout/top-down/dense/default` |
+| Dagre Layered route | `/layout/dagre-layered/default/default` |
+| Coffman–Graham Layered route | `/layout/coffman-graham/default/default` |
 | Other policies | `/layout/fixed/baseline/right`, `/layout/adaptive/shared/right` |
 | Ready | `nodesStorybook=ready`, `nodesLayoutStorybook=ready` |
 | Canvas | `#nodes-storybook-canvas` |
 
 This page uses the shared retained Workbench and exact UI Elements/Components.
-Each lazy story imports one production policy entrypoint; the top-down route
-shows the frozen Blender Area topology without supplied ranks, coordinates or
-routes.
+Each lazy story imports one production policy entrypoint. Dagre Layered shows
+the frozen compact reference without supplied ranks, coordinates or routes;
+Coffman–Graham Layered owns the separate width-bounded large-graph scenario.
 
 ```bash
 SKILL=.agents/skills/nodes-dev
@@ -20,14 +20,14 @@ bun run --cwd packages/layout typecheck
 bun run typecheck
 "$SKILL/scripts/nodes-dev.sh" restart "$PWD"
 bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \
-  --route /layout/top-down/dense/default --target-id "$target_id"
+  --route /layout/coffman-graham/default/default --target-id "$target_id"
 bun "$SKILL/scripts/nodes-browser.ts" dom "$PWD" \
-  --route /layout/top-down/dense/default --target-id "$target_id"
+  --route /layout/coffman-graham/default/default --target-id "$target_id"
 bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
-  --route /layout/top-down/dense/default --target-id "$target_id" \
-  --output /tmp/nodes-layout-top-down-dense.png
+  --route /layout/coffman-graham/default/default --target-id "$target_id" \
+  --output /tmp/nodes-layout-coffman-graham.png
 bun "$SKILL/scripts/nodes-browser.ts" console "$PWD" \
-  --route /layout/top-down/dense/default --target-id "$target_id"
+  --route /layout/coffman-graham/default/default --target-id "$target_id"
 ```
 
 DOM evidence proves the exact story route, retained Workbench diagnostics and

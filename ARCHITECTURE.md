@@ -40,17 +40,21 @@ Editor creates bounded forward and inverse JSON Patch operations against a fresh
 ### `@nodes/layout`
 
 Layout accepts only finite numeric graph data. Fixed and adaptive policies share
-the compound `WEST/EAST` solver. The independent top-down policy owns a flat
-acyclic graph, `SOUTH/NORTH` endpoints, one Dagre/Sugiyama placement pass and
-one Codex-compatible rounded cubic edge pipeline without importing that compound solver.
+the compound `WEST/EAST` solver. `Dagre Layered` owns compact flat DAGs with
+`SOUTH/NORTH` endpoints and one Codex-compatible rounded-corner edge pipeline.
+`Coffman–Graham Layered` is a separate width-bounded policy for larger flat
+DAGs; it limits real nodes per layer before deterministic crossing reduction
+and uses the same geometric law of straight sections with only local rounded
+corners. Neither layered policy imports the compound solver or selects another
+algorithm from input size.
 Every policy is a separate public module graph;
 there is no production registry or runtime policy switch. Layout never reads a
 live NodeTree or renderer.
 
 ### `@nodes/worker`
 
-Worker owns structured-clone-safe transports and exact fixed, adaptive and
-top-down client and executor entrypoints. Each executor imports one layout
+Worker owns structured-clone-safe transports and exact fixed, adaptive,
+Dagre Layered and Coffman–Graham Layered client/executor entrypoints. Each executor imports one layout
 policy, while client bundles contain no solver. There are no compatibility
 package aliases or legacy package paths.
 

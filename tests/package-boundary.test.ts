@@ -98,6 +98,8 @@ describe("universal node-system package boundaries", () => {
       ".",
       "./adaptive/client",
       "./adaptive/executor",
+      "./coffman-graham/client",
+      "./coffman-graham/executor",
       "./fixed/client",
       "./fixed/executor",
       "./top-down/client",
@@ -111,6 +113,7 @@ describe("universal node-system package boundaries", () => {
     expect(Object.keys(layoutManifest.exports).sort()).toEqual([
       ".",
       "./adaptive",
+      "./coffman-graham",
       "./fixed",
       "./top-down",
       "./types",
@@ -132,6 +135,7 @@ describe("universal node-system package boundaries", () => {
     const fixedLayout = await buildFixture("fixed-layout-consumer.ts")
     const adaptiveLayout = await buildFixture("adaptive-layout-consumer.ts")
     const topDownLayout = await buildFixture("top-down-layout-consumer.ts")
+    const coffmanGrahamLayout = await buildFixture("coffman-graham-layout-consumer.ts")
     const nodeEditor = await buildFixture("node-editor-consumer.ts")
     const projection = await buildFixture("projection-consumer.ts")
 
@@ -160,6 +164,11 @@ describe("universal node-system package boundaries", () => {
     expect(topDownLayout.source).not.toContain("NO_LEGAL_ADAPTIVE_SIDE_ASSIGNMENT")
     expect(topDownLayout.source).not.toContain("Port has conflicting edge roles")
     expect(topDownLayout.source).not.toContain("sparse visibility")
+    expect(coffmanGrahamLayout.source).toContain("COFFMAN_GRAHAM_CYCLE_DETECTED")
+    expect(coffmanGrahamLayout.source).not.toContain("TOP_DOWN_CYCLE_DETECTED")
+    expect(coffmanGrahamLayout.source).not.toContain("NO_LEGAL_LAYOUT")
+    expect(coffmanGrahamLayout.source).not.toContain("NO_LEGAL_ADAPTIVE_SIDE_ASSIGNMENT")
+    expect(coffmanGrahamLayout.source).not.toContain("Port has conflicting edge roles")
     expect(nodeEditor.source).toContain("NodeEditor")
     expect(nodeEditor.source).toContain("NodeCanvas")
     expect(nodeEditor.source).toContain("Socket is detached")
@@ -189,9 +198,14 @@ describe("universal node-system package boundaries", () => {
       sha256: "8ca3dc0a037c2ad40181b7fa8708dbdfe15331c76852c41803194de6e40cb013",
     })
     expect(topDownLayout).toMatchObject({
-      bytes: 59_055,
-      gzipBytes: 20_479,
-      sha256: "f5bca8745c4f05db59cf5298a4374a608d75b4a1a7d74db2adb799d1352bd579",
+      bytes: 59_154,
+      gzipBytes: 20_503,
+      sha256: "dc9eb779cd6c6189fcca55a5d103c2e78f9f895877858f530eb34c41acac8715",
+    })
+    expect(coffmanGrahamLayout).toMatchObject({
+      bytes: 30_571,
+      gzipBytes: 10_381,
+      sha256: "6fc54633d7e6ed262914e5ed6347c3cfc89c88361971638e19901ab5f6cf0a34",
     })
     expect(nodeEditor.bytes).toBeLessThan(350_000)
     expect(nodeEditor.gzipBytes).toBeLessThan(100_000)

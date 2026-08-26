@@ -42,8 +42,8 @@ describe("parent nodes storybook server", () => {
         ["/core/live-node-tree", "@nodes/core", 'id="core-snapshot"', "core"],
         ["/editor/live-node-tree", "@nodes/editor", 'id="nodes-storybook-canvas"', "editor"],
         ["/layout/fixed/baseline/right", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
-        ["/layout/top-down/blender-area/default", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
-        ["/layout/top-down/dense/default", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
+        ["/layout/dagre-layered/default/default", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
+        ["/layout/coffman-graham/default/default", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
         ["/worker/protocol", "@nodes/worker", 'id="worker-request"', "worker"],
         ["/ui/parameter/text/connected", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],
         ["/ui/socket/boolean/input", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],
@@ -68,6 +68,8 @@ describe("parent nodes storybook server", () => {
       expect(await fetch(`${origin}/ui/parameter/composition/field`).then(({status}) => status)).toBe(404)
       expect(await fetch(`${origin}/ui/parameter/connection/connected`).then(({status}) => status)).toBe(404)
       expect(await fetch(`${origin}/ui/socket/unknown`).then(({status}) => status)).toBe(404)
+      expect(await fetch(`${origin}/layout/top-down/blender-area/default`).then(({status}) => status)).toBe(404)
+      expect(await fetch(`${origin}/layout/top-down/dense/default`).then(({status}) => status)).toBe(404)
       const redirect = await fetch(`${origin}/core`, {redirect: "manual"})
       expect(redirect.status).toBe(308)
       expect(redirect.headers.get("location")).toBe("/core/")
