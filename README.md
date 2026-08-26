@@ -77,8 +77,8 @@ Register the sibling packages once in a coordinated local checkout:
 (cd ../layout/packages/core && bun link)
 (cd ../ui/packages/elements && bun link)
 (cd ../ui/packages/components && bun link)
-(cd ../highlighter && bun link)
-(cd ../storybook && bun link)
+(cd ../../../highlighter && bun link)
+(cd ../../../storybook && bun link)
 ```
 
 Then install and verify Nodes:
