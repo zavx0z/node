@@ -86,10 +86,10 @@ Then install and verify Nodes:
 ```bash
 bun install --frozen-lockfile
 bun run check
-bun run storybook
 ```
 
-The local Storybook listens at `http://127.0.0.1:4018`. Generated `dist/`, dependency directories, logs, and runtime evidence are ignored.
+Use `$storybook ensure @nodes/storybook` for the local runtime. Generated
+`dist/`, dependency directories, logs, and runtime evidence are ignored.
 
 ## Accepted reference evidence
 

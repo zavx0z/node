@@ -10,8 +10,7 @@ describe("parent nodes storybook server", () => {
       cwd: storybookRoot,
       env: {
         ...Bun.env,
-        NODES_STORYBOOK_HOST: "127.0.0.1",
-        NODES_STORYBOOK_PORT: String(port),
+        STORYBOOK_PORT: String(port),
       },
       stdout: "pipe",
       stderr: "pipe",

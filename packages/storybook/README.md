@@ -2,7 +2,8 @@
 
 **Built for [MetaFor](https://github.com/zavx0z/metafor).**
 
-Один private Storybook всего репозитория Nodes работает без HMR на `4018` и
+Один private Storybook всего репозитория Nodes работает без HMR на
+автоматически выделенном порту и
 собирается как static `/node/`. Core, Editor, Layout, Worker и UI хранят свои
 stories рядом с собой в `packages/<owner>/storybook/**`; это приложение только
 соединяет их routes и отдельные browser bundles. Общие router, shell, server и

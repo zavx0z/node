@@ -1,7 +1,7 @@
 # Catalog and DOM package pages
 
-All commands use the single `nodes` lifecycle process on
-`http://127.0.0.1:4018`.
+All lifecycle and browser operations use global `$storybook` with exact package
+`@nodes/storybook`; its origin is automatic.
 
 ## Catalog
 

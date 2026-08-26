@@ -10,15 +10,14 @@ This page proves `NodeTreeEditor → NodeTree → projection → NodeEditor` whi
 the layout calculation remains explicitly gated by F9.
 
 ```bash
-SKILL=.agents/skills/nodes-dev
 bun test packages/core packages/editor \
   packages/ui/projection.test.ts \
   packages/editor/storybook
 bun run typecheck
-"$SKILL/scripts/nodes-dev.sh" restart "$PWD"
-bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \
+$storybook restart @nodes/storybook
+$storybook browser reload @nodes/storybook \
   --route /editor/live-node-tree --target-id "$target_id"
-bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
+$storybook browser canvas @nodes/storybook \
   --route /editor/live-node-tree --target-id "$target_id" \
   --output /tmp/nodes-editor.png
 ```
@@ -26,7 +25,7 @@ bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
 For value-cache evidence after an exact reload:
 
 ```bash
-bun "$SKILL/scripts/nodes-browser.ts" interact "$PWD" \
+$storybook browser interact @nodes/storybook \
   --route /editor/live-node-tree --target-id "$target_id" \
   --plan .agents/skills/nodes-dev/references/editor-cache-invalidation.plan.json
 ```
@@ -34,7 +33,7 @@ bun "$SKILL/scripts/nodes-browser.ts" interact "$PWD" \
 For structural authoring and manual layout:
 
 ```bash
-bun "$SKILL/scripts/nodes-browser.ts" interact "$PWD" \
+$storybook browser interact @nodes/storybook \
   --route /editor/live-node-tree --target-id "$target_id" \
   --plan .agents/skills/nodes-dev/references/editor-topology.plan.json
 ```

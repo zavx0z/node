@@ -1,13 +1,13 @@
 ---
 name: nodes-dev
-description: "Develop and verify the standalone Nodes repository, its Core, Editor, Layout, Worker, UI, and centralized static Storybook. Use metafor-dev only for product integration."
+description: "Develop and verify the standalone Nodes repository and its Core, Editor, Layout, Worker, UI, and package-specific acceptance semantics. Use the global storybook skill for @nodes/storybook and metafor-dev only for product integration."
 ---
 
 # Nodes development
 
 Built for [MetaFor](https://github.com/zavx0z/metafor) as reusable node-system infrastructure.
 
-Use the exact Nodes checkout supplied for the task. Preserve its branch or detached HEAD, unrelated changes, listeners, and browser targets. `@nodes/storybook` owns one no-HMR process, one origin, and one target; package isolation comes from routes and separate bundles rather than extra servers.
+Use the exact Nodes checkout supplied for the task. Preserve its branch or detached HEAD, unrelated changes, listeners, and browser targets. `@nodes/storybook` owns the Nodes catalog and package pages; the global `$storybook` owns their package-named lifecycle and exact browser target.
 
 Before changing a contract, read repository `ARCHITECTURE.md`, the owning package `requirements.md` or layout requirement, public types, and focused tests. A new law belongs in its real owner before implementation.
 
@@ -35,49 +35,18 @@ Every overview ends in `/`; exact leaves do not. Unknown suffixes fail closed.
 - Read [references/layout-webgpu.md](references/layout-webgpu.md) for fixed, adaptive and top-down Workbench evidence.
 - Read [references/ui-webgpu.md](references/ui-webgpu.md) for Node UI, accepted-reference readiness, and retained evidence.
 
-## Lifecycle
+## Storybook boundary
 
-```bash
-SKILL=.agents/skills/nodes-dev
-"$SKILL/scripts/nodes-dev.sh" status  "$PWD"
-"$SKILL/scripts/nodes-dev.sh" ensure  "$PWD"
-"$SKILL/scripts/nodes-dev.sh" restart "$PWD"
-```
+Use the single global `$storybook` with exact package `@nodes/storybook` for
+lifecycle, automatic origin, static build, exact-route browser evidence,
+interaction and profiling. This skill contains no lifecycle/browser scripts,
+selector, port, process state or copied generic Storybook rules.
 
-Run read-only `status` first and `ensure` before the first lifecycle or browser operation. `ensure`, `start`, and `restart` may remain foreground owners of the exact Bun child, so retain their long-lived PTY. Foreign listeners are never adopted or stopped.
+Nodes remains the semantic owner of package catalog order, DOM/WebGPU page
+meaning, accepted reference readiness, cache/topology interaction plans and
+route-specific expected observations. The references above contain only that
+domain evidence; `$storybook` supplies all generic commands and safety laws.
 
-For an isolated test that must not inspect the real browser, use tests, typecheck, the static build, and an ephemeral HTTP server. `NODES_DEV_TEST_MODE=1` permits a separate lifecycle port; browser actions additionally require an explicitly isolated `NODES_DEV_CDP_PORT`.
-
-If the request forbids starting or stopping any process, do not run lifecycle commands beyond `status`, browser helpers, `server.test.ts`, the static HTTP smoke, or any broad test selection that may spawn Bun. Use typecheck and only focused pure tests whose implementation has been inspected for process creation.
-
-After an applicable change under `packages/**` or a linked Engine, Layout, or UI dependency, finish a stable source checkpoint, restart once, and reload every route needed for evidence.
-
-## Background browser evidence
-
-```bash
-bun "$SKILL/scripts/nodes-browser.ts" targets "$PWD"
-bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \
-  --route /layout/coffman-graham/default/default --target-id "$target_id"
-bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
-  --route /layout/coffman-graham/default/default --target-id "$target_id" \
-  --output /tmp/nodes-layout-coffman-graham.png
-```
-
-Run `targets` first. Open `/` only when the origin has no target. Multiple targets are explicit ambiguity. The helpers never focus an OS window. Catalog, Core and Worker reject canvas, touch, profile, and interaction actions. Editor, Layout and UI require an exact non-black `#nodes-storybook-canvas`; package-specific interaction plans remain explicit.
-
-## Static and acceptance evidence
-
-`bun run build` must produce a self-contained `dist` for Pages base `/node/`,
-including all six page shells, lazy chunks, the Engine font, accepted reference
-catalog and raster, fail-closed deep-link recovery, and schema-1 manifest with
-exact revisions, emitted sizes and SHA-256 hashes. The shared shell shows the
-Russian `Главная` action and `Создано для MetaFor` footer without a floating
-header badge over the work area.
-
-GitHub Pages deployment is manual and owner-gated. Never dispatch
-`.github/workflows/pages.yml`, run `gh workflow run`, change repository Pages
-settings, or deploy an artifact unless the owner explicitly requests deployment
-in the current task. `bun run build` and checks verify `dist`; they do not
-authorize publishing it.
-
-Tests and typechecks prove package contracts. DOM, console, page, and canvas evidence prove only the exact route and target. Reference assets remain evidence-only; automated captures do not become owner acceptance. Product runtime behavior and GPU timing require their own scoped verification.
+At handoff report affected Nodes owners, focused and repository checks, exact
+route-specific evidence where applicable, and every remaining product or owner
+gate.

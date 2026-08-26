@@ -18,5 +18,5 @@ authoring-команды — [`@nodes/editor`](../packages/editor/requirements.m
    production exports пакетов семейства.
 3. Package-specific storybook modules принадлежат одному `@nodes/storybook`,
    но сохраняют package semantics и независимые exact routes.
-4. Один `$nodes-dev` process и один browser origin заменяют прежние root,
+4. Один `$storybook` process для `@nodes/storybook` и один browser origin заменяют прежние root,
    layout и UI selectors без compatibility servers.

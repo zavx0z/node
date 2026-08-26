@@ -16,7 +16,8 @@
     "storybook": "bun server.ts",
     "build": "bun build.ts",
     "test": "bun test .",
-    "typecheck": "tsc --noEmit --pretty false"
+    "typecheck": "tsc --noEmit --pretty false",
+    "check": "bun run typecheck && bun run test && bun run build"
   },
   "dependencies": {
     "@engine/core": "link:@engine/core",

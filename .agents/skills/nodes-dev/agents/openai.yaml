@@ -1,4 +1,4 @@
 interface:
   display_name: "Nodes Development"
-  short_description: "Develop the centralized Nodes storybook"
-  default_prompt: "Use $nodes-dev to run and verify the centralized Nodes catalog and its exact package routes."
+  short_description: "Develop Nodes packages and contracts"
+  default_prompt: "Use $nodes-dev to develop and verify exact Nodes package contracts."

@@ -103,6 +103,7 @@ export function createNodesStorybookApp(options: NodesStorybookPagesOptions = {}
         stylePath: files.stylePath,
         body: files.body,
         capability,
+        ...(capability === "webgpu" ? {touch: true} : {}),
         readiness: {dataset: "nodesStorybook", value: "ready"},
         ...(canvasId === null ? {} : {canvas: {id: canvasId, evidence: "non-black" as const}}),
         routeTree: nodesPackageRouteTree(entry.id),

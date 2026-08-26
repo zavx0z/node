@@ -10,19 +10,18 @@ The `ui/` mount preserves all NodeEditor, Frame, Link, Socket, and
 accepted-reference comparison story ids. Strip only the `ui/` mount when choosing a story module.
 
 ```bash
-SKILL=.agents/skills/nodes-dev
 bun test packages/ui packages/ui/storybook
 bun run --cwd packages/ui typecheck
 bun run typecheck
-"$SKILL/scripts/nodes-dev.sh" restart "$PWD"
+$storybook restart @nodes/storybook
 story_route=/ui/node-editor/scene/default
-bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \
+$storybook browser reload @nodes/storybook \
   --route "$story_route" --target-id "$target_id"
-bun "$SKILL/scripts/nodes-browser.ts" dom "$PWD" \
+$storybook browser dom @nodes/storybook \
   --route "$story_route" --target-id "$target_id"
-bun "$SKILL/scripts/nodes-browser.ts" console "$PWD" \
+$storybook browser console @nodes/storybook \
   --route "$story_route" --target-id "$target_id"
-bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
+$storybook browser canvas @nodes/storybook \
   --route "$story_route" --target-id "$target_id" \
   --output /tmp/nodes-ui.png
 ```

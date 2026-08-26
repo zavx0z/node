@@ -1,12 +1,10 @@
 import {join} from "node:path"
 import {fileURLToPath} from "node:url"
-import {startStorybookHubServer} from "@zavx0z/storybook/server"
+import {startStorybookPackageServer} from "@zavx0z/storybook/server"
 import {createNodesStorybookApp} from "./server/page-registry.ts"
 
-const server = startStorybookHubServer({
+startStorybookPackageServer({
   app: createNodesStorybookApp(),
-  hostname: Bun.env.NODES_STORYBOOK_HOST ?? "127.0.0.1",
-  port: Number(Bun.env.NODES_STORYBOOK_PORT ?? 4018),
   staticFiles: [
     {
       publicPath: "/fonts/jetbrains-mono-bold.ttf",
@@ -21,5 +19,3 @@ const server = startStorybookHubServer({
     },
   ],
 })
-
-console.log(`[nodes storybook catalog] ${server.url}`)

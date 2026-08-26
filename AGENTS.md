@@ -1,8 +1,9 @@
 # Node agent rules
 
 - Use `$nodes-dev` from `.agents/skills/nodes-dev` for Node implementation,
-  tests, lifecycle, static Pages builds, and exact-route DOM, SVG, or WebGPU
-  browser evidence.
+  tests and package-specific acceptance semantics. Use the single global
+  `$storybook` for `@nodes/storybook` lifecycle, static Pages builds, and
+  exact-route DOM, SVG, or WebGPU browser evidence.
 - Before changing behavior, read `ARCHITECTURE.md`, the owning package
   `requirements.md`, public types, implementation, and focused tests.
 - Preserve the independent Core, Editor, Layout, Worker, UI, and Storybook

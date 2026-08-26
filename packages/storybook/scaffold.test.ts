@@ -21,6 +21,7 @@ describe("central Nodes storybook scaffold", () => {
       build: "bun build.ts",
       test: "bun test .",
       typecheck: "tsc --noEmit --pretty false",
+      check: "bun run typecheck && bun run test && bun run build",
     })
     expect(manifest.dependencies).toEqual({
       "@engine/core": "link:@engine/core",
@@ -44,14 +45,15 @@ describe("central Nodes storybook scaffold", () => {
     const catalog = await Bun.file(join(storybookRoot, "catalog/package-catalog.ts")).text()
 
     expect(server).toContain('from "@zavx0z/storybook/server"')
-    expect(server).toContain("startStorybookHubServer({")
+    expect(server).toContain("startStorybookPackageServer({")
     expect(server).toContain("app: createNodesStorybookApp()")
-    expect(server).toContain("Bun.env.NODES_STORYBOOK_HOST")
-    expect(server).toContain("Bun.env.NODES_STORYBOOK_PORT ?? 4018")
+    expect(server).not.toContain("port:")
+    expect(server).not.toMatch(/NODES_STORYBOOK_(?:HOST|PORT)/u)
     expect(server).not.toContain("Bun.serve")
     expect(server).not.toContain("hmr: true")
     expect(registry).toContain('mountPath: "/"')
     expect(registry).toContain('canvasId: "nodes-storybook-canvas"')
+    expect(registry).toContain('...(capability === "webgpu" ? {touch: true} : {})')
     expect(registry).toContain("...NODES_PACKAGE_CATALOG.map((entry) =>")
     for (const id of ["core", "editor", "layout", "worker", "ui"]) {
       expect(catalog).toContain(`id: ${JSON.stringify(id)}`)

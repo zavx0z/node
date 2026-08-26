@@ -13,11 +13,7 @@ bun install
 bun run check
 ```
 
-Run the catalog with:
-
-```bash
-bun run storybook
-```
+Run the catalog with `$storybook ensure @nodes/storybook`.
 
 ## Ownership
 
@@ -60,11 +56,13 @@ A Storybook change should preserve route canonicalization, page bundle isolation
 ```bash
 bun run typecheck
 bun run test
-bun run build
+bun run --cwd packages/storybook build
 git diff --check
 ```
 
-For visible WebGPU changes, also use `$nodes-dev` to inspect the exact route, canvas, console, and retained behavior. A successful static build does not prove visual correctness.
+For visible WebGPU changes, use `$storybook` with `@nodes/storybook` to inspect
+the exact route, canvas, console and retained behavior. A successful static
+build does not prove visual correctness.
 
 ## Delivery boundary
 

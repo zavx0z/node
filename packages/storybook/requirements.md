@@ -8,8 +8,8 @@
 
 ## Один каталог и один процесс
 
-1. Всё семейство запускается одним Bun process на одном origin
-   `http://127.0.0.1:4018`. Параллельные package servers и отдельные ports для
+1. Всё семейство запускается одним package-named Bun process на одном
+   automatic origin. Параллельные package servers и отдельные ports для
    layout или UI запрещены.
 2. Главная страница `/` перечисляет каждый production-пакет, простое описание
    его ответственности, содержание storybook и ссылку на package overview:
@@ -93,15 +93,24 @@
 2. Server no-HMR: после source checkpoint выполняются один restart и exact
    route reload. Он обслуживает один общий Engine font asset, reference assets и отдельные
    browser bundles/styles каждого package page.
-3. Корневой repo-local `$nodes-dev` обслуживает `@nodes/storybook`, владеет
-   одним selector `nodes`, одним process и одним origin. Lifecycle-команды
-   больше не принимают `--storybook`.
-4. Browser wrapper принимает exact `--route`, выводит package из центрального
+3. Глобальный `$storybook` обслуживает exact package `@nodes/storybook` и
+   владеет одним process/origin/target без selector или port registry.
+4. Общий browser helper принимает exact `--route`, получает page из typed dev
    manifest, fail-closed отклоняет неизвестный route и canvas/touch/profile
    actions для DOM pages. Неканоническая форма overview без `/` либо leaf с
    `/` нормализуется server redirect, но не является вторым route.
 5. Catalog, core и worker требуют route/DOM/console evidence; editor, layout и
    UI дополнительно требуют non-black exact canvas.
+6. `$storybook ensure`, `start` и `restart` остаются foreground owners exact child после
+   healthy JSON. Когда другой lifecycle-вызов заранее записал exact
+   `restart` или `manual-stop`, прежний owner завершается с exit `0`, а не с
+   ложным `143`. Потеря owner-сессии и настоящий неожиданный child exit
+   остаются nonzero failures.
+7. Общий `$storybook` browser helper сериализует разные процессы по exact CDP target до
+   navigation, readiness, capture и cleanup. После получения lock он повторно
+   читает текущий URL target. Для скрытой вкладки frame scheduling проходит
+   точную последовательность `enabled → ready/render barrier → disabled`, в том
+   числе при ошибке.
 
 ## Static build
 
