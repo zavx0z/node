@@ -56,6 +56,7 @@ describe("standalone nodes-dev boundary", () => {
       "/layout/",
       "/layout/fixed/baseline/right",
       "/layout/top-down/blender-area/default",
+      "/layout/top-down/dense/default",
       "/worker/",
       "/worker/protocol",
       "/editor/",

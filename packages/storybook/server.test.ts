@@ -43,6 +43,7 @@ describe("parent nodes storybook server", () => {
         ["/editor/live-node-tree", "@nodes/editor", 'id="nodes-storybook-canvas"', "editor"],
         ["/layout/fixed/baseline/right", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
         ["/layout/top-down/blender-area/default", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
+        ["/layout/top-down/dense/default", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
         ["/worker/protocol", "@nodes/worker", 'id="worker-request"', "worker"],
         ["/ui/parameter/text/connected", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],
         ["/ui/socket/boolean/input", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],

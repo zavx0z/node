@@ -2,7 +2,8 @@
 
 | Property | Value |
 | --- | --- |
-| Representative route | `/layout/top-down/blender-area/default` |
+| Reference route | `/layout/top-down/blender-area/default` |
+| Dense stress route | `/layout/top-down/dense/default` |
 | Other policies | `/layout/fixed/baseline/right`, `/layout/adaptive/shared/right` |
 | Ready | `nodesStorybook=ready`, `nodesLayoutStorybook=ready` |
 | Canvas | `#nodes-storybook-canvas` |
@@ -19,14 +20,14 @@ bun run --cwd packages/layout typecheck
 bun run typecheck
 "$SKILL/scripts/nodes-dev.sh" restart "$PWD"
 bun "$SKILL/scripts/nodes-browser.ts" reload "$PWD" \
-  --route /layout/top-down/blender-area/default --target-id "$target_id"
+  --route /layout/top-down/dense/default --target-id "$target_id"
 bun "$SKILL/scripts/nodes-browser.ts" dom "$PWD" \
-  --route /layout/top-down/blender-area/default --target-id "$target_id"
+  --route /layout/top-down/dense/default --target-id "$target_id"
 bun "$SKILL/scripts/nodes-browser.ts" canvas "$PWD" \
-  --route /layout/top-down/blender-area/default --target-id "$target_id" \
-  --output /tmp/nodes-layout-top-down.png
+  --route /layout/top-down/dense/default --target-id "$target_id" \
+  --output /tmp/nodes-layout-top-down-dense.png
 bun "$SKILL/scripts/nodes-browser.ts" console "$PWD" \
-  --route /layout/top-down/blender-area/default --target-id "$target_id"
+  --route /layout/top-down/dense/default --target-id "$target_id"
 ```
 
 DOM evidence proves the exact story route, retained Workbench diagnostics and

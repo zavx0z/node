@@ -41,8 +41,9 @@ Editor creates bounded forward and inverse JSON Patch operations against a fresh
 
 Layout accepts only finite numeric graph data. Fixed and adaptive policies share
 the compound `WEST/EAST` solver. The independent top-down policy owns a flat
-acyclic graph, `SOUTH/NORTH` endpoints and bounded layered routing without
-importing that compound solver. Every policy is a separate public module graph;
+acyclic graph, `SOUTH/NORTH` endpoints, non-layered constraint placement and
+one obstacle-aware cubic connection type without importing that compound solver.
+Every policy is a separate public module graph;
 there is no production registry or runtime policy switch. Layout never reads a
 live NodeTree or renderer.
 
