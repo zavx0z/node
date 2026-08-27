@@ -1,13 +1,15 @@
-# Editor WebGPU page
+# Editor section in the shared WebGPU Workbench
 
 | Property | Value |
 | --- | --- |
-| Route | `/editor/live-node-tree` |
-| Ready | `nodesStorybook=ready`, `nodesStorybookPage=editor` |
+| Route | `/editor/node-tree/live` |
+| Ready | `nodesStorybook=ready`, exact `nodesStorybookStory` |
 | Canvas | `#nodes-storybook-canvas` |
 
-This page proves `NodeTreeEditor → NodeTree → projection → NodeEditor` while
-the layout calculation remains explicitly gated by F9.
+This section proves `NodeTreeEditor → NodeTree → projection → NodeEditor` while
+the layout calculation remains explicitly gated by the retained dock's manual
+rebuild action. Its package-owned preview/dock Surfaces live inside the one root
+Workbench.
 
 ```bash
 bun test packages/core packages/editor \
@@ -16,28 +18,14 @@ bun test packages/core packages/editor \
 bun run typecheck
 $storybook restart @nodes/storybook
 $storybook browser reload @nodes/storybook \
-  --route /editor/live-node-tree --target-id "$target_id"
+  --route /editor/node-tree/live --target-id "$target_id"
 $storybook browser canvas @nodes/storybook \
-  --route /editor/live-node-tree --target-id "$target_id" \
+  --route /editor/node-tree/live --target-id "$target_id" \
   --output /tmp/nodes-editor.png
 ```
 
-For value-cache evidence after an exact reload:
-
-```bash
-$storybook browser interact @nodes/storybook \
-  --route /editor/live-node-tree --target-id "$target_id" \
-  --plan .agents/skills/nodes-dev/references/editor-cache-invalidation.plan.json
-```
-
-For structural authoring and manual layout:
-
-```bash
-$storybook browser interact @nodes/storybook \
-  --route /editor/live-node-tree --target-id "$target_id" \
-  --plan .agents/skills/nodes-dev/references/editor-topology.plan.json
-```
-
-Before F9, tree/topology revisions advance while projection revisions stay old
-and `nodeTreeLayoutDirty=true`. After F9, exact revisions match, dirty is false,
-console is empty and canvas is non-black.
+Use the visible retained dock for add/remove Parameter, add/remove Node,
+disconnect/connect, value Store updates and manual `rebuildLayout`. Before the
+manual rebuild, tree/topology revisions advance while projection revisions stay
+old and `nodeTreeLayoutDirty=true`. After rebuild, exact revisions match, dirty
+is false, console is empty and canvas is non-black.

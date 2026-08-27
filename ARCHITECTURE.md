@@ -68,9 +68,11 @@ Each package owns its dev-only stories under `packages/<owner>/storybook/**`.
 The repository Storybook consumes those descriptors and production code only
 through exact public entrypoints. Shared application infrastructure comes from
 exact `@zavx0z/storybook/*` subpaths and remains a private app dependency. Its
-DOM, SVG, and WebGPU pages remain independent bundles. Static output uses
-`/node/`, copies the accepted reference catalog verbatim, and keeps raster
-evidence outside production exports.
+single root Workbench owns one document, canvas, runtime and route tree;
+package implementations remain independent lazy story chunks rather than
+independent user-facing pages. Static output uses `/node/`, copies the accepted
+reference catalog verbatim, and keeps raster evidence outside production
+exports.
 
 ## Naming and icon associations
 
@@ -109,9 +111,9 @@ unbounded algorithm.
 ## Static Storybook pipeline
 
 `packages/storybook/build.ts` passes the Node-owned typed app manifest to
-`@zavx0z/storybook/build`. The shared builder builds six source entrypoints into
-independent `dist/@storybook-assets/<page>/` directories, writes package HTML
-shells, copies one exact Engine font asset and accepted evidence, emits
+`@zavx0z/storybook/build`. The shared builder emits one root Workbench entry
+with lazy owner/story chunks, writes one HTML shell, copies one exact Engine
+font asset and accepted evidence, emits
 `.nojekyll`, and creates a project-base-aware fail-closed 404 recovery page.
 `storybook-manifest.json` records exact source/dependency revisions, page
 graphs, emitted sizes and SHA-256 hashes. Each shell declares the shared font

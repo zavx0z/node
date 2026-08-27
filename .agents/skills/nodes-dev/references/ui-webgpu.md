@@ -1,13 +1,15 @@
-# Node UI WebGPU page
+# Node UI sections in the shared WebGPU Workbench
 
 | Property | Value |
 | --- | --- |
 | Representative detail route | `/ui/socket/boolean/input` |
-| Ready | `nodesStorybook=ready`, `nodeComponentStorybook=ready` |
+| Ready | `nodesStorybook=ready`, exact `nodesStorybookStory` |
 | Canvas | `#nodes-storybook-canvas` |
 
-The `ui/` mount preserves all NodeEditor, Frame, Link, Socket, and
-accepted-reference comparison story ids. Strip only the `ui/` mount when choosing a story module.
+The `ui/` owner prefix preserves all NodeEditor, Parameter, Socket, Frame, Link,
+and accepted-reference comparison story ids. Strip only the `ui/` prefix when
+choosing a story module. These are primary sections of the same root Workbench,
+not a nested package page.
 
 ```bash
 bun test packages/ui packages/ui/storybook

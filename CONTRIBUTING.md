@@ -49,7 +49,7 @@ Do not hide a sibling dependency behind a local wrapper. Local Bun links are coo
 
 ## Story and evidence requirements
 
-A Storybook change should preserve route canonicalization, page bundle isolation, WebGPU capability boundaries, and the `/node/` static base. Reference changes must update the asset, SHA-256, viewport, DPR, provenance, compatibility, and acceptance in one manifest change. Automated captures remain candidates until the owner accepts them.
+A Storybook change should preserve route canonicalization, one root entry with lazy story-chunk isolation, WebGPU capability boundaries, and the `/node/` static base. Reference changes must update the asset, SHA-256, viewport, DPR, provenance, compatibility, and acceptance in one manifest change. Automated captures remain candidates until the owner accepts them.
 
 ## Checks
 

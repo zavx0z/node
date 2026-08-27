@@ -3,78 +3,43 @@ import {fileURLToPath} from "node:url"
 
 const storybookRoot = fileURLToPath(new URL(".", import.meta.url))
 
-describe("parent nodes storybook server", () => {
-  test("serves catalog and every package page from one no-HMR origin", async () => {
+describe("root Nodes Storybook server", () => {
+  test("serves every section through one no-HMR Workbench page", async () => {
     const port = await freePort()
     const process = Bun.spawn(["bun", "server.ts"], {
       cwd: storybookRoot,
-      env: {
-        ...Bun.env,
-        STORYBOOK_PORT: String(port),
-      },
+      env: {...Bun.env, STORYBOOK_PORT: String(port)},
       stdout: "pipe",
       stderr: "pipe",
     })
-
     try {
       const origin = `http://127.0.0.1:${port}`
-      const catalog = await waitForResponse(`${origin}/`)
-      const catalogHtml = await catalog.text()
-      expect(catalog.headers.get("cache-control")).toBe("no-cache")
-      expect(catalogHtml).toContain("<title>Nodes storybook</title>")
-      expect(catalogHtml).toContain('id="nodes-package-catalog"')
-      expect(catalogHtml).not.toContain("data-storybook-brand")
-      expect(catalogHtml).toContain('data-storybook-footer')
-      expect(catalogHtml).toContain('Создано для&nbsp;<a href="https://github.com/zavx0z/metafor">MetaFor</a>')
-      expect(catalogHtml).toContain("системы узлов для агентов, сложных систем и иммерсивного WebGPU")
-
-      const overviewCases = [
-        ["/core/", "@nodes/core", 'id="core-snapshot"', "core"],
-        ["/editor/", "@nodes/editor", 'id="nodes-storybook-canvas"', "editor"],
-        ["/layout/", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
-        ["/worker/", "@nodes/worker", 'id="worker-request"', "worker"],
-        ["/ui/", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],
-        ["/ui/parameter/", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],
-        ["/ui/parameter/text/", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],
-      ] as const
-      const leafCases = [
-        ["/core/live-node-tree", "@nodes/core", 'id="core-snapshot"', "core"],
-        ["/editor/live-node-tree", "@nodes/editor", 'id="nodes-storybook-canvas"', "editor"],
-        ["/layout/fixed/baseline/right", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
-        ["/layout/dagre-layered/default/default", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
-        ["/layout/coffman-graham/default/default", "@nodes/layout", 'id="nodes-storybook-canvas"', "layout"],
-        ["/worker/protocol", "@nodes/worker", 'id="worker-request"', "worker"],
-        ["/ui/parameter/text/connected", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],
-        ["/ui/socket/boolean/input", "@nodes/ui", 'id="nodes-storybook-canvas"', "ui"],
-      ] as const
-      for (const [route, packageName, marker, pageId] of [...overviewCases, ...leafCases]) {
-        const response = await fetch(`${origin}${route}`)
+      for (const route of [
+        "/",
+        "/core/",
+        "/editor/node-tree/live",
+        "/layout/fixed/baseline/right",
+        "/worker/coffman-graham/default",
+        "/ui/parameter/text/connected",
+        "/ui/socket/boolean/input",
+      ]) {
+        const response = await waitForResponse(`${origin}${route}`)
         const html = await response.text()
-        expect(response.status, route).toBe(200)
-        expect(html, route).toContain(`<title>Nodes storybook · ${packageName}</title>`)
-        expect(html, route).toContain('<meta name="engine-default-font" content="/fonts/jetbrains-mono-bold.ttf">')
-        expect(html, route).toContain('data-storybook-home href="/"')
-        expect(html, route).toContain(">Главная</a>")
-        expect(html, route).toContain(marker)
-        expect(html, route).toContain(`/@storybook-assets/${pageId}/entry.js`)
-        const entry = await fetch(`${origin}/@storybook-assets/${pageId}/entry.js`)
-        expect(entry.status, `${pageId} entry`).toBe(200)
-        expect(entry.headers.get("content-type"), pageId).toContain("text/javascript")
+        expect(html, route).toContain("<title>Nodes Storybook</title>")
+        expect(html, route).toContain('<canvas id="nodes-storybook-canvas"></canvas>')
+        expect(html, route).toContain('/@storybook-assets/workbench/entry.js')
+        expect(html, route).not.toContain("nodes-package-catalog")
+        expect(html, route).not.toContain("data-storybook-home")
       }
       expect(await fetch(`${origin}/unknown`).then(({status}) => status)).toBe(404)
-      expect(await fetch(`${origin}/core/unknown`).then(({status}) => status)).toBe(404)
-      expect(await fetch(`${origin}/ui/parameter/unknown`).then(({status}) => status)).toBe(404)
-      expect(await fetch(`${origin}/ui/parameter/composition/field`).then(({status}) => status)).toBe(404)
-      expect(await fetch(`${origin}/ui/parameter/connection/connected`).then(({status}) => status)).toBe(404)
+      expect(await fetch(`${origin}/layout/missing`).then(({status}) => status)).toBe(404)
       expect(await fetch(`${origin}/ui/socket/unknown`).then(({status}) => status)).toBe(404)
-      expect(await fetch(`${origin}/layout/top-down/blender-area/default`).then(({status}) => status)).toBe(404)
-      expect(await fetch(`${origin}/layout/top-down/dense/default`).then(({status}) => status)).toBe(404)
-      const redirect = await fetch(`${origin}/core`, {redirect: "manual"})
+      const redirect = await fetch(`${origin}/layout/fixed`, {redirect: "manual"})
       expect(redirect.status).toBe(308)
-      expect(redirect.headers.get("location")).toBe("/core/")
-      const parameterRedirect = await fetch(`${origin}/ui/parameter`, {redirect: "manual"})
-      expect(parameterRedirect.status).toBe(308)
-      expect(parameterRedirect.headers.get("location")).toBe("/ui/parameter/")
+      expect(redirect.headers.get("location")).toBe("/layout/fixed/")
+      const entry = await fetch(`${origin}/@storybook-assets/workbench/entry.js`)
+      expect(entry.status).toBe(200)
+      expect(entry.headers.get("content-type")).toContain("text/javascript")
     } finally {
       process.kill()
       await process.exited
@@ -83,11 +48,7 @@ describe("parent nodes storybook server", () => {
 })
 
 async function freePort(): Promise<number> {
-  const server = Bun.serve({
-    hostname: "127.0.0.1",
-    port: 0,
-    fetch: () => new Response("probe"),
-  })
+  const server = Bun.serve({hostname: "127.0.0.1", port: 0, fetch: () => new Response("probe")})
   const port = server.port
   server.stop(true)
   if (port === undefined) throw new Error("Bun did not allocate a test port")

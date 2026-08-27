@@ -12,3 +12,7 @@
 - Preserve the supplied checkout, unrelated changes, linked dependency
   identity, listeners, and browser targets. Use the skill-owned background
   browser path instead of focusing desktop browser windows.
+- `@nodes/storybook` has one document, canvas, `UiRuntime`, Router and Workbench.
+  `/` shows a representative story in that Workbench; owner prefixes are
+  sections of the same catalog. Do not add a landing page, package cards,
+  package-specific shells or nested Storybook runtimes.

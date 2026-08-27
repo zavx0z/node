@@ -15,7 +15,7 @@ The accepted implementation was migrated from `pkg/nodes` at MetaFor revision `2
 - Deterministic fixed/adaptive compound layout and isolated top-down DAG layout.
 - Worker clients that remain solver-free and executors that remain policy-exact.
 - Retained WebGPU node views where pan and zoom update one transform hierarchy.
-- Independent package entrypoints, browser bundles, and measurable integration boundaries.
+- Independent package entrypoints, lazy Storybook chunks, and measurable integration boundaries.
 - Static, project-base-safe Storybook output with accepted reference evidence.
 
 ## Packages
@@ -27,25 +27,25 @@ The accepted implementation was migrated from `pkg/nodes` at MetaFor revision `2
 | `@nodes/layout` | Pure numeric placement and orthogonal routing policies | none | Internal |
 | `@nodes/worker` | Serializable fixed/adaptive/top-down worker clients, transports, and executors | `@nodes/layout` | Internal |
 | `@nodes/ui` | Retained NodeCanvas, NodeEditor, Frame, Node, Parameter, Socket, and Link views | Engine, Layout, UI, Core | Internal |
-| `@nodes/storybook` | Static and local package catalog, visual stories, and accepted evidence | all package owners above | Internal |
+| `@nodes/storybook` | One static/local Workbench, lazy owner stories, and accepted evidence | all package owners above | Internal |
 
 Every package is `private: true`. Repository separation does not imply registry publication or a compatibility promise.
 
 ## Storybook
 
-The Storybook is a real application with six independent browser bundles:
-
-- `/` — package catalog;
-- `/core/` — live graph document and snapshot evidence;
-- `/editor/` — transactional authoring projected into a WebGPU editor;
-- `/layout/` — standard UI Workbench with lazy fixed, adaptive and top-down geometry stories;
-- `/worker/` — serializable request, response, generation, and failure envelopes;
-- `/ui/` — the complete retained Node UI story catalog and accepted-reference comparison.
+The Storybook is one root Workbench with one document, canvas, runtime and
+route tree. There is no separate package landing page: `/` immediately shows a
+representative Core overview. Core, Editor, Layout, Worker and UI keep prefixed routes
+inside that Workbench, while their exact implementations load as independent
+lazy chunks. The primary panel selects owners such as `Раскладка` or `Сокеты`,
+the secondary panel selects a policy or Socket kind, and the dock selects its
+scenario or direction. Owner and secondary overview routes render their own
+aggregate information before an exact detail is selected.
 
 Static output is built for the GitHub Pages project base `/node/`. Deep links recover through the same route manifest, while reference metadata and the accepted raster remain separate evidence assets under `dist/references/`.
 
 The default TTF remains owned by Engine. The shared Storybook HTML shell
-declares its served URL once, and all WebGPU pages let `UiRuntime` load the
+declares its served URL once, and the one WebGPU page lets `UiRuntime` load the
 shared font lazily. Node packages and story modules do not own font routes; a
 custom runtime font skips the default request.
 

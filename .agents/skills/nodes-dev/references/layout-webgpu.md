@@ -1,14 +1,14 @@
-# Layout WebGPU Workbench
+# Layout section in the shared WebGPU Workbench
 
 | Property | Value |
 | --- | --- |
 | Dagre Layered route | `/layout/dagre-layered/default/default` |
 | Coffman–Graham Layered route | `/layout/coffman-graham/default/default` |
 | Other policies | `/layout/fixed/baseline/right`, `/layout/adaptive/shared/right` |
-| Ready | `nodesStorybook=ready`, `nodesLayoutStorybook=ready` |
+| Ready | `nodesStorybook=ready`, exact `nodesStorybookStory` |
 | Canvas | `#nodes-storybook-canvas` |
 
-This page uses the shared retained Workbench and exact UI Elements/Components.
+This section uses the one shared retained Workbench and exact UI Elements/Components.
 Each lazy story imports one production policy entrypoint. Dagre Layered shows
 the frozen compact reference without supplied ranks, coordinates or routes;
 Coffman–Graham Layered owns the separate width-bounded large-graph scenario.

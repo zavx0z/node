@@ -2,130 +2,77 @@
 
 **Создано для [MetaFor](https://github.com/zavx0z/metafor).**
 
-`@nodes/storybook` владеет единым dev-каталогом всех production-пакетов
-семейства Nodes. Production contracts остаются у своих пакетов; storybook не
-входит ни в один production export.
+`@nodes/storybook` — один private dev-каталог всего семейства Nodes.
+Production contracts остаются у Core, Editor, Layout, Worker и UI; Storybook
+лениво показывает их внутри одного общего Workbench и не входит в production
+exports.
 
-## Один каталог и один процесс
+## Один документ и один Workbench
 
-1. Всё семейство запускается одним package-named Bun process на одном
-   automatic origin. Параллельные package servers и отдельные ports для
-   layout или UI запрещены.
-2. Главная страница `/` перечисляет каждый production-пакет, простое описание
-   его ответственности, содержание storybook и ссылку на package overview:
-   `/core/`, `/editor/`, `/layout/`, `/worker/` либо `/ui/`.
-3. Каталог содержит `@nodes/core`, `@nodes/editor`, `@nodes/layout`,
-   `@nodes/worker` и `@nodes/ui`; скрытый package-specific стенд не
-   допускается.
-4. Один browser target этого origin переходит между package routes. Навигация
-   не создаёт второй target или второй runtime process.
-5. На каждом package overview, prefix overview и detail route видна общая
-   кнопка `Главная`, возвращающая на главный каталог `/`. Кнопку и русский
-   footer создаёт общий shell, а не отдельные DOM, SVG и WebGPU consumers.
+1. Storybook имеет один package-named process, automatic origin, browser target,
+   HTML document, canvas, `UiRuntime`, Router и пятизонный Workbench.
+2. `/` сразу открывает Workbench с representative Core overview. Отдельной landing page,
+   package cards, кнопок «Открыть обзор» и package-specific DOM/WebGPU shells нет.
+3. Все overview и detail routes принадлежат одному route tree с owner prefixes
+   `core/**`, `editor/**`, `layout/**`, `worker/**`, `ui/**`.
+4. Переход между любыми разделами выполняется одним `router.go()` без reload,
+   `location.assign`, нового canvas, runtime, process или target.
+5. Root app владеет только общей навигацией, shell, lazy dispatch и readiness.
+   Package owners сохраняют local story descriptors, fixtures, state, source,
+   controls и preview adapters.
 
-## Package routes
+## Панели каталога
 
-1. `core` показывает живой NodeTree, revisions, snapshot, ordered document и
-   атомарный reconcile без layout и renderer.
-2. `editor` показывает полный authoring path NodeTreeEditor → NodeTree →
-   projection → NodeEditor, изменение Node/Parameter/Link и явную кнопку
-   перестройки layout.
-3. `layout` использует общий retained WebGPU Workbench, UI Elements/Components
-   и package-owned preview для независимых fixed, adaptive и top-down stories.
-   Story modules лениво импортируют только точный policy entrypoint; NodeTree и
-   editor в эту страницу не входят.
-4. `worker` показывает exact serializable request/result/error envelopes
-   fixed, adaptive и top-down executors без UI или main-thread fallback semantics.
-5. `ui` сохраняет полный каталог NodeEditor, Frame, Node, Parameter, Socket и
-   Link stories. Story route получает prefix `ui/`, но story identity и lazy
-   source module не меняются.
-6. Sidebar `ui` сначала показывает группу `Редактор` с NodeEditor, Frame и
-   Link, затем группу `Компоненты` с `Параметры` и `Сокеты` именно в таком
-   порядке, после неё — `Сравнение`.
-7. `Параметры` показывают все public Field kinds в порядке `text`, `number`,
-   `integer`, `boolean`, `enum`, `color`, `vector`, `rotation`, `matrix`,
-   `reference`, `collection`, `path`, `readonly`. Каждый Field kind имеет exact
-   variants `field`, `input`, `output`, `both`, `connected`, поэтому detail
-   route имеет форму `/ui/parameter/<field-kind>/<variant>`. Package overview
-   использует первый detail `parameter/text/field`; старые разделы
-   `parameter/composition` и `parameter/connection` не являются routes.
-8. Default addresses принадлежат одному manifest и не дублируются строками в
-   server, catalog и skill.
-9. Каждый package mount и каждый префикс его внутреннего route является
-   каноническим overview со слешем в конце. Например, `/ui/socket/` показывает
-   все Socket types, `/ui/socket/boolean/` — его направления, а
-   `/ui/socket/boolean/input` — один detail story. Тот же переход
-   `package → component → section → detail` действует для всех package pages;
-   leaf не подставляется в pathname при выборе более высокого уровня. Внутри
-   Node UI overview сохраняет прежний five-panel Workbench и отображает первый
-   detail descendant как preview/source state; отдельная generic overview
-   Surface не заменяет NodeEditor, Socket preview или code panel.
+1. Главная панель показывает semantic owners: `NodeTree`, `NodeTreeEditor`,
+   `Раскладка`, `Worker`, `NodeEditor`, `Параметры`, `Сокеты`, `Frame`, `Link`
+   и `Сравнение`.
+2. Главная строка является route item. Disclosure-only group header не заменяет
+   owner route и не выдаётся за открываемый раздел.
+3. Для `Раскладка` второстепенная панель показывает `Fixed`, `Adaptive`,
+   `Dagre Layered`, `Coffman–Graham`; dock показывает точные policy scenarios.
+4. Для `Сокеты` второстепенная панель показывает все public Socket kinds;
+   dock показывает `Input`, `Output`, `Bidirectional` выбранного kind.
+5. Для `Параметры` второстепенная панель показывает все public Field kinds, а
+   dock — `field`, `input`, `output`, `both`, `connected`.
+6. Socket kinds принадлежат `@nodes/ui`; Fixed/Adaptive/Dagre/Coffman принадлежат
+   `@nodes/layout`. Layout registry не содержит Socket types или группы
+   «Сокеты нод».
 
-## Структура модулей
+## Lazy owner modules
 
-1. Stories, fixtures, styles и focused tests каждого production package
-   находятся рядом с владельцем в `packages/<package>/storybook/**`.
-   Центральный `@nodes/storybook` только собирает их routes и browser entries;
-   он не копирует package semantics к себе.
-2. Общие catalog, route manifest и Node-owned app manifest не содержат
-   NodeTree, layout policy, renderer или story semantics конкретного пакета.
-3. Package page импортирует production только через exact public entrypoints.
-   Относительный импорт обратно в production source запрещён.
-4. Сборка в один repository Storybook сохраняет все layout fixtures/baselines
-   и все UI stories/assets/tests; общий lifecycle не уменьшает покрытие.
-5. На одном document монтируется ровно один package page. Editor, Layout и UI
-   создают по одному UiRuntime своего canvas; DOM pages не загружают
-   Engine/WebGPU chunks.
-   Общий HTML shell объявляет Engine-owned default font URL один раз через
-   inert meta. Editor/UI pages не передают font path, а custom font полностью
-   обходит default request.
-6. Router, typed app manifest, общий HTML shell, server и static builder
-   импортируются только из точных subpaths `@zavx0z/storybook/*`. Старый
-   `@ui/storybook` и compatibility imports не используются.
-7. `@zavx0z/storybook` остаётся dev-only зависимостью private repository app.
-   Ни один production package Nodes не экспортирует и не импортирует его.
+1. Root entry eager-загружает только Workbench и чистую story metadata.
+   Production implementations загружаются exact lazy chunks выбранного story.
+2. Обычный story рендерится package-owned `StorybookStoryModule` в общей preview
+   Surface. Core и Worker не создают отдельный DOM shell.
+3. Владелец, которому нужны самостоятельные интерактивные Surface, возвращает
+   явный preview adapter. Root регистрирует его surfaces один раз в существующем
+   `UiRuntime` и скрывает inactive surfaces.
+4. `NodeTreeEditor` использует отдельные preview/dock surfaces, но не создаёт
+   второй Workbench. Node UI adapter аналогично владеет NodeEditor/reference
+   surfaces только внутри root preview slot.
+5. Lazy boundary доказывается chunks: cold root не содержит Core/Editor/Layout/
+   Worker/UI implementations, а выбор одного story не импортирует соседний
+   policy или owner.
 
-## Server и browser evidence
+## Routes и readiness
 
-1. Все pages публикуют общий marker `nodesStorybook=ready` только после своего
-   фактического первого результата. Package-specific datasets остаются
-   дополнительной диагностикой.
-2. Server no-HMR: после source checkpoint выполняются один restart и exact
-   route reload. Он обслуживает один общий Engine font asset, reference assets и отдельные
-   browser bundles/styles каждого package page.
-3. Глобальный `$storybook` обслуживает exact package `@nodes/storybook` и
-   владеет одним process/origin/target без selector или port registry.
-4. Общий browser helper принимает exact `--route`, получает page из typed dev
-   manifest, fail-closed отклоняет неизвестный route и canvas/touch/profile
-   actions для DOM pages. Неканоническая форма overview без `/` либо leaf с
-   `/` нормализуется server redirect, но не является вторым route.
-5. Catalog, core и worker требуют route/DOM/console evidence; editor, layout и
-   UI дополнительно требуют non-black exact canvas.
-6. `$storybook ensure`, `start` и `restart` остаются foreground owners exact child после
-   healthy JSON. Когда другой lifecycle-вызов заранее записал exact
-   `restart` или `manual-stop`, прежний owner завершается с exit `0`, а не с
-   ложным `143`. Потеря owner-сессии и настоящий неожиданный child exit
-   остаются nonzero failures.
-7. Общий `$storybook` browser helper сериализует разные процессы по exact CDP target до
-   navigation, readiness, capture и cleanup. После получения lock он повторно
-   читает текущий URL target. Для скрытой вкладки frame scheduling проходит
-   точную последовательность `enabled → ready/render barrier → disabled`, в том
-   числе при ошибке.
+1. Overview routes оканчиваются `/`; exact leaves не оканчиваются `/`.
+   Неизвестный suffix остаётся 404.
+2. Root representative — overview `core`. Каждый primary overview показывает
+   общую информацию и все secondary items; каждый secondary overview показывает
+   все свои variants. Overview имеет собственный lazy presentation module и не
+   подставляет первый detail descendant.
+3. Общий marker `nodesStorybook=ready` публикуется только после exact lazy module,
+   актуального adapter state, render и shared frame boundary.
+4. Browser evidence использует глобальный `$storybook`: один target, точный
+   route, console 0 и non-black canvas. Restart сохраняет pathname и не
+   активирует Chrome.
 
 ## Static build
 
-1. `bun run build` создаёт один самостоятельный artifact под base `/node/`.
-   Шесть pages собираются независимо, поэтому DOM pages не получают
-   WebGPU-код других packages.
-2. `storybook-manifest.json` имеет schema version 1 и хранит app id, base,
-   source revision/dirty-state, точные revisions Engine, Layout, UI,
-   Highlighter и `@zavx0z/storybook`, pages, routes, capabilities, readiness,
-   entries, chunks, размеры и SHA-256 всех emitted assets.
-3. `404.html` восстанавливает только route, присутствующий в typed route tree.
-   Неизвестный suffix остаётся 404 и не открывает fallback story.
-4. Static output содержит Engine-owned font и Node-owned reference catalog и
-   raster. В manifest и browser output не попадают локальные пути checkout.
-5. Pages cold build получает Engine, Layout, Elements, Components, Highlighter
-   и `@zavx0z/storybook` только из checkout с точным Git revision. До frozen
-   Nodes install он регистрирует прямые Bun links этих владельцев; удалённый
-   `@ui/storybook` не регистрируется и не используется как bootstrap fallback.
+1. `bun run build` создаёт один page artifact под `/node/` с root entry и lazy
+   owner/story chunks.
+2. Manifest schema 1 фиксирует source/dependency revisions, общий route tree,
+   readiness, canvas evidence и hashes без local realpaths.
+3. Artifact содержит один Engine font и Node-owned reference assets. Pages
+   workflow остаётся manual и не публикуется без отдельного решения владельца.

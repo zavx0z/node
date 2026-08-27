@@ -1,101 +1,52 @@
 import {describe, expect, test} from "bun:test"
-import {NODES_PACKAGE_CATALOG} from "../catalog/package-catalog.ts"
+import {createStorybookPage} from "@zavx0z/storybook/server"
 import {
-  nodesPackageOverviewRoute,
-  nodesPackageRouteTree,
-} from "../catalog/package-route-manifest.ts"
-import {
-  createNodesStorybookPages,
-  nodesStorybookPageFiles,
-} from "./page-registry.ts"
+  NODES_STORIES,
+  NODES_STORY_ROUTE_TREE,
+} from "../app/stories.ts"
+import {createNodesStorybookApp} from "./page-registry.ts"
 
-describe("central Nodes storybook page registry", () => {
-  test("mounts catalog and every package as separate named browser entry", async () => {
-    const pages = createNodesStorybookPages()
-    expect(pages.map(({id}) => id)).toEqual([
-      "catalog",
+describe("root Nodes Storybook page", () => {
+  test("owns one canvas Workbench for every prefixed package story", () => {
+    const app = createNodesStorybookApp()
+    expect(app.pages).toHaveLength(1)
+    expect(app.pages[0]).toMatchObject({
+      id: "workbench",
+      mountPath: "/",
+      body: {kind: "canvas", canvasId: "nodes-storybook-canvas"},
+      capability: "webgpu",
+      readiness: {dataset: "nodesStorybook", value: "ready"},
+    })
+    expect(app.pages[0]?.routeTree).toBe(NODES_STORY_ROUTE_TREE)
+    expect(new Set(NODES_STORIES.map(({route}) => route.split("/")[0]))).toEqual(new Set([
       "core",
       "editor",
       "layout",
       "worker",
       "ui",
-    ])
-    expect(pages.map(({mountPath}) => mountPath)).toEqual([
-      "/",
-      ...NODES_PACKAGE_CATALOG.map(({routePrefix}) => routePrefix),
-    ])
-    for (const page of pages) {
-      const files = nodesStorybookPageFiles(page.id as Parameters<typeof nodesStorybookPageFiles>[0])
-      expect(await Bun.file(files.entrypoint).exists(), `${page.id} entry`).toBeTrue()
-      expect(await Bun.file(files.stylePath).exists(), `${page.id} style`).toBeTrue()
-      if (files.body.kind === "html") {
-        expect(await Bun.file(files.body.bodyHtmlPath).exists(), `${page.id} body`).toBeTrue()
-      }
-    }
-    for (const entry of NODES_PACKAGE_CATALOG) {
-      const tree = nodesPackageRouteTree(entry.id)
-      expect(tree.find("")?.kind, entry.id).toBe("overview")
-      expect(pageById(pages, entry.id).routeTree, entry.id).toBe(tree)
-      expect(nodesPackageOverviewRoute(entry.id), entry.id).toBe(entry.defaultRoute)
+    ]))
+    for (const path of ["", "core", "layout", "layout/fixed", "ui/socket", "ui/socket/boolean"]) {
+      expect(NODES_STORY_ROUTE_TREE.find(path), path).toMatchObject({kind: "overview"})
     }
   })
 
-  test("keeps DOM pages canvas-free and all visual pages on one selector", () => {
-    for (const id of ["catalog", "core", "worker"] as const) {
-      expect(nodesStorybookPageFiles(id).body.kind, id).toBe("html")
+  test("renders the same Workbench shell at root, overview and exact leaf routes", async () => {
+    const app = createNodesStorybookApp({publicBasePath: "/node"})
+    const page = createStorybookPage(app, app.pages[0]!)
+    for (const path of [
+      "/node/",
+      "/node/core/",
+      "/node/layout/fixed/",
+      "/node/ui/socket/boolean/input",
+    ]) {
+      const response = await page.routeResponse(path)
+      expect(response?.status, path).toBe(200)
+      const html = await response?.text()
+      expect(html, path).toContain('<canvas id="nodes-storybook-canvas"></canvas>')
+      expect(html, path).toContain('/node/@storybook-assets/workbench/entry.js')
+      expect(html, path).not.toContain("nodes-package-catalog")
+      expect(html, path).not.toContain("data-storybook-home")
     }
-    for (const id of ["editor", "layout", "ui"] as const) {
-      expect(nodesStorybookPageFiles(id).body).toEqual({kind: "canvas", canvasId: "nodes-storybook-canvas"})
-    }
-  })
-
-  test("serves only registered overview and leaf nodes inside each package mount", async () => {
-    const pages = createNodesStorybookPages()
-    for (const entry of NODES_PACKAGE_CATALOG) {
-      const page = pageById(pages, entry.id)
-      const overview = await page.routeResponse(entry.defaultRoute)
-      expect(overview?.status, entry.defaultRoute).toBe(200)
-      expect(await overview?.text(), entry.defaultRoute).toContain('data-storybook-home href="/"')
-      const leaf = nodesPackageRouteTree(entry.id).leaves[0]
-      expect(leaf, entry.id).toBeDefined()
-      const leafResponse = await page.routeResponse(`${entry.routePrefix}/${leaf}`)
-      expect(leafResponse?.status, `${entry.id} leaf`).toBe(200)
-      const missing = await page.routeResponse(`${entry.routePrefix}/missing`)
-      expect(missing?.status, `${entry.id} missing`).toBe(404)
-    }
-  })
-
-  test("renders project-base-safe static shells with Nodes branding", async () => {
-    const pages = createNodesStorybookPages({publicBasePath: "/node"})
-    const catalog = await pageByIdWithCatalog(pages, "catalog").htmlResponse().then((response) => response.text())
-    const editor = await pageById(pages, "editor").htmlResponse().then((response) => response.text())
-    expect(catalog).toContain('<base href="/node/">')
-    expect(editor).toContain('<base href="/node/editor/">')
-    for (const html of [catalog, editor]) {
-      expect(html).not.toContain("data-storybook-brand")
-      expect(html).toContain('<meta name="engine-default-font" content="/node/fonts/jetbrains-mono-bold.ttf">')
-      expect(html).toContain('Создано для&nbsp;<a href="https://github.com/zavx0z/metafor">MetaFor</a>')
-      expect(html).toContain("системы узлов для агентов, сложных систем и иммерсивного WebGPU")
-    }
-    expect(editor).toContain('data-storybook-home href="/node/"')
-    expect(editor).toContain(">Главная</a>")
+    expect((await page.routeResponse("/node/unknown"))?.status).toBe(404)
   })
 })
-
-function pageByIdWithCatalog(
-  pages: ReturnType<typeof createNodesStorybookPages>,
-  id: "catalog",
-) {
-  const page = pages.find((candidate) => candidate.id === id)
-  if (page === undefined) throw new Error(`Missing Nodes storybook page: ${id}`)
-  return page
-}
-
-function pageById(
-  pages: ReturnType<typeof createNodesStorybookPages>,
-  id: (typeof NODES_PACKAGE_CATALOG)[number]["id"],
-) {
-  const page = pages.find((candidate) => candidate.id === id)
-  if (page === undefined) throw new Error(`Missing Nodes storybook page: ${id}`)
-  return page
-}
