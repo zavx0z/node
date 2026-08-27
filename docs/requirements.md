@@ -6,7 +6,7 @@
 storybook. Runtime-законы принадлежат [`@nodes/core`](../packages/core/requirements.md),
 authoring-команды — [`@nodes/editor`](../packages/editor/requirements.md),
 алгоритмические законы — [`@nodes/layout`](../packages/layout/README.md), Worker boundary —
-`@nodes/worker`, WebGPU view — [`@nodes/ui`](../packages/ui/requirements.md), а
+`@nodes/worker`, standard-DOM view — [`@nodes/ui`](../packages/ui/requirements.md), а
 единый dev-каталог — [`@nodes/storybook`](../packages/storybook/requirements.md).
 
 ## Package boundary

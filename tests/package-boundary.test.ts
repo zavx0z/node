@@ -27,29 +27,30 @@ describe("universal node-system package boundaries", () => {
     expect(source).not.toContain("Hamiltonian")
   })
 
-  test("keeps exact Node Editor rendering solver-free and isolates the explicit projection adapter", async () => {
+  test("keeps @nodes/ui on exact standard-DOM owners", async () => {
     const uiRoot = join(packagesRoot, "ui")
     const packageJson = await Bun.file(join(uiRoot, "package.json")).json() as {
       dependencies?: Record<string, string>
+      exports?: Record<string, string>
     }
-    expect(packageJson.dependencies?.["@ui/hud"]).toBeUndefined()
     const production = (await sourceFiles(uiRoot))
       .filter((path) => !path.endsWith(".test.ts"))
       .filter((path) => !path.includes("/storybook/"))
     const source = await readAll(production)
-    const exactEditor = await Bun.file(join(uiRoot, "node-editor.ts")).text()
-    const projection = await Bun.file(join(uiRoot, "projection.ts")).text()
-    expect(source).not.toMatch(/from ["']@ui\/hud/)
-    expect(exactEditor).not.toMatch(/from ["']@nodes\//)
-    expect(projection).toContain('from "@nodes/core/node-tree"')
-    expect(projection).toContain('from "@nodes/layout/fixed"')
-    expect(source).not.toMatch(/\b(?:NodeSystemSurface|NodeSystemCard|NodeSystemFact)\b/)
-    for (const productTerm of [
-      "service-worker-api",
-      "oracle-rtc-data-channel",
-      "force-rtc-data-channel",
-      "HAMILTONIAN",
-    ]) expect(source).not.toContain(productTerm)
+    expect(packageJson.exports).toEqual({
+      ".": "./index.ts",
+      "./graph-canvas": "./dom/graph-canvas.ts",
+      "./node-workbench": "./dom/node-workbench.ts",
+      "./parameter-socket": "./dom/parameter-socket.ts",
+      "./node-tree-editor": "./dom/node-tree-editor.ts",
+    })
+    expect(packageJson.dependencies).toEqual({
+      "@zavx0z/dom": "link:@zavx0z/dom",
+    })
+    for (const forbidden of ["@engine/core", "@layout/core", "@ui/components", "@ui/elements", "UiSurface", "UiRuntime"]) {
+      expect(source).not.toContain(forbidden)
+    }
+    expect(await Bun.file(join(uiRoot, "projection.ts")).exists()).toBeFalse()
   })
 
   test("publishes only existing independent entrypoints", async () => {
@@ -118,6 +119,16 @@ describe("universal node-system package boundaries", () => {
       "./top-down",
       "./types",
     ])
+    const uiManifest = await Bun.file(join(packagesRoot, "ui/package.json")).json() as {
+      exports: Record<string, unknown>
+    }
+    expect(Object.keys(uiManifest.exports).sort()).toEqual([
+      ".",
+      "./graph-canvas",
+      "./node-tree-editor",
+      "./node-workbench",
+      "./parameter-socket",
+    ])
     for (const legacy of [
       "validation.ts",
       "containment.ts",
@@ -129,15 +140,14 @@ describe("universal node-system package boundaries", () => {
     ]) expect(await Bun.file(join(packagesRoot, legacy)).exists(), legacy).toBeFalse()
   })
 
-  test("builds independent core, authoring, layout policies and Node Editor consumers", async () => {
+  test("builds independent core, authoring, layout policies and DOM UI consumers", async () => {
     const core = await buildFixture("core-consumer.ts")
     const authoring = await buildFixture("editor-consumer.ts")
     const fixedLayout = await buildFixture("fixed-layout-consumer.ts")
     const adaptiveLayout = await buildFixture("adaptive-layout-consumer.ts")
     const topDownLayout = await buildFixture("top-down-layout-consumer.ts")
     const coffmanGrahamLayout = await buildFixture("coffman-graham-layout-consumer.ts")
-    const nodeEditor = await buildFixture("node-editor-consumer.ts")
-    const projection = await buildFixture("projection-consumer.ts")
+    const domUi = await buildFixture("dom-ui-consumer.ts")
 
     expect(core.source).toContain("Stale NodeTree projection")
     expect(core.source).toContain("must contain only finite numbers")
@@ -169,20 +179,13 @@ describe("universal node-system package boundaries", () => {
     expect(coffmanGrahamLayout.source).not.toContain("NO_LEGAL_LAYOUT")
     expect(coffmanGrahamLayout.source).not.toContain("NO_LEGAL_ADAPTIVE_SIDE_ASSIGNMENT")
     expect(coffmanGrahamLayout.source).not.toContain("Port has conflicting edge roles")
-    expect(nodeEditor.source).toContain("NodeEditor")
-    expect(nodeEditor.source).toContain("NodeCanvas")
-    expect(nodeEditor.source).toContain("Socket is detached")
-    expect(nodeEditor.source).not.toContain("NO_LEGAL_LAYOUT")
-    expect(nodeEditor.source).not.toContain("NO_LEGAL_ADAPTIVE_SIDE_ASSIGNMENT")
-    expect(projection.source).toContain("Stale NodeTree projection")
-    expect(projection.source).toContain("Port has conflicting edge roles")
-    expect(projection.source).toContain("Missing Node view")
-    for (const legacy of [
-      "NodeSystemSurface",
-      "NodeSystemCard",
-      "NodeSystemFact",
-      "NodeInspectorSurface",
-    ]) expect(nodeEditor.source).not.toContain(legacy)
+    expect(domUi.source).toContain("GraphCanvas props must be an object")
+    expect(domUi.source).toContain("NodeWorkbench props must be an object")
+    expect(domUi.source).toContain("ParameterSocket props must be an object")
+    expect(domUi.source).toContain("NodeTreeEditor props must be an object")
+    expect(domUi.source).not.toContain("UiSurface")
+    expect(domUi.source).not.toContain("NodeEditor")
+    expect(domUi.source).not.toContain("@layout/core")
 
     expect(core.bytes).toBeLessThan(20_000)
     expect(authoring.bytes).toBeLessThan(40_000)
@@ -207,10 +210,8 @@ describe("universal node-system package boundaries", () => {
       gzipBytes: 12_541,
       sha256: "18ed4f095ac201266151002d83cdb9dfd2e15c5db7f98d06505d1df63c2ec3b9",
     })
-    expect(nodeEditor.bytes).toBeLessThan(350_000)
-    expect(nodeEditor.gzipBytes).toBeLessThan(100_000)
-    expect(projection.bytes).toBeLessThan(520_000)
-    expect(projection.gzipBytes).toBeLessThan(145_000)
+    expect(domUi.bytes).toBeLessThan(100_000)
+    expect(domUi.gzipBytes).toBeLessThan(25_000)
   })
 })
 

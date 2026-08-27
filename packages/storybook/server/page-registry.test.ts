@@ -3,7 +3,7 @@ import {createStorybookPage} from "@zavx0z/storybook/server"
 import {
   NODES_STORIES,
   NODES_STORY_ROUTE_TREE,
-} from "../app/stories.ts"
+} from "../app/dom-catalog.ts"
 import {createNodesStorybookApp} from "./page-registry.ts"
 
 describe("root Nodes Storybook page", () => {
@@ -17,6 +17,7 @@ describe("root Nodes Storybook page", () => {
       capability: "webgpu",
       readiness: {dataset: "nodesStorybook", value: "ready"},
     })
+    expect(app.pages[0]?.entrypoint.endsWith("/app/dom-entry.ts")).toBeTrue()
     expect(app.pages[0]?.routeTree).toBe(NODES_STORY_ROUTE_TREE)
     expect(new Set(NODES_STORIES.map(({route}) => route.split("/")[0]))).toEqual(new Set([
       "core",
@@ -28,6 +29,7 @@ describe("root Nodes Storybook page", () => {
     for (const path of ["", "core", "layout", "layout/fixed", "ui/socket", "ui/socket/boolean"]) {
       expect(NODES_STORY_ROUTE_TREE.find(path), path).toMatchObject({kind: "overview"})
     }
+    expect(NODES_STORY_ROUTE_TREE.nodes).toHaveLength(224)
   })
 
   test("renders the same Workbench shell at root, overview and exact leaf routes", async () => {

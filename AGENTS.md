@@ -7,12 +7,16 @@
 - Before changing behavior, read `ARCHITECTURE.md`, the owning package
   `requirements.md`, public types, implementation, and focused tests.
 - Preserve the independent Core, Editor, Layout, Worker, UI, and Storybook
-  package boundaries. Engine, Layout, and UI are upstream owners; MetaFor is a
-  product consumer. Import exact owners directly without aliases or re-exports.
+  package boundaries; Layout here means the domain package `@nodes/layout`.
+  The upstream document path is `@zavx0z/dom` → `@zavx0z/renderer` →
+  `@zavx0z/renderer-webgpu` → `@engine/core`, while UI owns shared controls.
+  Generic Layout and `@ui/elements` are retired. MetaFor is a product consumer.
+  Import exact owners directly without aliases or re-exports.
 - Preserve the supplied checkout, unrelated changes, linked dependency
   identity, listeners, and browser targets. Use the skill-owned background
   browser path instead of focusing desktop browser windows.
-- `@nodes/storybook` has one document, canvas, `UiRuntime`, Router and Workbench.
-  `/` shows a representative story in that Workbench; owner prefixes are
-  sections of the same catalog. Do not add a landing page, package cards,
-  package-specific shells or nested Storybook runtimes.
+- `@nodes/storybook` has one semantic DOM document, canvas, document renderer
+  runtime, Router and Workbench. `/` shows a representative story in that
+  Workbench; owner prefixes are sections of the same catalog. Do not add a
+  landing page, package cards, package-specific shells or nested Storybook
+  runtimes.

@@ -7,11 +7,46 @@ Production contracts остаются у Core, Editor, Layout, Worker и UI; Sto
 лениво показывает их внутри одного общего Workbench и не входит в production
 exports.
 
+## Final standard-DOM pipeline
+
+### `NODES-STORYBOOK-DOM-001` — one entry for 224 route nodes
+
+All 158 leaves and 66 overviews in the existing route tree use one direct
+`app/dom-entry.ts`. There is no hybrid bootstrap, retained entry, retained
+preview/overview module or load-bearing retained story registry. The private
+`dom-catalog.ts` contains load-free route/title/owner metadata only; unknown
+paths remain rejected by the shared typed route tree.
+
+The entry composes one `@zavx0z/dom` Document, one shared semantic Workbench,
+`createDocumentCanvasRuntime()` and the Engine-owned font. Navigation uses the
+same `StorybookRouteTreeRouter.go()` and replaces only the controlled preview
+subtree inside the existing Workbench; it does not reload the page, create a
+second canvas/runtime/process or select a different browser target. Readiness
+is published after each lazy story and one presented-frame boundary.
+
+Core/Editor use the common NodeTree controller. Layout keeps the domain
+`@nodes/layout` policies and projects their real computed geometry/diagnostics
+through the private DOM layout controller. Worker executes exact production
+executor envelopes. Parameter and Socket use standard input/select/checkbox
+authoring plus independent kind/direction/side metadata. NodeEditor, Frame,
+Link, root/UI overviews and Comparison use `NodeWorkbench`, which retains the
+real GraphCanvas, NodeTree and Parameter controllers and standard image/listbox
+subtrees. Comparison uses the base-path-normalized accepted reference beside
+one Noise-style live DOM Node.
+
+The final partition is **224 DOM / 0 retained**. App source and emitted browser
+chunks contain no `UiRuntime`, retained Storybook surfaces, `@layout/core`,
+`@ui/components`, `@ui/elements`, retained Parameter/Socket renderers or
+NodeEditor implementation. `@nodes/storybook` therefore has no direct
+Layout/UI/Highlighter/Core/Editor dependency; `@engine/core` remains only for
+the shared font, while domain `@nodes/layout`, Worker, UI DOM, renderer and
+shared Storybook owners remain explicit.
+
 ## Один документ и один Workbench
 
 1. Storybook имеет один package-named process, automatic origin, browser target,
-   HTML document, canvas, `UiRuntime`, Router, пятизонный Workbench и общую
-   нижнюю `StatusBar`.
+   semantic DOM Document, canvas, document renderer runtime, Router и общий
+   пятизонный DOM Workbench.
 2. `/` сразу открывает Workbench с representative Core overview. Отдельной landing page,
    package cards, кнопок «Открыть обзор» и package-specific DOM/WebGPU shells нет.
 3. Все overview и detail routes принадлежат одному route tree с owner prefixes
@@ -19,8 +54,8 @@ exports.
 4. Переход между любыми разделами выполняется одним `router.go()` без reload,
    `location.assign`, нового canvas, runtime, process или target.
 5. Root app владеет только общей навигацией, shell, lazy dispatch и readiness.
-   Package owners сохраняют local story descriptors, fixtures, state, source,
-   controls и preview adapters.
+   Package owners сохраняют production DOM controllers, route data, state и
+   live source; отдельного preview adapter/surface contract больше нет.
 
 ## Панели каталога
 
@@ -41,19 +76,16 @@ exports.
 
 ## Lazy owner modules
 
-1. Root entry eager-загружает только Workbench и чистую story metadata.
-   Production implementations загружаются exact lazy chunks выбранного story.
-2. Обычный story рендерится package-owned `StorybookStoryModule` в общей preview
-   Surface. Core и Worker не создают отдельный DOM shell.
-3. Владелец, которому нужны самостоятельные интерактивные Surface, возвращает
-   явный preview adapter. Root регистрирует его surfaces один раз в существующем
-   `UiRuntime` и скрывает inactive surfaces.
-4. `NodeTreeEditor` использует отдельные preview/dock surfaces, но не создаёт
-   второй Workbench. Node UI adapter аналогично владеет NodeEditor/reference
-   surfaces только внутри root preview slot.
-5. Lazy boundary доказывается chunks: cold root не содержит Core/Editor/Layout/
-   Worker/UI implementations, а выбор одного story не импортирует соседний
-   policy или owner.
+1. Root entry eager-загружает DOM Workbench, load-free metadata and small shared
+   DOM controller code. Domain policy/fixture data loads in exact lazy chunks.
+2. Every story returns one standard element/controller/source tuple. The root
+   replaces that element in the existing preview region and disposes the prior
+   controller without replacing the Workbench or renderer runtime.
+3. Layout and Worker leaves import only their exact policy/executor; their owner
+   overviews explicitly aggregate all registered policies. Parameter and Socket
+   data remain distinct lazy modules.
+4. Bundle evidence scans every emitted chunk and rejects retained Surface,
+   NodeEditor, Field/Elements and generic Layout runtime markers.
 
 ## Routes и readiness
 
@@ -76,4 +108,5 @@ exports.
 2. Manifest schema 1 фиксирует source/dependency revisions, общий route tree,
    readiness, canvas evidence и hashes без local realpaths.
 3. Artifact содержит один Engine font и Node-owned reference assets. Pages
-   workflow остаётся manual и не публикуется без отдельного решения владельца.
+   workflow отсутствует до immutable DOM/renderer revisions и отдельного
+   решения владельца о публикации.

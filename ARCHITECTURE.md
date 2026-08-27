@@ -7,25 +7,66 @@
 ```text
 MetaFor product integration
   └─ @nodes/storybook and product adapters
-       ├─ @nodes/ui ────────────────> @ui/components / @ui/elements
-       │      └─────────────────────> @layout/core ─> @engine/core
+       ├─ @nodes/ui ────────────────> @zavx0z/dom
        ├─ @nodes/editor ────────────> @nodes/core
        ├─ @nodes/worker ────────────> @nodes/layout
        └─ @nodes/layout + @nodes/core
 ```
 
-The direction is intentionally acyclic. Core does not know about layout, workers, WebGPU, or products. Editor changes Core without importing a solver. UI receives an already positioned projection or an explicit projector adapter. Storybook is the only package that composes every owner.
+The direction is intentionally acyclic. Core does not know about layout,
+workers, WebGPU, or products. Editor changes Core without importing a solver.
+UI receives already positioned graph props as standard DOM. Storybook is the
+only package that composes DOM, renderer, Engine font and every domain owner.
 
 Cross-repository owners:
 
 | Owner | Repository | Contract consumed by Nodes |
 | --- | --- | --- |
-| Engine | [zavx0z/engine](https://github.com/zavx0z/engine) | `@engine/core` retained scene and renderer |
-| Layout UI runtime | [zavx0z/layout](https://github.com/zavx0z/layout) | `@layout/core` runtime, surfaces, Flex, and polyline geometry |
-| UI | [zavx0z/ui](https://github.com/zavx0z/ui) | `@ui/elements` and `@ui/components` |
-| Shared Storybook | private `@zavx0z/storybook` owner repository | dev-only router, Workbench, server and static builder through exact `@zavx0z/storybook/*` subpaths |
+| Renderer | [zavx0z/renderer](https://github.com/zavx0z/renderer) | `@zavx0z/dom`, CPU renderer and browser/WebGPU adapters |
+| Engine | [zavx0z/engine](https://github.com/zavx0z/engine) | `@engine/core` WebGPU primitives and default font |
+| Shared Storybook | private `@zavx0z/storybook` owner repository | dev-only DOM catalog, Workbench, router, server and static builder through exact subpaths |
 | Nodes | [zavx0z/node](https://github.com/zavx0z/node) | graph, editor, solver, worker, view, and Storybook packages |
 | Product | [zavx0z/metafor](https://github.com/zavx0z/metafor) | authorized product integration only |
+
+## DOM production target
+
+New Node UI production slices author one standard DOM tree. `@nodes/ui`
+creates and updates semantic elements through `@zavx0z/dom`; it does not
+receive a Surface, Engine object, manual paint host or renderer resource.
+The application/Storybook composition root connects that same tree to
+`@zavx0z/renderer → @zavx0z/renderer-webgpu → @engine/core`.
+
+Functions are authoring factories, not a replacement runtime hierarchy. A
+factory returns one stable standard element plus typed refs/controller, while
+the observable prototype chain remains `Node → Element → HTMLElement`.
+Positioned Node coordinates remain domain scene data, but ordinary internal
+structure and geometry belong to HTML/CSS flow.
+
+The first bounded production proof is package-private
+`packages/ui/dom/single-node-canvas.ts`: one pre-positioned Node, no Frame,
+Socket, Link, Parameter or pan/zoom. Subsequent keyed Graph, Parameter/Socket,
+NodeTree, Layout, Worker and NodeWorkbench slices now cover all 224 registered
+Storybook route nodes. The former hybrid bootstrap and retained app
+entry/preview/overview/story loader graph have been removed; the final private
+Storybook has one DOM entry and no compatibility alias.
+
+Domain views may own package-private standard DOM projections without moving
+their computation into DOM. `@nodes/layout` keeps four independent pure
+numeric policy entrypoints; `packages/layout/dom/layout-presentation.ts`
+receives only their completed geometry and diagnostics. `@nodes/worker` keeps
+its exact clients/executors and presents their structured-clone envelopes
+through `packages/worker/dom/worker-protocol.ts`. Neither projection is a
+public solver/transport entrypoint, and neither imports generic `@layout/core`
+or retained UI Elements.
+
+`packages/ui/dom/parameter-socket.ts` is the common package-private DOM
+composition for every Parameter and Socket catalog route. It projects existing
+kind/variant data onto standard input/select/checkbox authoring controls and
+keeps Socket kind, capability direction and visual side independent. Composite
+Field values use an explicit string projection; the controller does not copy
+or re-export the retained UI Field DSL. Parameter and Socket route data remain
+separate lazy modules, but both update the same keyed DOM contract through
+ordinary events.
 
 ## Workspace boundaries
 
@@ -60,7 +101,11 @@ package aliases or legacy package paths.
 
 ### `@nodes/ui`
 
-UI owns retained NodeCanvas and NodeEditor views, render-plan contracts, culling, picking, selection, interaction, and the neutral node-view presets. Public entrypoints are `node`, `projection`, `node-editor`, `parameter`, and `link-curve`; source-branded identifiers and compatibility re-exports are not part of the API.
+UI owns standard-DOM `GraphCanvas`, `NodeWorkbench`, `ParameterSocket` and
+`NodeTreeEditor`. Public factories return exact semantic elements, CSS and
+stable typed controllers. Applications own domain geometry and renderer
+composition. Removed retained Node/NodeEditor/Parameter/Link/projection
+entrypoints have no aliases or compatibility re-exports.
 
 ### `@nodes/storybook`
 
@@ -117,13 +162,9 @@ font asset and accepted evidence, emits
 `.nojekyll`, and creates a project-base-aware fail-closed 404 recovery page.
 `storybook-manifest.json` records exact source/dependency revisions, page
 graphs, emitted sizes and SHA-256 hashes. Each shell declares the shared font
-URL once through inert meta; Editor and UI create `UiRuntime` without
-package-owned font paths, while a custom runtime font bypasses the default
-request.
+URL once through inert meta; the one document renderer runtime receives the
+Engine-owned font without package-owned font paths.
 
-The workflow file does not enable Pages or mutate repository settings and has
-no push trigger. Its cold build checks out every external owner at an exact Git
-revision, registers Highlighter and the shared Storybook directly, and never
-registers the removed `@ui/storybook` implementation. The frozen Nodes install
-and check run only after those links exist. Build and deployment run only after
-an explicit owner dispatch.
+No Pages workflow is stored while the independent DOM/renderer owners have no
+immutable delivered revisions. Static build remains local evidence; publication
+requires a separate owner decision after the exact linked graph is deliverable.

@@ -3,7 +3,7 @@ import {
   defineStorybookApp,
   type StorybookAppManifest,
 } from "@zavx0z/storybook/app"
-import {NODES_STORY_ROUTE_TREE} from "../app/stories.ts"
+import {NODES_STORY_ROUTE_TREE} from "../app/dom-catalog.ts"
 
 export type NodesStorybookAppOptions = Readonly<{
   publicBasePath?: string
@@ -30,7 +30,7 @@ export function createNodesStorybookApp(options: NodesStorybookAppOptions = {}):
       id: "workbench",
       title: "Nodes Storybook",
       mountPath: "/",
-      entrypoint: join(import.meta.dir, "../app/entry.ts"),
+      entrypoint: join(import.meta.dir, "../app/dom-entry.ts"),
       stylePath: join(import.meta.dir, "../app/style.css"),
       body: {kind: "canvas", canvasId: "nodes-storybook-canvas"},
       capability: "webgpu",

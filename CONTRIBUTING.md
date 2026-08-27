@@ -6,7 +6,7 @@ Changes should preserve both sides of that promise: MetaFor receives a precise n
 
 ## Setup
 
-Use Bun `1.4.0` from [`.bun-version`](./.bun-version). Register the sibling Engine, Layout, and UI package links described in the [README](./README.md), then run:
+Use Bun `1.4.0` from [`.bun-version`](./.bun-version). Register the sibling Renderer, Engine, and shared Storybook package links described in the [README](./README.md), then run:
 
 ```bash
 bun install
@@ -40,10 +40,18 @@ Read the affected package requirements, public types, and focused tests before c
 
 Import from the real package owner:
 
-- GPU scene primitives from `@engine/core`;
-- runtime, surfaces, Flex, and polyline geometry from `@layout/core`;
-- controls and element semantics from `@ui/*`;
+- semantic HTML DOM from `@zavx0z/dom`;
+- CSS, layout, display, and hit projection from `@zavx0z/renderer`;
+- retained GPU realization from `@zavx0z/renderer-webgpu` and scene primitives
+  from `@engine/core`;
+- browser lifecycle composition from `@zavx0z/renderer-browser`;
+- shared controls from `@ui/components`;
 - graph contracts from exact `@nodes/*` packages.
+
+The live owner chain is `@zavx0z/dom` → `@zavx0z/renderer` →
+`@zavx0z/renderer-webgpu` → `@engine/core`. Generic Layout and
+`@ui/elements` are retired; `@nodes/layout` remains the independent domain
+owner of numeric placement and routing.
 
 Do not hide a sibling dependency behind a local wrapper. Local Bun links are coordinated development wiring, not publication or immutable release evidence.
 

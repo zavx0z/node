@@ -3,14 +3,14 @@ import {mkdtemp, readdir, rm} from "node:fs/promises"
 import {tmpdir} from "node:os"
 import {join} from "node:path"
 
-describe("one-Workbench Nodes Storybook bundle boundaries", () => {
-  test("keeps the root Workbench eager and package implementations in lazy chunks", async () => {
-    const directory = await mkdtemp(join(tmpdir(), "nodes-root-storybook-"))
+describe("final Nodes Storybook bundle boundaries", () => {
+  test("emits one DOM app with lazy domain data and zero retained implementation", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "nodes-final-storybook-"))
     try {
       const child = Bun.spawn([
         process.execPath,
         "build",
-        join(import.meta.dir, "app/entry.ts"),
+        join(import.meta.dir, "app/dom-entry.ts"),
         "--target=browser",
         "--format=esm",
         "--splitting",
@@ -24,29 +24,36 @@ describe("one-Workbench Nodes Storybook bundle boundaries", () => {
       ])
       expect(exitCode, `${stdout}\n${stderr}`).toBe(0)
       const files = await javascriptFiles(directory)
-      const entryPath = files.find((path) => path.endsWith("entry.js"))
-      expect(entryPath).toBeDefined()
-      const entry = await Bun.file(entryPath!).text()
-      const chunkSources = await Promise.all(files.filter((path) => path !== entryPath).map((path) => Bun.file(path).text()))
-      const chunks = chunkSources.join("\n")
-
-      expect(entry).toContain("NodesStoryPreviewSurface")
-      expect(entry).toContain("StorybookNavigationSurface")
-      expect(entry).not.toContain("createWorkerExecutor")
-      expect(entry).not.toContain("class NodeTreeEditor")
-      expect(entry).not.toContain("NodeCanvas.contentRoot")
-      expect(entry).not.toContain("socketRenderer")
-      expect(chunks).toContain("createWorkerExecutor")
-      expect(chunks).toContain("NodeTreeEditor")
-      expect(chunks).toContain("NodeEditor")
-      expect(chunks).toContain("socketRenderer")
+      const sources = await Promise.all(files.map((path) => Bun.file(path).text()))
+      const output = sources.join("\n")
+      expect(files.some((path) => path.endsWith("/dom-entry.js"))).toBeTrue()
+      expect(output).toContain("createDocumentCanvasRuntime")
+      expect(output).toContain("createNodeWorkbench")
+      expect(output).toContain("createGraphCanvas")
+      expect(output).toContain("createParameterSocket")
+      expect(output).toContain("createLayoutDomStory")
+      expect(output).toContain("createWorkerDomStory")
+      expect(output).toContain("layoutAdaptiveWithDiagnostics")
+      expect(output).toContain("createWorkerExecutor")
       expect(files.length).toBeGreaterThan(8)
+      for (const forbidden of [
+        "UiRuntime.create",
+        "StorybookNavigationSurface",
+        "NodesStoryPreviewSurface",
+        'from "@layout/core',
+        'from "@ui/components',
+        'from "@ui/elements',
+        "parameterRenderer.render",
+        "socketRenderer.render",
+        "new NodeEditor",
+        "new NodeTreeEditor",
+      ]) expect(output).not.toContain(forbidden)
     } finally {
       await rm(directory, {recursive: true, force: true})
     }
   })
 
-  test("owns the exact accepted reference asset as one lazy UI story dependency", async () => {
+  test("owns the exact accepted reference asset", async () => {
     const file = Bun.file(new URL("./assets/references/blender-4.5.5-reference.png", import.meta.url))
     const hash = new Bun.CryptoHasher("sha256")
       .update(new Uint8Array(await file.arrayBuffer()))

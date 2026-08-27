@@ -6,7 +6,6 @@
       "name": "@nodes/workspace",
       "devDependencies": {
         "@engine/core": "link:@engine/core",
-        "@layout/core": "link:@layout/core",
         "@nodes/core": "workspace:*",
         "@nodes/editor": "workspace:*",
         "@nodes/layout": "workspace:*",
@@ -14,10 +13,11 @@
         "@nodes/ui": "workspace:*",
         "@nodes/worker": "workspace:*",
         "@types/bun": "^1.4.0",
-        "@ui/components": "link:@ui/components",
-        "@ui/elements": "link:@ui/elements",
         "@webgpu/types": "^0.1.68",
-        "@zavx0z/highlighter": "link:@zavx0z/highlighter",
+        "@zavx0z/dom": "link:@zavx0z/dom",
+        "@zavx0z/renderer": "link:@zavx0z/renderer",
+        "@zavx0z/renderer-browser": "link:@zavx0z/renderer-browser",
+        "@zavx0z/renderer-webgpu": "link:@zavx0z/renderer-webgpu",
         "@zavx0z/storybook": "link:@zavx0z/storybook",
         "typescript": "^7.0.2",
       },
@@ -38,6 +38,7 @@
       "version": "0.0.1",
       "dependencies": {
         "@dagrejs/dagre": "3.1.1",
+        "@zavx0z/dom": "link:@zavx0z/dom",
         "d3-dag": "0.9.1",
       },
     },
@@ -46,15 +47,13 @@
       "version": "0.0.1",
       "dependencies": {
         "@engine/core": "link:@engine/core",
-        "@layout/core": "link:@layout/core",
-        "@nodes/core": "workspace:*",
-        "@nodes/editor": "workspace:*",
         "@nodes/layout": "workspace:*",
         "@nodes/ui": "workspace:*",
         "@nodes/worker": "workspace:*",
-        "@ui/components": "link:@ui/components",
-        "@ui/elements": "link:@ui/elements",
-        "@zavx0z/highlighter": "link:@zavx0z/highlighter",
+        "@zavx0z/dom": "link:@zavx0z/dom",
+        "@zavx0z/renderer": "link:@zavx0z/renderer",
+        "@zavx0z/renderer-browser": "link:@zavx0z/renderer-browser",
+        "@zavx0z/renderer-webgpu": "link:@zavx0z/renderer-webgpu",
         "@zavx0z/storybook": "link:@zavx0z/storybook",
       },
     },
@@ -62,12 +61,7 @@
       "name": "@nodes/ui",
       "version": "0.0.1",
       "dependencies": {
-        "@engine/core": "link:@engine/core",
-        "@layout/core": "link:@layout/core",
-        "@nodes/core": "workspace:*",
-        "@nodes/layout": "workspace:*",
-        "@ui/components": "link:@ui/components",
-        "@ui/elements": "link:@ui/elements",
+        "@zavx0z/dom": "link:@zavx0z/dom",
       },
     },
     "packages/worker": {
@@ -75,6 +69,7 @@
       "version": "0.0.1",
       "dependencies": {
         "@nodes/layout": "workspace:*",
+        "@zavx0z/dom": "link:@zavx0z/dom",
       },
     },
   },
@@ -84,8 +79,6 @@
     "@dagrejs/graphlib": ["@dagrejs/graphlib@4.0.5", "", {}, "sha512-7xrBTqIts3o+PMUZX97wSc+7TUbW+/rULzGNCTP6yooNVDXbzw4Wutg/H/xOutTB/c/k0YqOAavgPh4/Zk9PFA=="],
 
     "@engine/core": ["@engine/core@link:@engine/core", {}],
-
-    "@layout/core": ["@layout/core@link:@layout/core", {}],
 
     "@nodes/core": ["@nodes/core@workspace:packages/core"],
 
@@ -143,15 +136,17 @@
 
     "@typescript/typescript-win32-x64": ["@typescript/typescript-win32-x64@7.0.2", "", { "os": "win32", "cpu": "x64" }, "sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g=="],
 
-    "@ui/components": ["@ui/components@link:@ui/components", {}],
-
-    "@ui/elements": ["@ui/elements@link:@ui/elements", {}],
-
     "@webgpu/types": ["@webgpu/types@0.1.72", "", {}, "sha512-0cF7RFM2edNoiIS1ODJp0/Gzv4/xSXhwoR0YCza+OWpJWtn4wmo9DvK91aLlH9+uUnwIriP7ZiC3WitmyhuzBw=="],
 
-    "@zavx0z/highlighter": ["@zavx0z/highlighter@link:@zavx0z/highlighter", {}],
+    "@zavx0z/dom": ["@zavx0z/dom@link:@zavx0z/dom", {}],
 
-    "@zavx0z/storybook": ["@zavx0z/storybook@link:@zavx0z/storybook", {}],
+    "@zavx0z/renderer": ["@zavx0z/renderer@link:@zavx0z/renderer", {}],
+
+    "@zavx0z/renderer-browser": ["@zavx0z/renderer-browser@link:@zavx0z/renderer-browser", {}],
+
+    "@zavx0z/renderer-webgpu": ["@zavx0z/renderer-webgpu@link:@zavx0z/renderer-webgpu", {}],
+
+    "@zavx0z/storybook": ["@zavx0z/storybook@link:@zavx0z/storybook", { "bin": { "storybook": "./scripts/storybook.ts", "create-storybook": "./scripts/create-storybook.ts" } }],
 
     "bun-types": ["bun-types@1.4.0", "", { "dependencies": { "@types/node": "*" } }, "sha512-iIKw23BspnQQYd3prITOBxeUsxBHnwzX6YJfGMuNOZzeNcMmVqzIIVGRm1l69ogaPQmb4wB6BN8mA5bE9YuC5Q=="],
 
