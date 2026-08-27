@@ -3,6 +3,7 @@ import {
   StorybookBackdropSurface,
   StorybookDockSurface,
   StorybookNavigationSurface,
+  StorybookStatusBarSurface,
   StorybookStoryPanelSurface,
   planStorybookShell,
   type StorybookStoryPanelCategory,
@@ -81,6 +82,7 @@ try {
   const preview = new NodesStoryPreviewSurface()
   if (isStandardStory(story)) preview.setStory(descriptor, story, args)
   const dock = new StorybookDockSurface<string>(dockOptions())
+  const statusBar = new StorybookStatusBarSurface()
   let storyPanel: StorybookStoryPanelSurface
 
   const panelOptions = (): StorybookStoryPanelOptions => ({
@@ -127,6 +129,7 @@ try {
   runtime.addSurface(preview, ({w, h}) => editorActive || nodeUiActive ? hiddenFrame() : frames(w, h).preview)
   runtime.addSurface(dock, ({w, h}) => editorActive ? hiddenFrame() : frames(w, h).dock)
   runtime.addSurface(storyPanel, ({w, h}) => frames(w, h).info)
+  runtime.addSurface(statusBar, ({w, h}) => frames(w, h).status)
 
   function primaryOptions() {
     return {
@@ -189,7 +192,7 @@ try {
   }
 
   function publish(): void {
-    for (const surface of [catalog, sections, preview, dock, storyPanel]) surface.flushPendingRender()
+    for (const surface of [catalog, sections, preview, dock, storyPanel, statusBar]) surface.flushPendingRender()
     for (const entry of editorPreview?.surfaces ?? []) entry.surface.flushPendingRender?.()
     for (const entry of nodeUiPreview?.surfaces ?? []) entry.surface.flushPendingRender?.()
     runtime.space.updateWorldMatrix()

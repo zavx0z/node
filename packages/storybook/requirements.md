@@ -10,7 +10,8 @@ exports.
 ## Один документ и один Workbench
 
 1. Storybook имеет один package-named process, automatic origin, browser target,
-   HTML document, canvas, `UiRuntime`, Router и пятизонный Workbench.
+   HTML document, canvas, `UiRuntime`, Router, пятизонный Workbench и общую
+   нижнюю `StatusBar`.
 2. `/` сразу открывает Workbench с representative Core overview. Отдельной landing page,
    package cards, кнопок «Открыть обзор» и package-specific DOM/WebGPU shells нет.
 3. Все overview и detail routes принадлежат одному route tree с owner prefixes
