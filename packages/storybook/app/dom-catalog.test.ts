@@ -6,8 +6,11 @@ import {
   NODES_STORY_ROUTE_TREE,
   nodesDockTitle,
   nodesPrimaryItems,
+  nodesPrimarySelection,
+  nodesScenarioRoute,
   nodesSecondaryItems,
   nodesSecondaryRoute,
+  nodesSecondarySelection,
   nodesStoryDescriptor,
   nodesStoryPresentationRoute,
   nodesVariantItems,
@@ -42,14 +45,15 @@ describe("one-root final DOM Nodes Storybook catalog", () => {
       "Вход", "Выход", "Двунаправленный",
     ])
     const overview = await createNodesDomRouteStory(createDocument(), "ui/socket")
-    expect(overview.element.className).toBe("parameter-socket")
-    expect(overview.props).toHaveProperty("parameters")
+    expect(overview.element.className).toBe("nodes-production-story nodes-production-story--socket")
+    expect(overview.element.querySelector(".node-socket")?.getAttribute("data-socket-kind")).toBe("float")
+    expect(overview.source().typescript).toContain('from "@nodes/ui/socket"')
     overview.dispose()
   })
 
-  test("owns one 224-node route tree and a DOM factory for every node", async () => {
-    expect(NODES_STORIES).toHaveLength(158)
-    expect(NODES_STORY_ROUTE_TREE.nodes).toHaveLength(224)
+  test("owns one 225-node route tree and a DOM factory for every node", async () => {
+    expect(NODES_STORIES).toHaveLength(159)
+    expect(NODES_STORY_ROUTE_TREE.nodes).toHaveLength(225)
     expect(NODES_STORY_ROUTE_TREE.find("")).toMatchObject({kind: "overview", path: ""})
     expect(nodesStoryPresentationRoute("")).toBe("")
     expect(nodesStoryDescriptor("")).toMatchObject({
@@ -60,11 +64,30 @@ describe("one-root final DOM Nodes Storybook catalog", () => {
     })
     for (const node of NODES_STORY_ROUTE_TREE.nodes) {
       expect(nodesStoryDescriptor(node.path).route, node.path).toBe(node.path)
+      const primary = nodesPrimarySelection(node.path)
+      if (primary !== null) {
+        expect(nodesPrimaryItems().some(({route}) => route === primary), node.path).toBeTrue()
+      }
+      const secondary = nodesSecondarySelection(node.path)
+      if (secondary !== null) {
+        expect(nodesSecondaryItems(node.path).some(({route}) => route === secondary), node.path).toBeTrue()
+      }
+      const scenario = nodesScenarioRoute(node.path)
+      if (scenario !== null) {
+        expect(nodesVariantItems(node.path).some(({route}) => route === scenario), node.path).toBeTrue()
+      }
     }
     expect(NODES_STORY_ROUTE_TREE.find("unknown")).toBeUndefined()
   })
 
   test("preserves exact Link and Comparison metadata", () => {
+    expect(nodesStoryDescriptor("ui/node-editor/scene/compiled-general")).toMatchObject({
+      title: "Редактор нод · Compiled general system",
+      apiName: "NodeEditor",
+      primary: {id: "node-editor"},
+      secondary: {id: "scene"},
+      variant: {id: "compiled-general"},
+    })
     expect(nodesStoryDescriptor("ui/link/orthogonal/selected")).toMatchObject({
       title: "Link · Ортогональный",
       apiName: "LinkView",

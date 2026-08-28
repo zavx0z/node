@@ -1,2 +1,5 @@
 [loader]
 ".wgsl" = "text"
+
+[test]
+preload = ["./test-preload.ts"]

@@ -29,7 +29,7 @@ describe("root Nodes Storybook page", () => {
     for (const path of ["", "core", "layout", "layout/fixed", "ui/socket", "ui/socket/boolean"]) {
       expect(NODES_STORY_ROUTE_TREE.find(path), path).toMatchObject({kind: "overview"})
     }
-    expect(NODES_STORY_ROUTE_TREE.nodes).toHaveLength(224)
+    expect(NODES_STORY_ROUTE_TREE.nodes).toHaveLength(225)
   })
 
   test("renders the same Workbench shell at root, overview and exact leaf routes", async () => {

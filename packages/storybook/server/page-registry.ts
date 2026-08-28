@@ -1,8 +1,9 @@
-import {join} from "node:path"
+import {join, resolve} from "node:path"
 import {
   defineStorybookApp,
   type StorybookAppManifest,
 } from "@zavx0z/storybook/app"
+import {createTemplateJsxBunPlugin} from "@zavx0z/template/bun"
 import {NODES_STORY_ROUTE_TREE} from "../app/dom-catalog.ts"
 
 export type NodesStorybookAppOptions = Readonly<{
@@ -11,6 +12,7 @@ export type NodesStorybookAppOptions = Readonly<{
 
 /** One root Workbench containing every package-owned Nodes story. */
 export function createNodesStorybookApp(options: NodesStorybookAppOptions = {}): StorybookAppManifest {
+  const packagesRoot = resolve(import.meta.dir, "../..")
   return defineStorybookApp({
     id: "node",
     title: "Nodes Storybook",
@@ -31,6 +33,15 @@ export function createNodesStorybookApp(options: NodesStorybookAppOptions = {}):
       title: "Nodes Storybook",
       mountPath: "/",
       entrypoint: join(import.meta.dir, "../app/dom-entry.ts"),
+      browserBuild: {
+        plugins: () => [createTemplateJsxBunPlugin({
+          sourceRoots: [
+            join(packagesRoot, "ui"),
+            join(packagesRoot, "storybook"),
+            resolve(packagesRoot, "../../ui/packages/components"),
+          ],
+        })],
+      },
       stylePath: join(import.meta.dir, "../app/style.css"),
       body: {kind: "canvas", canvasId: "nodes-storybook-canvas"},
       capability: "webgpu",

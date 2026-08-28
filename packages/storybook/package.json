@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@engine/core": "link:@engine/core",
+    "@nodes/core": "workspace:*",
+    "@nodes/editor": "workspace:*",
     "@nodes/layout": "workspace:*",
     "@nodes/worker": "workspace:*",
     "@nodes/ui": "workspace:*",
@@ -28,6 +30,8 @@
     "@zavx0z/renderer": "link:@zavx0z/renderer",
     "@zavx0z/renderer-browser": "link:@zavx0z/renderer-browser",
     "@zavx0z/renderer-webgpu": "link:@zavx0z/renderer-webgpu",
-    "@zavx0z/storybook": "link:@zavx0z/storybook"
+    "@zavx0z/react": "link:@zavx0z/react",
+    "@zavx0z/storybook": "link:@zavx0z/storybook",
+    "@zavx0z/template": "link:@zavx0z/template"
   }
 }

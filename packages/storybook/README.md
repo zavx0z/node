@@ -12,4 +12,9 @@ landing page и package-specific shells. Owners хранят stories рядом 
 implementations остаются lazy chunks. Общие router, shell, server и builder
 приходят из точных subpaths `@zavx0z/storybook/*`.
 
+Exact route `/ui/node-editor/scene/compiled-general` is the real compiled TSX
+slice: one Core `NodeTree`, one `NodeTreeEditor`, a `useSyncExternalStore`
+projection and class-free `@nodes/ui/node-system` composition. Browser and
+static builds use the `@zavx0z/template` compiler plugin; npm React is absent.
+
 Node-owned reference evidence остаётся dev-only в `assets/references/`.

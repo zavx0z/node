@@ -48,7 +48,8 @@ describe("standalone Nodes repository contract", () => {
     const files = await sourceFiles(join(repositoryRoot, "packages"))
     const productionFiles = files.filter((path) => !path.includes("/storybook/"))
     const productionUi = await readAll(productionFiles
-      .filter((path) => path.startsWith(join(repositoryRoot, "packages/ui"))))
+      .filter((path) => path.startsWith(join(repositoryRoot, "packages/ui")))
+      .filter((path) => /\.tsx?$/u.test(path) && !/\.test\.tsx?$/u.test(path)))
     expect(productionUi).not.toMatch(/\b(?:Blender|blender|BLENDER)\b/)
 
     const production = await readAll(productionFiles.filter((path) => !path.endsWith(".test.ts")))
@@ -70,7 +71,7 @@ describe("standalone Nodes repository contract", () => {
 })
 
 async function sourceFiles(root: string): Promise<string[]> {
-  return (await allFiles(root)).filter((path) => /\.(?:ts|json|md|html|css|toml|ya?ml|sh)$/.test(path))
+  return (await allFiles(root)).filter((path) => /\.(?:tsx?|json|md|html|css|toml|ya?ml|sh)$/.test(path))
 }
 
 async function allFiles(root: string): Promise<string[]> {

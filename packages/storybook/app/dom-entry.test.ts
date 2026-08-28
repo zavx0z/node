@@ -6,8 +6,8 @@ import {nodesDomStoryCss} from "./dom-css.ts"
 import {createNodesDomRouteStory} from "./dom-story.ts"
 
 describe("final all-DOM Nodes Storybook entry", () => {
-  test("dispatches every one of 224 registered nodes to a real DOM story", async () => {
-    expect(NODES_STORY_ROUTE_TREE.nodes).toHaveLength(224)
+  test("dispatches every one of 225 registered nodes to a real DOM story", async () => {
+    expect(NODES_STORY_ROUTE_TREE.nodes).toHaveLength(225)
     for (const {path} of NODES_STORY_ROUTE_TREE.nodes) {
       const story = await createNodesDomRouteStory(createDocument(), path)
       expect(story.element.localName, path || "root").toMatch(/^(section|article)$/)
@@ -29,6 +29,9 @@ describe("final all-DOM Nodes Storybook entry", () => {
     expect(entry).toContain("router.subscribe")
     expect(entry).toContain("applyRoute(node.path)")
     expect(entry).toContain('workbench.update("preview.node", story.element)')
+    expect(entry).toContain('workbench.update("catalog.active", nodesPrimarySelection(route))')
+    expect(entry).toContain('workbench.update("secondary.active", nodesSecondarySelection(route))')
+    expect(entry).toContain('workbench.update("scenarios.active", nodesScenarioRoute(route))')
     expect(entry).toContain("previous.dispose()")
     expect(entry).not.toContain("window.location.assign")
     expect(entry).not.toContain("isNodesDomStoryRoute")
@@ -37,23 +40,25 @@ describe("final all-DOM Nodes Storybook entry", () => {
     expect(entry).not.toContain("./entry.ts")
   })
 
-  test("ships one standard-DOM CSS set with no retained owner source", async () => {
+  test("ships exact production Node CSS with no retained owner source", async () => {
     for (const selector of [
-      ".single-node-canvas",
-      ".multi-node-canvas",
       ".graph-canvas",
-      ".parameter-socket",
+      ".node-editor",
+      ".node-article",
+      ".node-parameter",
+      ".node-socket",
+      ".node-link",
       ".node-tree-dom",
-      ".node-workbench",
       ".layout-dom",
       ".worker-dom",
+      ".nodes-production-story",
     ]) expect(nodesDomStoryCss).toContain(selector)
+    expect(nodesDomStoryCss).toContain("[data-z-")
     const files = ["dom-entry.ts", "dom-story.ts", "dom-catalog.ts", "dom-css.ts"]
     for (const file of files) {
       const source = await Bun.file(new URL(`./${file}`, import.meta.url)).text()
       for (const forbidden of [
         "@layout/core",
-        "@ui/components",
         "@ui/elements",
         "@zavx0z/highlighter",
         "UiRuntime",
@@ -61,6 +66,8 @@ describe("final all-DOM Nodes Storybook entry", () => {
         "NodesStoryPreviewSurface",
         "parameterRenderer.render",
         "socketRenderer.render",
+        "createNodeWorkbench",
+        "createParameterSocket",
       ]) expect(source, file).not.toContain(forbidden)
     }
   })
@@ -77,16 +84,20 @@ describe("final all-DOM Nodes Storybook entry", () => {
     ]) expect(await Bun.file(join(root, path)).exists(), path).toBeFalse()
     const manifest = await Bun.file(join(root, "package.json")).json() as {dependencies: Record<string, string>}
     for (const dependency of [
-      "@layout/core", "@nodes/core", "@nodes/editor", "@ui/components", "@ui/elements", "@zavx0z/highlighter",
+      "@layout/core", "@ui/components", "@ui/elements", "@zavx0z/highlighter",
     ]) expect(manifest.dependencies[dependency], dependency).toBeUndefined()
     expect(manifest.dependencies).toMatchObject({
       "@engine/core": "link:@engine/core",
+      "@nodes/core": "workspace:*",
+      "@nodes/editor": "workspace:*",
       "@nodes/layout": "workspace:*",
       "@nodes/worker": "workspace:*",
       "@nodes/ui": "workspace:*",
       "@zavx0z/dom": "link:@zavx0z/dom",
       "@zavx0z/renderer-browser": "link:@zavx0z/renderer-browser",
+      "@zavx0z/react": "link:@zavx0z/react",
       "@zavx0z/storybook": "link:@zavx0z/storybook",
+      "@zavx0z/template": "link:@zavx0z/template",
     })
   })
 

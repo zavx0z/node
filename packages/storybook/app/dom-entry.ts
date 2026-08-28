@@ -18,9 +18,10 @@ import {
   NODES_STORY_ROUTE_TREE,
   nodesDockTitle,
   nodesPrimaryItems,
-  nodesPrimaryRoute,
+  nodesPrimarySelection,
+  nodesScenarioRoute,
   nodesSecondaryItems,
-  nodesSecondaryRoute,
+  nodesSecondarySelection,
   nodesStoryDescriptor,
   nodesVariantItems,
 } from "./dom-catalog.ts"
@@ -60,15 +61,15 @@ try {
       title: "Nodes Storybook",
       "catalog.label": "Nodes",
       "catalog.items": catalogItems(),
-      "catalog.active": nodesPrimaryRoute(route),
+      "catalog.active": nodesPrimarySelection(route),
       "secondary.label": descriptor.primary.label,
       "secondary.items": secondaryItems(route),
-      "secondary.active": nodesSecondaryRoute(route),
+      "secondary.active": nodesSecondarySelection(route),
       "preview.label": descriptor.title,
       "preview.node": story.element,
       "scenarios.label": nodesDockTitle(route),
       "scenarios.items": scenarioItems(route),
-      "scenarios.active": route,
+      "scenarios.active": nodesScenarioRoute(route),
       "inspector.label": "Исходный код",
       "inspector.source": story.source(),
       status: {
@@ -129,15 +130,15 @@ try {
     descriptor = nextDescriptor
     story = nextStory
     story.element.addEventListener("click", onStoryClick)
-    workbench.update("catalog.active", nodesPrimaryRoute(route))
+    workbench.update("catalog.active", nodesPrimarySelection(route))
     workbench.update("secondary.label", descriptor.primary.label)
     workbench.update("secondary.items", secondaryItems(route))
-    workbench.update("secondary.active", nodesSecondaryRoute(route))
+    workbench.update("secondary.active", nodesSecondarySelection(route))
     workbench.update("preview.label", descriptor.title)
     workbench.update("preview.node", story.element)
     workbench.update("scenarios.label", nodesDockTitle(route))
     workbench.update("scenarios.items", scenarioItems(route))
-    workbench.update("scenarios.active", route)
+    workbench.update("scenarios.active", nodesScenarioRoute(route))
     previous.dispose()
     publish()
     await waitForStorybookFrameBoundary()

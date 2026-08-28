@@ -37,11 +37,15 @@ console.log(`[Nodes Storybook] built ${manifest.pages.length} static pages in ${
 async function dependencyIdentities(): Promise<readonly StorybookDependencyIdentity[]> {
   const inputs = [
     ["@engine/core", import.meta.resolve("@engine/core/default-font")],
+    ["@nodes/core", import.meta.resolve("@nodes/core")],
+    ["@nodes/editor", import.meta.resolve("@nodes/editor")],
     ["@zavx0z/dom", import.meta.resolve("@zavx0z/dom")],
     ["@zavx0z/renderer", import.meta.resolve("@zavx0z/renderer")],
     ["@zavx0z/renderer-browser", import.meta.resolve("@zavx0z/renderer-browser")],
     ["@zavx0z/renderer-webgpu", import.meta.resolve("@zavx0z/renderer-webgpu")],
+    ["@zavx0z/react", import.meta.resolve("@zavx0z/react")],
     ["@zavx0z/storybook", import.meta.resolve("@zavx0z/storybook/app")],
+    ["@zavx0z/template", import.meta.resolve("@zavx0z/template/compiled")],
   ] as const
   return Object.freeze(await Promise.all(inputs.map(async ([name, entry]) => ({
     name,

@@ -137,6 +137,17 @@ export function nodesVariantItems(route: string): readonly StorybookDomNavigatio
 }
 export function nodesPrimaryRoute(route: string): string { return nodesStoryDescriptor(route).primary.route }
 export function nodesSecondaryRoute(route: string): string { return nodesStoryDescriptor(route).secondary.route }
+export function nodesPrimarySelection(route: string): string | null {
+  const candidate = nodesPrimaryRoute(route)
+  return nodesPrimaryItems().some(({route: itemRoute}) => itemRoute === candidate) ? candidate : null
+}
+export function nodesSecondarySelection(route: string): string | null {
+  const candidate = nodesSecondaryRoute(route)
+  return nodesSecondaryItems(route).some(({route: itemRoute}) => itemRoute === candidate) ? candidate : null
+}
+export function nodesScenarioRoute(route: string): string | null {
+  return nodesStoryDescriptor(route).kind === "detail" ? route : null
+}
 export function nodesDockTitle(route: string): string {
   const owner = nodesStoryDescriptor(route).primary.id
   return owner === "socket" ? "Направление" : owner === "parameter" ? "Варианты" : "Сценарии"

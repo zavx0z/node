@@ -7,7 +7,7 @@
 ```text
 MetaFor product integration
   └─ @nodes/storybook and product adapters
-       ├─ @nodes/ui ────────────────> @zavx0z/dom
+       ├─ @nodes/ui ────────────────> @zavx0z/dom + @zavx0z/react + @zavx0z/template + @ui/components/field
        ├─ @nodes/editor ────────────> @nodes/core
        ├─ @nodes/worker ────────────> @nodes/layout
        └─ @nodes/layout + @nodes/core
@@ -25,6 +25,7 @@ Cross-repository owners:
 | Renderer | [zavx0z/renderer](https://github.com/zavx0z/renderer) | `@zavx0z/dom`, CPU renderer and browser/WebGPU adapters |
 | Engine | [zavx0z/engine](https://github.com/zavx0z/engine) | `@engine/core` WebGPU primitives and default font |
 | Shared Storybook | private `@zavx0z/storybook` owner repository | dev-only DOM catalog, Workbench, router, server and static builder through exact subpaths |
+| UI | [zavx0z/ui](https://github.com/zavx0z/ui) | exact universal `@ui/components/field` used inside Parameters and Node properties |
 | Nodes | [zavx0z/node](https://github.com/zavx0z/node) | graph, editor, solver, worker, view, and Storybook packages |
 | Product | [zavx0z/metafor](https://github.com/zavx0z/metafor) | authorized product integration only |
 
@@ -42,13 +43,21 @@ the observable prototype chain remains `Node → Element → HTMLElement`.
 Positioned Node coordinates remain domain scene data, but ordinary internal
 structure and geometry belong to HTML/CSS flow.
 
-The first bounded production proof is package-private
-`packages/ui/dom/single-node-canvas.ts`: one pre-positioned Node, no Frame,
-Socket, Link, Parameter or pan/zoom. Subsequent keyed Graph, Parameter/Socket,
-NodeTree, Layout, Worker and NodeWorkbench slices now cover all 224 registered
-Storybook route nodes. The former hybrid bootstrap and retained app
-entry/preview/overview/story loader graph have been removed; the final private
-Storybook has one DOM entry and no compatibility alias.
+The production UI now exposes natural DOM owners for Node, Parameter, Socket,
+Link and NodeEditor in addition to GraphCanvas, NodeWorkbench and NodeTree.
+NodeEditor preserves compact coloured headers, collapse/preview, embedded
+universal Fields, typed socket endpoints, Frame/Link/Node selection, grid,
+fit/pan/zoom, culling and stable keyed identity without restoring Surface
+signatures or a second runtime hierarchy. Package-private
+`packages/ui/dom/single-node-canvas.ts` and multi-node controllers remain
+bounded fixtures only.
+
+`@nodes/ui/node-system` is the compiled TSX composition over the same standard
+DOM realm. It subscribes to Core's cached immutable snapshot through
+`useSyncExternalStore`; keyed Node, Parameter, Socket and Link components are a
+projection of that snapshot, never a second graph or value store. Writes remain
+caller-owned and the canonical Storybook adapter routes them through the one
+`NodeTreeEditor`.
 
 Domain views may own package-private standard DOM projections without moving
 their computation into DOM. `@nodes/layout` keeps four independent pure
@@ -59,14 +68,13 @@ through `packages/worker/dom/worker-protocol.ts`. Neither projection is a
 public solver/transport entrypoint, and neither imports generic `@layout/core`
 or retained UI Elements.
 
-`packages/ui/dom/parameter-socket.ts` is the common package-private DOM
-composition for every Parameter and Socket catalog route. It projects existing
-kind/variant data onto standard input/select/checkbox authoring controls and
-keeps Socket kind, capability direction and visual side independent. Composite
-Field values use an explicit string projection; the controller does not copy
-or re-export the retained UI Field DSL. Parameter and Socket route data remain
-separate lazy modules, but both update the same keyed DOM contract through
-ordinary events.
+`packages/ui/dom/parameter.ts` embeds the exact universal
+`@ui/components/field` owner, so composite color/vector/rotation/matrix,
+reference, collection and path values retain their real controlled contracts.
+`packages/ui/dom/socket.ts` independently owns typed kind, direction, side,
+shape and color presets. The older `parameter-socket.ts` remains a bounded
+catalog controller, not the production Node composition or a string substitute
+for universal Fields.
 
 ## Workspace boundaries
 
@@ -101,11 +109,18 @@ package aliases or legacy package paths.
 
 ### `@nodes/ui`
 
-UI owns standard-DOM `GraphCanvas`, `NodeWorkbench`, `ParameterSocket` and
-`NodeTreeEditor`. Public factories return exact semantic elements, CSS and
-stable typed controllers. Applications own domain geometry and renderer
-composition. Removed retained Node/NodeEditor/Parameter/Link/projection
-entrypoints have no aliases or compatibility re-exports.
+UI owns standard-DOM `Node`, `Parameter`, `Socket`, `Link`, `NodeEditor`,
+`GraphCanvas`, `NodeWorkbench`, `ParameterSocket` and `NodeTreeEditor`. Public
+factories return exact semantic elements, CSS and stable typed controllers.
+Applications own domain geometry and renderer composition. These natural
+leaves preserve the former visible/interaction contract without restoring old
+Surface signatures, aliases or compatibility re-exports.
+
+The compiled `NodeSystem`, `NodeCard`, `ParameterRow`, `SocketPort` and
+`NodeConnection` functions compose those same semantic concepts through
+`@zavx0z/react` and build-time `@zavx0z/template`. They expose one `style`
+override, use class-free `defineStyles` owner tokens and retain keyed DOM
+identity from canonical entity ids.
 
 ### `@nodes/storybook`
 
@@ -143,6 +158,13 @@ Directory and file names are lowercase; multiword names use kebab-case. Story en
 One live tree may have several simultaneous projections. A projection separates intrinsic measurement, global placement/routing, and final local render plans. Cache keys distinguish these phases. Value-only changes that do not affect intrinsic geometry do not rerun global layout. Pan and zoom update only the retained content-root transform.
 
 Performance-sensitive work should record CPU layout and materialization time, allocations, upload bytes, draw calls, frame p50/p95/p99, input-to-present latency, and retained memory. A smaller demo is not proof if it changes route geometry, clipping, picking, or identity.
+
+Compiled NodeSystem performance is checked at 1k and 10k canonical Nodes with
+the same six-Node viewport projection. Value work is scoped through exact
+Parameter subscriptions; topology uses a revision-fenced additive Core path and
+structurally shared topology snapshot. Offscreen changes must produce no DOM
+mutation or renderer plan, while applicable unclipped Rect runs are discovered
+by the backend's default safe instancing rather than UI hints.
 
 Production layout policies are optimized as isolated artifacts rather than as
 branches of one universal engine. Under the pinned build toolchain, adding a

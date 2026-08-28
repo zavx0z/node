@@ -6,6 +6,8 @@
     "module": "Preserve",
     "moduleDetection": "force",
     "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "jsxImportSource": "@zavx0z/template",
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
@@ -15,11 +17,20 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": true,
+    "paths": {
+      "@zavx0z/react": ["../../../renderer/packages/react/src/index.ts"],
+      "@zavx0z/template": ["../../../template/index.ts"],
+      "@zavx0z/template/*": ["../../../template/*"]
+    }
   },
   "include": [
+    "bench/**/*.ts",
+    "bench/**/*.tsx",
     "packages/**/*.ts",
+    "packages/**/*.tsx",
     ".agents/**/*.ts",
+    "test-preload.ts",
     "tests/**/*.ts"
   ],
   "exclude": ["dist", "node_modules"]

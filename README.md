@@ -14,7 +14,7 @@ The accepted implementation was migrated from `pkg/nodes` at MetaFor revision `2
 - Atomic ID-addressed authoring through bounded JSON Patch transactions.
 - Deterministic fixed/adaptive compound layout and isolated top-down DAG layout.
 - Worker clients that remain solver-free and executors that remain policy-exact.
-- Standard-DOM Node graph controllers with keyed identity and ordinary events.
+- Standard-DOM Node graph controllers plus compiled TSX composition with keyed identity and ordinary events.
 - Independent package entrypoints, lazy Storybook chunks, and measurable integration boundaries.
 - Static, project-base-safe Storybook output with accepted reference evidence.
 
@@ -26,7 +26,7 @@ The accepted implementation was migrated from `pkg/nodes` at MetaFor revision `2
 | `@nodes/editor` | Headless transactional authoring and explicit layout freshness gates | `@nodes/core` | Internal |
 | `@nodes/layout` | Pure numeric placement and orthogonal routing policies | none | Internal |
 | `@nodes/worker` | Serializable fixed/adaptive/top-down worker clients, transports, and executors | `@nodes/layout` | Internal |
-| `@nodes/ui` | Standard-DOM GraphCanvas, NodeWorkbench, ParameterSocket and NodeTreeEditor | `@zavx0z/dom` | Internal |
+| `@nodes/ui` | Blender-like DOM Node, Parameter, Socket, Link, NodeEditor, GraphCanvas and compiled NodeSystem views | `@zavx0z/dom`, `@zavx0z/react`, `@zavx0z/template`, exact `@ui/components/field` | Internal |
 | `@nodes/storybook` | One static/local Workbench, lazy owner stories, and accepted evidence | all package owners above | Internal |
 
 Every package is `private: true`. Repository separation does not imply registry publication or a compatibility promise.
@@ -63,15 +63,16 @@ routes; a custom runtime font skips the default request.
 | [Nodes](https://github.com/zavx0z/node) | Graph runtime, authoring, layout policies, workers and DOM node views |
 | [MetaFor](https://github.com/zavx0z/metafor) | Product integration and immersive domain projections |
 
-Dependencies point toward their real owner. `@nodes/ui` consumes only the DOM
-owner; applications compose Engine/Renderer explicitly. No upstream repository
-imports Nodes or product semantics.
+Dependencies point toward their real owner. `@nodes/ui` consumes the DOM owner
+and the exact universal Field component; applications compose Engine/Renderer
+explicitly. No upstream repository imports Nodes or product semantics.
 
 ## Requirements
 
 - [Bun](https://bun.sh/) `1.4.0`
 - sibling `engine`, `renderer`, and `storybook` checkouts
   registered through Bun links
+- sibling `ui` checkout registered for `@ui/components/field`
 - a WebGPU-capable browser for Editor and UI stories
 
 ## Development
@@ -92,6 +93,7 @@ Then install and verify Nodes:
 ```bash
 bun install --frozen-lockfile
 bun run check
+bun run bench:node-system
 ```
 
 Use `$storybook ensure @nodes/storybook` for the local runtime. Generated

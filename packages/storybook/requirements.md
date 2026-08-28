@@ -9,9 +9,9 @@ exports.
 
 ## Final standard-DOM pipeline
 
-### `NODES-STORYBOOK-DOM-001` — one entry for 224 route nodes
+### `NODES-STORYBOOK-DOM-001` — one entry for 225 route nodes
 
-All 158 leaves and 66 overviews in the existing route tree use one direct
+All 159 leaves and 66 overviews in the existing route tree use one direct
 `app/dom-entry.ts`. There is no hybrid bootstrap, retained entry, retained
 preview/overview module or load-bearing retained story registry. The private
 `dom-catalog.ts` contains load-free route/title/owner metadata only; unknown
@@ -27,20 +27,49 @@ is published after each lazy story and one presented-frame boundary.
 Core/Editor use the common NodeTree controller. Layout keeps the domain
 `@nodes/layout` policies and projects their real computed geometry/diagnostics
 through the private DOM layout controller. Worker executes exact production
-executor envelopes. Parameter and Socket use standard input/select/checkbox
-authoring plus independent kind/direction/side metadata. NodeEditor, Frame,
-Link, root/UI overviews and Comparison use `NodeWorkbench`, which retains the
-real GraphCanvas, NodeTree and Parameter controllers and standard image/listbox
-subtrees. Comparison uses the base-path-normalized accepted reference beside
-one Noise-style live DOM Node.
+executor envelopes. Every UI route is an adapter over exact public production
+owners: `createNodeEditor`, `createNode`, `createParameter`, `createSocket` and
+`createLink`. Parameter embeds the exact `@ui/components/field` owner through
+`@nodes/ui/parameter`; Storybook does not copy its input/select/checkbox
+composition. NodeEditor, Frame, Link, root/UI overviews and Comparison render
+rich Blender-like Node structures rather than `NodeWorkbench` or label-only
+Graph rectangles. Comparison uses the base-path-normalized accepted reference
+beside one live production Node and Parameter subtree.
 
-The final partition is **224 DOM / 0 retained**. App source and emitted browser
-chunks contain no `UiRuntime`, retained Storybook surfaces, `@layout/core`,
-`@ui/components`, `@ui/elements`, retained Parameter/Socket renderers or
-NodeEditor implementation. `@nodes/storybook` therefore has no direct
-Layout/UI/Highlighter/Core/Editor dependency; `@engine/core` remains only for
-the shared font, while domain `@nodes/layout`, Worker, UI DOM, renderer and
-shared Storybook owners remain explicit.
+All 225 route nodes remain on the standard DOM pipeline, but route count and
+absence of the former retained implementation are migration mechanics rather
+than visual acceptance. App source and emitted browser chunks contain no
+`UiRuntime`, retained Storybook surfaces, `@layout/core` or `@ui/elements`.
+Production `@nodes/ui` and its exact `@ui/components/field` dependency are
+required, not forbidden. `@engine/core` remains only for the shared font,
+while domain `@nodes/layout`, Worker, UI DOM, renderer and shared Storybook
+owners remain explicit.
+
+### `NODES-STORYBOOK-UI-001` — production-owner previews
+
+1. NodeEditor routes use exact `createNodeEditor()` and its exported CSS. The
+   graph contains compact coloured-header Nodes, embedded Properties and
+   Parameters, typed Sockets, routed Links, grid, controlled selection and
+   Frame composition. A plain rectangle with a title is not a Node preview.
+2. Parameter routes use exact `createParameter()` with a real FieldDefinition
+   of the selected kind and exact left/right Socket definitions for the route
+   variant. Composite color/vector/rotation/matrix/reference/collection/path
+   values remain their production Field controls, never string substitutes.
+3. Socket routes use exact `createSocket()`, all 19 kinds and independent
+   direction/side/shape state. Link routes use exact `createLink()` route
+   segments and hit corridors. Storybook does not redraw either owner.
+4. Frame presentation is a real production NodeEditor graph with selected
+   Frame ownership and nested rich Nodes. Comparison is a neutral composition
+   of one accepted raster and one live production Noise-style Node; the
+   comparison wrapper owns layout only, not Node visuals.
+5. Component CSS shown in source and supplied to the document runtime is the
+   combined exact exported `nodeEditorCss`, `nodeCss`, `parameterCss`,
+   `socketCss` and `linkCss`, followed only by bounded Storybook comparison /
+   preview framing.
+6. `/ui/node-editor/scene/compiled-general` mounts the public compiled
+   `NodeSystem` over one Core `NodeTree` and one `NodeTreeEditor`. Its
+   `useSyncExternalStore` view owns no duplicate tree/value state, and the
+   Template compiler removes authored JSX without an npm React fallback.
 
 ## Один документ и один Workbench
 
@@ -55,7 +84,8 @@ shared Storybook owners remain explicit.
    `location.assign`, нового canvas, runtime, process или target.
 5. Root app владеет только общей навигацией, shell, lazy dispatch и readiness.
    Package owners сохраняют production DOM controllers, route data, state и
-   live source; отдельного preview adapter/surface contract больше нет.
+   live source. Private Storybook adapter выбирает props и связывает standard
+   events, но не копирует visual tree, CSS или interaction implementation.
 
 ## Панели каталога
 
@@ -85,7 +115,9 @@ shared Storybook owners remain explicit.
    overviews explicitly aggregate all registered policies. Parameter and Socket
    data remain distinct lazy modules.
 4. Bundle evidence scans every emitted chunk and rejects retained Surface,
-   NodeEditor, Field/Elements and generic Layout runtime markers.
+   old NodeEditor/Parameter renderers, Elements and generic Layout runtime
+   markers. Production `createNodeEditor`, `createNode`, `createParameter`,
+   `createSocket`, `createLink` and `createField` markers обязаны присутствовать.
 
 ## Routes и readiness
 
@@ -100,6 +132,10 @@ shared Storybook owners remain explicit.
 4. Browser evidence использует глобальный `$storybook`: один target, точный
    route, console 0 и non-black canvas. Restart сохраняет pathname и не
    активирует Chrome.
+5. Representative browser gates включают exact routes NodeEditor, Parameter,
+   Socket, Frame, Link и Comparison. DOM/readiness/non-black доказывают delivery,
+   но visual parity подтверждается только сопоставимым capture рядом с
+   accepted reference и отдельным owner verdict.
 
 ## Static build
 

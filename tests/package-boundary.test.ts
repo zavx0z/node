@@ -18,7 +18,7 @@ describe("universal node-system package boundaries", () => {
     expect(Object.keys(packageJson.dependencies ?? {})).toEqual([])
 
     const files = (await sourceFiles(coreRoot))
-      .filter((path) => !path.endsWith(".test.ts"))
+      .filter((path) => !/\.test\.tsx?$/u.test(path))
       .filter((path) => !path.includes("/storybook/"))
     const source = await readAll(files)
     expect(source).not.toMatch(/from ["']@nodes\//)
@@ -34,11 +34,17 @@ describe("universal node-system package boundaries", () => {
       exports?: Record<string, string>
     }
     const production = (await sourceFiles(uiRoot))
-      .filter((path) => !path.endsWith(".test.ts"))
+      .filter((path) => !/\.test\.tsx?$/u.test(path))
       .filter((path) => !path.includes("/storybook/"))
     const source = await readAll(production)
     expect(packageJson.exports).toEqual({
       ".": "./index.ts",
+      "./node": "./dom/node.ts",
+      "./parameter": "./dom/parameter.ts",
+      "./socket": "./dom/socket.ts",
+      "./link": "./dom/link.ts",
+      "./node-editor": "./dom/node-editor.ts",
+      "./node-system": "./node-system.tsx",
       "./graph-canvas": "./dom/graph-canvas.ts",
       "./node-workbench": "./dom/node-workbench.ts",
       "./parameter-socket": "./dom/parameter-socket.ts",
@@ -46,8 +52,15 @@ describe("universal node-system package boundaries", () => {
     })
     expect(packageJson.dependencies).toEqual({
       "@zavx0z/dom": "link:@zavx0z/dom",
+      "@zavx0z/react": "link:@zavx0z/react",
+      "@zavx0z/template": "link:@zavx0z/template",
+      "@ui/components": "link:@ui/components",
     })
-    for (const forbidden of ["@engine/core", "@layout/core", "@ui/components", "@ui/elements", "UiSurface", "UiRuntime"]) {
+    expect(source).toContain('from "@ui/components/field"')
+    expect(new Set(source.match(/from "@ui\/components\/[^"]+"/gu) ?? [])).toEqual(new Set([
+      'from "@ui/components/field"',
+    ]))
+    for (const forbidden of ["@engine/core", "@layout/core", "@ui/elements", "UiSurface", "UiRuntime"]) {
       expect(source).not.toContain(forbidden)
     }
     expect(await Bun.file(join(uiRoot, "projection.ts")).exists()).toBeFalse()
@@ -125,9 +138,15 @@ describe("universal node-system package boundaries", () => {
     expect(Object.keys(uiManifest.exports).sort()).toEqual([
       ".",
       "./graph-canvas",
+      "./link",
+      "./node",
+      "./node-editor",
+      "./node-system",
       "./node-tree-editor",
       "./node-workbench",
+      "./parameter",
       "./parameter-socket",
+      "./socket",
     ])
     for (const legacy of [
       "validation.ts",
@@ -180,11 +199,13 @@ describe("universal node-system package boundaries", () => {
     expect(coffmanGrahamLayout.source).not.toContain("NO_LEGAL_ADAPTIVE_SIDE_ASSIGNMENT")
     expect(coffmanGrahamLayout.source).not.toContain("Port has conflicting edge roles")
     expect(domUi.source).toContain("GraphCanvas props must be an object")
+    expect(domUi.source).toContain("NodeEditor props must be an object")
+    expect(domUi.source).toContain("Node definition must be an object")
     expect(domUi.source).toContain("NodeWorkbench props must be an object")
     expect(domUi.source).toContain("ParameterSocket props must be an object")
     expect(domUi.source).toContain("NodeTreeEditor props must be an object")
     expect(domUi.source).not.toContain("UiSurface")
-    expect(domUi.source).not.toContain("NodeEditor")
+    expect(domUi.source).toContain("Field controller is disposed")
     expect(domUi.source).not.toContain("@layout/core")
 
     expect(core.bytes).toBeLessThan(20_000)
@@ -210,8 +231,8 @@ describe("universal node-system package boundaries", () => {
       gzipBytes: 12_541,
       sha256: "18ed4f095ac201266151002d83cdb9dfd2e15c5db7f98d06505d1df63c2ec3b9",
     })
-    expect(domUi.bytes).toBeLessThan(100_000)
-    expect(domUi.gzipBytes).toBeLessThan(25_000)
+    expect(domUi.bytes).toBeLessThan(170_000)
+    expect(domUi.gzipBytes).toBeLessThan(42_000)
   })
 })
 
@@ -257,7 +278,7 @@ async function sourceFiles(root: string): Promise<string[]> {
   for (const entry of entries) {
     const path = join(root, entry.name)
     if (entry.isDirectory()) files.push(...await sourceFiles(path))
-    else if (entry.isFile() && path.endsWith(".ts")) files.push(path)
+    else if (entry.isFile() && /\.tsx?$/u.test(path)) files.push(path)
   }
   return files
 }

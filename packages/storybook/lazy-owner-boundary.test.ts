@@ -4,19 +4,18 @@ import {tmpdir} from "node:os"
 import {join} from "node:path"
 
 describe("final Nodes Storybook bundle boundaries", () => {
-  test("emits one DOM app with lazy domain data and zero retained implementation", async () => {
+  test("emits one DOM app with lazy production owners and no retained implementation", async () => {
     const directory = await mkdtemp(join(tmpdir(), "nodes-final-storybook-"))
     try {
       const child = Bun.spawn([
         process.execPath,
-        "build",
-        join(import.meta.dir, "app/dom-entry.ts"),
-        "--target=browser",
-        "--format=esm",
-        "--splitting",
-        "--outdir",
+        join(import.meta.dir, "test-fixtures/build-proof.ts"),
         directory,
-      ], {cwd: join(import.meta.dir, "../.."), stdout: "pipe", stderr: "pipe"})
+      ], {
+        cwd: join(import.meta.dir, "../.."),
+        stdout: "pipe",
+        stderr: "pipe",
+      })
       const [exitCode, stdout, stderr] = await Promise.all([
         child.exited,
         new Response(child.stdout).text(),
@@ -28,9 +27,14 @@ describe("final Nodes Storybook bundle boundaries", () => {
       const output = sources.join("\n")
       expect(files.some((path) => path.endsWith("/dom-entry.js"))).toBeTrue()
       expect(output).toContain("createDocumentCanvasRuntime")
-      expect(output).toContain("createNodeWorkbench")
-      expect(output).toContain("createGraphCanvas")
-      expect(output).toContain("createParameterSocket")
+      expect(output).toContain("createNodeEditor")
+      expect(output).toContain("createNode")
+      expect(output).toContain("createParameter")
+      expect(output).toContain("createSocket")
+      expect(output).toContain("createLink")
+      expect(output).toContain("useSyncExternalStore")
+      expect(output).toContain("NodeTreeEditor")
+      expect(output).toContain("createField")
       expect(output).toContain("createLayoutDomStory")
       expect(output).toContain("createWorkerDomStory")
       expect(output).toContain("layoutAdaptiveWithDiagnostics")
@@ -41,13 +45,16 @@ describe("final Nodes Storybook bundle boundaries", () => {
         "StorybookNavigationSurface",
         "NodesStoryPreviewSurface",
         'from "@layout/core',
-        'from "@ui/components',
         'from "@ui/elements',
         "parameterRenderer.render",
         "socketRenderer.render",
         "new NodeEditor",
-        "new NodeTreeEditor",
+        "createNodeWorkbench",
+        "createParameterSocket",
+        "RemainingDomStory",
       ]) expect(output).not.toContain(forbidden)
+      expect(output).not.toContain('from "react"')
+      expect(output).not.toContain('from "react-dom')
     } finally {
       await rm(directory, {recursive: true, force: true})
     }

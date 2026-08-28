@@ -24,6 +24,8 @@ describe("final standard-DOM Nodes Storybook scaffold", () => {
     })
     expect(manifest.dependencies).toEqual({
       "@engine/core": "link:@engine/core",
+      "@nodes/core": "workspace:*",
+      "@nodes/editor": "workspace:*",
       "@nodes/layout": "workspace:*",
       "@nodes/worker": "workspace:*",
       "@nodes/ui": "workspace:*",
@@ -31,7 +33,9 @@ describe("final standard-DOM Nodes Storybook scaffold", () => {
       "@zavx0z/renderer": "link:@zavx0z/renderer",
       "@zavx0z/renderer-browser": "link:@zavx0z/renderer-browser",
       "@zavx0z/renderer-webgpu": "link:@zavx0z/renderer-webgpu",
+      "@zavx0z/react": "link:@zavx0z/react",
       "@zavx0z/storybook": "link:@zavx0z/storybook",
+      "@zavx0z/template": "link:@zavx0z/template",
     })
     expect(manifest.exports).toBeUndefined()
   })
@@ -46,6 +50,7 @@ describe("final standard-DOM Nodes Storybook scaffold", () => {
     expect(server).not.toContain("Bun.serve")
     expect(registry).toContain('entrypoint: join(import.meta.dir, "../app/dom-entry.ts")')
     expect(registry).toContain('from "../app/dom-catalog.ts"')
+    expect(registry).toContain("createTemplateJsxBunPlugin({")
     expect(entry).toContain("createDocumentCanvasRuntime({")
     expect(entry).toContain("createStorybookDomWorkbench({")
     expect(entry).toContain("router.go(targetRoute)")
@@ -58,13 +63,13 @@ describe("final standard-DOM Nodes Storybook scaffold", () => {
     }
   })
 
-  test("keeps the final app source free of retained owners", async () => {
+  test("keeps app source free of retired owners while consuming production Field through Nodes UI", async () => {
     const sources = await Promise.all([
       "app/dom-entry.ts", "app/dom-story.ts", "app/dom-catalog.ts", "app/dom-css.ts",
+      "app/production-node-story.ts",
     ].map((path) => Bun.file(join(storybookRoot, path)).text()))
     for (const source of sources) for (const forbidden of [
       "@layout/core",
-      "@ui/components",
       "@ui/elements",
       "@zavx0z/highlighter",
       "UiRuntime",
@@ -73,5 +78,8 @@ describe("final standard-DOM Nodes Storybook scaffold", () => {
       "parameterRenderer.render",
       "socketRenderer.render",
     ]) expect(source).not.toContain(forbidden)
+    const combined = sources.join("\n")
+    expect(combined).toContain('from "@nodes/ui/parameter"')
+    expect(combined).toContain("parameterCss")
   })
 })
