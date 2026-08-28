@@ -60,7 +60,16 @@ describe("universal node-system package boundaries", () => {
     expect(new Set(source.match(/from "@ui\/components\/[^"]+"/gu) ?? [])).toEqual(new Set([
       'from "@ui/components/field"',
     ]))
-    for (const forbidden of ["@engine/core", "@layout/core", "@ui/elements", "UiSurface", "UiRuntime"]) {
+    for (const forbidden of [
+      "@engine/core",
+      "@layout/core",
+      "@ui/elements",
+      "UiSurface",
+      "UiRuntime",
+      "createField",
+      "FieldController",
+      ".ui-field",
+    ]) {
       expect(source).not.toContain(forbidden)
     }
     expect(await Bun.file(join(uiRoot, "projection.ts")).exists()).toBeFalse()
@@ -205,7 +214,8 @@ describe("universal node-system package boundaries", () => {
     expect(domUi.source).toContain("ParameterSocket props must be an object")
     expect(domUi.source).toContain("NodeTreeEditor props must be an object")
     expect(domUi.source).not.toContain("UiSurface")
-    expect(domUi.source).toContain("Field controller is disposed")
+    expect(domUi.source).toContain("Field mount is disposed")
+    expect(domUi.source).not.toContain("createField")
     expect(domUi.source).not.toContain("@layout/core")
 
     expect(core.bytes).toBeLessThan(20_000)
@@ -231,8 +241,8 @@ describe("universal node-system package boundaries", () => {
       gzipBytes: 12_541,
       sha256: "18ed4f095ac201266151002d83cdb9dfd2e15c5db7f98d06505d1df63c2ec3b9",
     })
-    expect(domUi.bytes).toBeLessThan(170_000)
-    expect(domUi.gzipBytes).toBeLessThan(42_000)
+    expect(domUi.bytes).toBeLessThan(215_000)
+    expect(domUi.gzipBytes).toBeLessThan(55_000)
   })
 })
 

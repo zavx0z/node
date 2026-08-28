@@ -32,6 +32,11 @@ describe("final all-DOM Nodes Storybook entry", () => {
     expect(entry).toContain('workbench.update("catalog.active", nodesPrimarySelection(route))')
     expect(entry).toContain('workbench.update("secondary.active", nodesSecondarySelection(route))')
     expect(entry).toContain('workbench.update("scenarios.active", nodesScenarioRoute(route))')
+    expect(entry).toContain('"inspector.node": propsInspector.element')
+    expect(entry).toContain("propsInspector.update({")
+    expect(entry).toContain('dataset.nodesStorybookPanelCategory = "props"')
+    expect(entry).not.toContain("inspector.source")
+    expect(entry).not.toContain("inspector.label")
     expect(entry).toContain("previous.dispose()")
     expect(entry).not.toContain("window.location.assign")
     expect(entry).not.toContain("isNodesDomStoryRoute")
@@ -52,6 +57,7 @@ describe("final all-DOM Nodes Storybook entry", () => {
       ".layout-dom",
       ".worker-dom",
       ".nodes-production-story",
+      "[data-node-props-inspector]",
     ]) expect(nodesDomStoryCss).toContain(selector)
     expect(nodesDomStoryCss).toContain("[data-z-")
     const files = ["dom-entry.ts", "dom-story.ts", "dom-catalog.ts", "dom-css.ts"]

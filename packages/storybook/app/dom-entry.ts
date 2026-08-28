@@ -30,6 +30,7 @@ import {
   createNodesDomRouteStory,
   type NodesDomRouteStory,
 } from "./dom-story.ts"
+import {createNodesPropsInspector} from "./props-inspector.ts"
 
 const canvas = document.getElementById("nodes-storybook-canvas")
 if (!(canvas instanceof HTMLCanvasElement)) throw new Error("Nodes Storybook canvas not found")
@@ -51,6 +52,13 @@ try {
   let descriptor = nodesStoryDescriptor(route)
   let story = await createNodesDomRouteStory(semanticDocument, route)
   await storyReady(story)
+  const propsInspector = createNodesPropsInspector(semanticDocument, {
+    title: descriptor.title,
+    apiName: descriptor.apiName,
+    route,
+    owner: descriptor.primary.id,
+    props: story.props,
+  })
   let disposed = false
   let routeRevision = 0
 
@@ -70,8 +78,7 @@ try {
       "scenarios.label": nodesDockTitle(route),
       "scenarios.items": scenarioItems(route),
       "scenarios.active": nodesScenarioRoute(route),
-      "inspector.label": "Исходный код",
-      "inspector.source": story.source(),
+      "inspector.node": propsInspector.element,
       status: {
         lead: "Создано для ",
         owner: "MetaFor",
@@ -95,7 +102,13 @@ try {
 
   const publish = (): void => {
     const source = story.source()
-    workbench.update("inspector.source", source)
+    propsInspector.update({
+      title: descriptor.title,
+      apiName: descriptor.apiName,
+      route,
+      owner: descriptor.primary.id,
+      props: story.props,
+    })
     document.documentElement.dataset.nodesStorybookRoute = route === "" ? "/" : `/${route}`
     document.documentElement.dataset.nodesStorybookStory = route
     document.documentElement.dataset.nodesStorybookOwner = descriptor.primary.id
@@ -103,11 +116,21 @@ try {
     document.documentElement.dataset.nodesStorybookHtml = source.html
     document.documentElement.dataset.nodesStorybookCss = source.css
     document.documentElement.dataset.nodesStorybookTypescript = source.typescript
-    document.documentElement.dataset.nodesStorybookPanelCategory = "source"
+    document.documentElement.dataset.nodesStorybookPanelCategory = "props"
     runtime.requestRender()
   }
-  const onStoryClick = (): void => publish()
-  story.element.addEventListener("click", onStoryClick)
+  const onStoryInteraction = (): void => publish()
+  const bindStory = (target: NodesDomRouteStory): void => {
+    target.element.addEventListener("click", onStoryInteraction)
+    target.element.addEventListener("input", onStoryInteraction)
+    target.element.addEventListener("change", onStoryInteraction)
+  }
+  const unbindStory = (target: NodesDomRouteStory): void => {
+    target.element.removeEventListener("click", onStoryInteraction)
+    target.element.removeEventListener("input", onStoryInteraction)
+    target.element.removeEventListener("change", onStoryInteraction)
+  }
+  bindStory(story)
 
   const applyRoute = async (targetRoute: string): Promise<void> => {
     if (disposed) return
@@ -125,11 +148,11 @@ try {
       return
     }
     const previous = story
-    previous.element.removeEventListener("click", onStoryClick)
+    unbindStory(previous)
     route = targetRoute
     descriptor = nextDescriptor
     story = nextStory
-    story.element.addEventListener("click", onStoryClick)
+    bindStory(story)
     workbench.update("catalog.active", nodesPrimarySelection(route))
     workbench.update("secondary.label", descriptor.primary.label)
     workbench.update("secondary.items", secondaryItems(route))
@@ -162,10 +185,11 @@ try {
     routeRevision += 1
     unsubscribe()
     router.dispose()
-    story.element.removeEventListener("click", onStoryClick)
+    unbindStory(story)
     workbench.element.removeEventListener(STORYBOOK_DOM_WORKBENCH_EVENTS.navigate, onNavigate)
     workbench.element.removeEventListener(STORYBOOK_DOM_WORKBENCH_EVENTS.scenario, onScenario)
     story.dispose()
+    propsInspector.dispose()
     workbench.dispose()
     runtime.dispose()
     globalThis.__nodesStorybookCapturePresentedFrame = undefined

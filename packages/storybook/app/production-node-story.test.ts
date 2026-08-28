@@ -26,12 +26,13 @@ describe("production Node Storybook adapters", () => {
     expect(story.element.className).toContain("node-editor")
     expect(story.element.querySelectorAll(".node-article")).toHaveLength(2)
     expect(story.element.querySelectorAll(".node-parameter").length).toBeGreaterThan(3)
-    expect(story.element.querySelectorAll(".ui-field").length).toBeGreaterThan(3)
+    expect(story.element.querySelectorAll("[data-field-id]").length).toBeGreaterThan(3)
     expect(story.element.querySelectorAll(".node-socket").length).toBeGreaterThan(3)
     expect(story.element.querySelectorAll(".node-link")).toHaveLength(1)
     expect(story.source().typescript).toContain('from "@nodes/ui/node-editor"')
     expect(story.source().css).toContain(".node-article__header")
-    expect(story.source().css).toContain(".ui-field")
+    expect(story.source().css).toContain("[data-field-id]")
+    expect(story.source().css).not.toContain(".ui-field")
     story.dispose()
   })
 
@@ -39,10 +40,11 @@ describe("production Node Storybook adapters", () => {
     for (const kind of parameterKinds) {
       const story = createProductionNodeStory(createDocument(), `ui/parameter/${kind}/both`)
       const parameter = story.element.querySelector(".node-parameter")
-      const field = story.element.querySelector(".ui-field")
+      const field = story.element.querySelector("[data-field-id]")
 
       expect(parameter?.getAttribute("data-field-kind"), kind).toBe(kind)
       expect(field?.getAttribute("data-field-kind"), kind).toBe(kind)
+      expect(field?.className, kind).toBe("")
       expect(story.element.querySelectorAll(".node-socket"), kind).toHaveLength(2)
       expect(story.source().typescript, kind).toContain('from "@nodes/ui/parameter"')
       story.dispose()

@@ -29,12 +29,13 @@ Core/Editor use the common NodeTree controller. Layout keeps the domain
 through the private DOM layout controller. Worker executes exact production
 executor envelopes. Every UI route is an adapter over exact public production
 owners: `createNodeEditor`, `createNode`, `createParameter`, `createSocket` and
-`createLink`. Parameter embeds the exact `@ui/components/field` owner through
-`@nodes/ui/parameter`; Storybook does not copy its input/select/checkbox
-composition. NodeEditor, Frame, Link, root/UI overviews and Comparison render
-rich Blender-like Node structures rather than `NodeWorkbench` or label-only
-Graph rectangles. Comparison uses the base-path-normalized accepted reference
-beside one live production Node and Parameter subtree.
+`createLink`. Parameter mounts the exact compiled `@ui/components/field` owner
+through `@nodes/ui/parameter`; Storybook does not copy its
+input/select/checkbox composition. NodeEditor, Frame, Link, root/UI overviews
+and Comparison render rich Blender-like Node structures rather than
+`NodeWorkbench` or label-only Graph rectangles. Comparison uses the
+base-path-normalized accepted reference beside one live production Node and
+Parameter subtree.
 
 All 225 route nodes remain on the standard DOM pipeline, but route count and
 absence of the former retained implementation are migration mechanics rather
@@ -86,6 +87,12 @@ owners remain explicit.
    Package owners сохраняют production DOM controllers, route data, state и
    live source. Private Storybook adapter выбирает props и связывает standard
    events, но не копирует visual tree, CSS или interaction implementation.
+6. Shared Workbench получает один same-Document `inspector.node`. Nodes владеет
+   stable class-free read-only Props/metadata panel с semantic structure/data
+   selectors, обновляет его из того же `story.props` snapshot после `input`,
+   `change`, `click` и route change и не показывает HTML/CSS/TypeScript
+   sections. `story.source()` остаётся metadata/provenance и readiness contract,
+   но не является правой пользовательской панелью.
 
 ## Панели каталога
 
@@ -115,9 +122,10 @@ owners remain explicit.
    overviews explicitly aggregate all registered policies. Parameter and Socket
    data remain distinct lazy modules.
 4. Bundle evidence scans every emitted chunk and rejects retained Surface,
-   old NodeEditor/Parameter renderers, Elements and generic Layout runtime
-   markers. Production `createNodeEditor`, `createNode`, `createParameter`,
-   `createSocket`, `createLink` and `createField` markers обязаны присутствовать.
+   old NodeEditor/Parameter renderers, Elements, generic Layout runtime and the
+   legacy UI `createField` factory. Production `createNodeEditor`, `createNode`,
+   `createParameter`, `createSocket`, `createLink` and exact
+   `@ui/components/field` markers обязаны присутствовать.
 
 ## Routes и readiness
 

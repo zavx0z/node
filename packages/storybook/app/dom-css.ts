@@ -7,6 +7,7 @@ import {nodeSystemCss} from "@nodes/ui/node-system"
 import {nodeTreeEditorCss} from "@nodes/ui/node-tree-editor"
 import {parameterCss} from "@nodes/ui/parameter"
 import {socketCss} from "@nodes/ui/socket"
+import {nodesPropsInspectorCss} from "./props-inspector.ts"
 
 export const nodesProductionPreviewCss = String.raw`
 .nodes-production-story {
@@ -88,4 +89,5 @@ export const nodesDomStoryCss = [
   layoutPresentationCss,
   workerProtocolCss,
   nodesProductionPreviewCss,
+  nodesPropsInspectorCss,
 ].join("\n")

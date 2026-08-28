@@ -587,10 +587,11 @@ function serialize(element: Element, depth = 0): string {
     ` ${name}="${escapeHtml(value)}"`
   ).join("")
   if (["img", "input"].includes(element.localName)) return `${indent}<${element.localName}${attrs}>`
-  const children = [...element.childNodes]
+  const children = [...element.childNodes].filter((node) => node.nodeType === 1 || node.nodeType === 3)
   if (children.length === 0) return `${indent}<${element.localName}${attrs}></${element.localName}>`
   if (children.every((node) => node.nodeType === 3)) {
-    return `${indent}<${element.localName}${attrs}>${escapeHtml(element.textContent ?? "")}</${element.localName}>`
+    const text = children.map((node) => (node as Text).data).join("")
+    return `${indent}<${element.localName}${attrs}>${escapeHtml(text)}</${element.localName}>`
   }
   const body = children.map((node: DomNode) => node.nodeType === 3
     ? `${"  ".repeat(depth + 1)}${escapeHtml((node as Text).data)}`
