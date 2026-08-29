@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "law": "Only package, category and subject are semantic overview nodes. Former section prefixes remain variant grouping metadata and resolve to their owning subject overview.",
+  "remaps": [
+    {"from": "", "packageId": "@nodes/core", "to": ""},
+    {"from": "ui", "packageId": "@nodes/ui", "to": ""},
+    {"from": "layout/fixed/baseline", "packageId": "@nodes/layout", "to": "layout/fixed"},
+    {"from": "layout/adaptive/shared", "packageId": "@nodes/layout", "to": "layout/adaptive"},
+    {"from": "layout/adaptive/compound", "packageId": "@nodes/layout", "to": "layout/adaptive"},
+    {"from": "layout/dagre-layered/default", "packageId": "@nodes/layout", "to": "layout/dagre-layered"},
+    {"from": "layout/coffman-graham/default", "packageId": "@nodes/layout", "to": "layout/coffman-graham"}
+  ]
+}

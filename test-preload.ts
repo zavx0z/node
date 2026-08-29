@@ -6,7 +6,6 @@ plugin(createTemplateJsxBunPlugin({
   persistent: true,
   sourceRoots: [
     resolve(import.meta.dir, "packages/ui"),
-    resolve(import.meta.dir, "packages/storybook"),
     resolve(import.meta.dir, "../ui/packages/components"),
   ],
 }))

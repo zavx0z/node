@@ -20,6 +20,7 @@ describe("universal node-system package boundaries", () => {
     const files = (await sourceFiles(coreRoot))
       .filter((path) => !/\.test\.tsx?$/u.test(path))
       .filter((path) => !path.includes("/storybook/"))
+      .filter((path) => !path.includes("/.storybook/"))
     const source = await readAll(files)
     expect(source).not.toMatch(/from ["']@nodes\//)
     expect(source).not.toMatch(/from ["']@ui\//)
@@ -36,6 +37,7 @@ describe("universal node-system package boundaries", () => {
     const production = (await sourceFiles(uiRoot))
       .filter((path) => !/\.test\.tsx?$/u.test(path))
       .filter((path) => !path.includes("/storybook/"))
+      .filter((path) => !path.includes("/.storybook/"))
     const source = await readAll(production)
     expect(packageJson.exports).toEqual({
       ".": "./index.ts",

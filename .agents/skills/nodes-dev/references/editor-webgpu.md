@@ -2,9 +2,10 @@
 
 | Property | Value |
 | --- | --- |
-| Route | `/editor/node-tree/live` |
-| Ready | `nodesStorybook=ready`, exact `nodesStorybookStory` |
-| Canvas | `#nodes-storybook-canvas` |
+| Package | `@nodes/editor` |
+| Route | `editor/node-tree/live` |
+| Ready | external package ready + exact route |
+| Canvas | shared external Storybook canvas |
 
 This section proves `NodeTreeEditor → NodeTree → projection → NodeEditor` while
 the layout calculation remains explicitly gated by the retained dock's manual
@@ -16,12 +17,8 @@ bun test packages/core packages/editor \
   packages/ui/projection.test.ts \
   packages/editor/storybook
 bun run typecheck
-$storybook restart @nodes/storybook
-$storybook browser reload @nodes/storybook \
-  --route /editor/node-tree/live --target-id "$target_id"
-$storybook browser canvas @nodes/storybook \
-  --route /editor/node-tree/live --target-id "$target_id" \
-  --output /tmp/nodes-editor.png
+$storybook check /Users/zavx0z/repozitarium/webxr-space/projects/node
+$storybook open @nodes/editor editor/node-tree/live
 ```
 
 Use the visible retained dock for add/remove Parameter, add/remove Node,

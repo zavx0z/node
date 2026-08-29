@@ -1,20 +1,20 @@
 # Shared Workbench sections
 
-All lifecycle and browser operations use global `$storybook` with exact package
-`@nodes/storybook`; its origin is automatic.
+All lifecycle and browser operations use the global external `$storybook` and
+the canonical Nodes project declaration. Its origin is automatic; package ids
+are `@nodes/core`, `@nodes/editor`, `@nodes/layout`, `@nodes/worker`, `@nodes/ui`.
 
 ## Catalog hierarchy
 
-The root route `/` is the same five-panel Workbench as every detail route. It
-selects the `core` overview without replacing the pathname with a landing or
-creating package cards.
+Each package tab uses the same six-region Workbench. The global landing only
+selects projects/packages; it never loads a Nodes runtime or story.
 
 The primary panel contains semantic owners. The secondary panel contains that
 owner's implementations or public kinds. The dock contains variants of the
 selected secondary item.
 
-Clicking a primary owner opens its own aggregate overview: no secondary item or
-dock variant is selected. Clicking a secondary item opens its aggregate of all
+Clicking a category opens its own aggregate overview: no subject or dock
+variant is selected. Clicking a subject opens its aggregate of all
 variants: the dock is populated, but no exact variant is selected. Only a leaf
 renders one detail story.
 
@@ -39,5 +39,5 @@ Routes `/worker/<policy>/default` render serializable request/result/error
 envelopes inside the shared preview Surface. They preserve request id and
 generation and load the exact selected worker policy lazily.
 
-For every route verify `nodesStorybook=ready`, the exact story marker, console
-`0`, and a non-black canvas.
+For every route verify external package readiness, the exact story route,
+console `0`, and a non-black canvas.

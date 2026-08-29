@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/zavx0z/storybook/main/schemas/manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "project",
+  "id": "nodes",
+  "label": "Nodes",
+  "readme": "../README.md",
+  "packages": [
+    {"declaration": "../packages/core/.storybook/manifest.json"},
+    {"declaration": "../packages/editor/.storybook/manifest.json"},
+    {"declaration": "../packages/layout/.storybook/manifest.json"},
+    {"declaration": "../packages/worker/.storybook/manifest.json"},
+    {"declaration": "../packages/ui/.storybook/manifest.json"}
+  ]
+}

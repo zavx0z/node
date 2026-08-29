@@ -2,30 +2,22 @@
 
 | Property | Value |
 | --- | --- |
-| Representative detail route | `/ui/socket/boolean/input` |
-| Ready | `nodesStorybook=ready`, exact `nodesStorybookStory` |
-| Canvas | `#nodes-storybook-canvas` |
+| Package | `@nodes/ui` |
+| Representative detail route | `ui/socket/boolean/input` |
+| Ready | external package ready + exact route |
+| Canvas | shared external Storybook canvas |
 
-The `ui/` owner prefix preserves all NodeEditor, Parameter, Socket, Frame, Link,
-and accepted-reference comparison story ids. Strip only the `ui/` prefix when
-choosing a story module. These are primary sections of the same root Workbench,
-not a nested package page.
+The `ui/` route prefix preserves all NodeEditor, Parameter, Socket, Frame, Link
+and accepted-reference story ids inside the `@nodes/ui` package tab. The
+generated loader selects the exact declared story factory; no nested shell or
+route switch exists.
 
 ```bash
 bun test packages/ui packages/ui/storybook
 bun run --cwd packages/ui typecheck
 bun run typecheck
-$storybook restart @nodes/storybook
-story_route=/ui/node-editor/scene/default
-$storybook browser reload @nodes/storybook \
-  --route "$story_route" --target-id "$target_id"
-$storybook browser dom @nodes/storybook \
-  --route "$story_route" --target-id "$target_id"
-$storybook browser console @nodes/storybook \
-  --route "$story_route" --target-id "$target_id"
-$storybook browser canvas @nodes/storybook \
-  --route "$story_route" --target-id "$target_id" \
-  --output /tmp/nodes-ui.png
+$storybook check /Users/zavx0z/repozitarium/webxr-space/projects/node
+$storybook open @nodes/ui ui/node-editor/scene/default
 ```
 
 Ready is published only after the reference texture reaches ready and a later

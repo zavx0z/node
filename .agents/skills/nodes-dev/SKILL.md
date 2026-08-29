@@ -1,25 +1,24 @@
 ---
 name: nodes-dev
-description: "Develop and verify the standalone Nodes repository and its Core, Editor, Layout, Worker, UI, and package-specific acceptance semantics. Use the global storybook skill for @nodes/storybook and metafor-dev only for product integration."
+description: "Develop and verify the standalone Nodes repository and its Core, Editor, Layout, Worker, UI, external declarations, and package-specific acceptance semantics."
 ---
 
 # Nodes development
 
 Built for [MetaFor](https://github.com/zavx0z/metafor) as reusable node-system infrastructure.
 
-Use the exact Nodes checkout supplied for the task. Preserve its branch or detached HEAD, unrelated changes, listeners, and browser targets. `@nodes/storybook` owns one Nodes catalog inside one shared Workbench; the global `$storybook` owns its package-named lifecycle and exact browser target.
+Use the exact Nodes checkout supplied for the task. Preserve its branch or detached HEAD, unrelated changes, listeners, and browser targets. Nodes publishes only project/package declarations and owner resources; the global `$storybook` owns the one external server, shared Workbench and exact package tabs.
 
 Before changing a contract, read repository `ARCHITECTURE.md`, the owning package `requirements.md` or layout requirement, public types, and focused tests. A new law belongs in its real owner before implementation.
 
-The shared HTML shell declares one Engine-owned `engine-default-font` meta URL.
-Only the root entry calls `UiRuntime.create()` without a package font path;
-Editor and UI adapters reuse that runtime. A custom runtime font bypasses the
-meta request. The build copies one exact Engine asset into application output,
-while production Nodes packages never own or eagerly load it.
+The external shell owns the Engine font and DOM-to-WebGPU renderer. Nodes
+runtimes receive the shell's exact `@zavx0z/dom` Document/canvas context and
+mount only owner story nodes. Production packages never own or eagerly load a
+font, Storybook shell or renderer.
 
 ## Workbench catalog
 
-| Primary section | Overview | Secondary content |
+| Package | Historical route prefix | Secondary content |
 | --- | --- | --- |
 | `NodeTree` | `/core/` | Core runtime scenarios |
 | `NodeTreeEditor` | `/editor/` | authoring scenarios |
@@ -27,11 +26,12 @@ while production Nodes packages never own or eagerly load it.
 | `Worker` | `/worker/` | exact worker policies |
 | Node UI owners | `/ui/` | NodeEditor, Parameters, Sockets, Frame, Link, Comparison |
 
-`/` opens the same Workbench with the representative Core overview. It is not a
-landing page and contains no package cards. Every overview ends in `/`; exact
-leaves do not. A primary overview shows common information and every secondary
-item; a secondary overview shows all variants. It never renders the first leaf
-as a hidden fallback. Unknown suffixes fail closed.
+The project declaration is `.storybook/manifest.json`; package declarations
+live under `packages/<owner>/.storybook/`. Each package opens in its own tab in
+the one external origin. Package/category/subject overviews are real states and
+never substitute a first variant. Exact leaves retain all 159 historical route
+strings. Former section prefixes are grouping metadata with explicit remaps in
+`.storybook/overview-remap.json`, not another navigation panel.
 
 - Read [references/workbench-sections.md](references/workbench-sections.md) for the shared catalog hierarchy and Core/Worker evidence.
 - Read [references/editor-webgpu.md](references/editor-webgpu.md) for authoring, cache, and topology evidence.
@@ -40,16 +40,16 @@ as a hidden fallback. Unknown suffixes fail closed.
 
 ## Storybook boundary
 
-Use the single global `$storybook` with exact package `@nodes/storybook` for
-lifecycle, automatic origin, static build, exact-route browser evidence,
-interaction and profiling. This skill contains no lifecycle/browser scripts,
-selector, port, process state or copied generic Storybook rules.
+Use the single global `$storybook` against the Nodes project declaration for
+attach/check/open and exact-route browser evidence. This skill contains no
+lifecycle/browser scripts, selector, port, process state or copied generic
+Storybook rules. There is no `@nodes/storybook` package or package-local server.
 
-Nodes remains the semantic owner of primary/secondary/dock hierarchy, owner
+Each Nodes package remains semantic owner of its category/subject/dock order,
 stories, accepted reference readiness, cache/topology interaction plans and
-route-specific expected observations. No package creates a second router,
-canvas, `UiRuntime`, Workbench or DOM shell. The references above contain only
-domain evidence; `$storybook` supplies all generic commands and safety laws.
+route-specific observations. No package creates a router, canvas, Workbench,
+server or DOM shell. The references above contain only domain evidence;
+`$storybook` supplies generic lifecycle and safety laws.
 
 At handoff report affected Nodes owners, focused and repository checks, exact
 route-specific evidence where applicable, and every remaining product or owner

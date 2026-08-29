@@ -1,22 +1,25 @@
 # Node agent rules
 
 - Use `$nodes-dev` from `.agents/skills/nodes-dev` for Node implementation,
-  tests and package-specific acceptance semantics. Use the single global
-  `$storybook` for `@nodes/storybook` lifecycle, static Pages builds, and
-  exact-route DOM, SVG, or WebGPU browser evidence.
+  focused tests and owner acceptance semantics. External Storybook lifecycle is
+  owned only by the global `$storybook` tool and the project declaration at
+  `.storybook/manifest.json`.
 - Before changing behavior, read `ARCHITECTURE.md`, the owning package
-  `requirements.md`, public types, implementation, and focused tests.
-- Preserve the independent Core, Editor, Layout, Worker, UI, and Storybook
-  package boundaries; Layout here means the domain package `@nodes/layout`.
-  The upstream document path is `@zavx0z/dom` → `@zavx0z/renderer` →
-  `@zavx0z/renderer-webgpu` → `@engine/core`, while UI owns shared controls.
-  Generic Layout and `@ui/elements` are retired. MetaFor is a product consumer.
-  Import exact owners directly without aliases or re-exports.
-- Preserve the supplied checkout, unrelated changes, linked dependency
-  identity, listeners, and browser targets. Use the skill-owned background
-  browser path instead of focusing desktop browser windows.
-- `@nodes/storybook` has one semantic DOM document, canvas, document renderer
-  runtime, Router and Workbench. `/` shows a representative story in that
-  Workbench; owner prefixes are sections of the same catalog. Do not add a
-  landing page, package cards, package-specific shells or nested Storybook
-  runtimes.
+  `requirements.md`, public types, implementation and focused tests.
+- Preserve the independent `@nodes/core`, `@nodes/editor`, `@nodes/layout`,
+  `@nodes/worker` and `@nodes/ui` production boundaries. Story/catalog/runtime
+  files remain dev-only under each owner's `storybook/` and `.storybook/`.
+- Consumer packages never install or import `@zavx0z/storybook`, never create a
+  private `@scope/storybook` package and never own a Storybook server, build,
+  launcher, port or frontend shell.
+- The upstream document path is `@zavx0z/dom` → `@zavx0z/renderer` →
+  `@zavx0z/renderer-webgpu` → `@engine/core`. Generic Layout and
+  `@ui/elements` are retired; `@nodes/layout` remains the domain solver owner.
+- Import exact owners directly without aliases or production re-exports.
+  Preserve supplied checkout, unrelated changes, linked dependency identity,
+  listeners and browser targets.
+- External Storybook supplies one shared Workbench/Navigation Tree and opens
+  one package per tab. Package declarations preserve the 159 historical leaves;
+  former section prefixes are variant grouping metadata, never another panel.
+- The Blender PNG and provenance catalog remain immutable `@nodes/ui` resources
+  under `packages/ui/.storybook/references/` and outside production exports.

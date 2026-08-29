@@ -6,17 +6,20 @@
 
 ```text
 MetaFor product integration
-  └─ @nodes/storybook and product adapters
+  └─ @nodes/ui and product adapters
        ├─ @nodes/ui ────────────────> @zavx0z/dom + @zavx0z/react + @zavx0z/template + @ui/components/field
        ├─ @nodes/editor ────────────> @nodes/core
        ├─ @nodes/worker ────────────> @nodes/layout
        └─ @nodes/layout + @nodes/core
+
+external Storybook tool <── JSON declarations + owner-local dev stories
 ```
 
 The direction is intentionally acyclic. Core does not know about layout,
 workers, WebGPU, or products. Editor changes Core without importing a solver.
-UI receives already positioned graph props as standard DOM. Storybook is the
-only package that composes DOM, renderer, Engine font and every domain owner.
+UI receives already positioned graph props as standard DOM. The external
+Storybook tool composes the shared Workbench/renderer; Nodes packages expose
+only JSON declarations, structural runtimes and owner-local stories.
 
 Cross-repository owners:
 
@@ -24,9 +27,9 @@ Cross-repository owners:
 | --- | --- | --- |
 | Renderer | [zavx0z/renderer](https://github.com/zavx0z/renderer) | `@zavx0z/dom`, CPU renderer and browser/WebGPU adapters |
 | Engine | [zavx0z/engine](https://github.com/zavx0z/engine) | `@engine/core` WebGPU primitives and default font |
-| Shared Storybook | private `@zavx0z/storybook` owner repository | dev-only DOM catalog, Workbench, router, server and static builder through exact subpaths |
+| External Storybook | standalone `zavx0z/storybook` tool | declaration schemas, one server/origin, shared Workbench, package sessions and generated loaders; no consumer dependency |
 | UI | [zavx0z/ui](https://github.com/zavx0z/ui) | exact universal `@ui/components/field` used inside Parameters and Node properties |
-| Nodes | [zavx0z/node](https://github.com/zavx0z/node) | graph, editor, solver, worker, view, and Storybook packages |
+| Nodes | [zavx0z/node](https://github.com/zavx0z/node) | graph, editor, solver, worker, DOM view and owner declaration packages |
 | Product | [zavx0z/metafor](https://github.com/zavx0z/metafor) | authorized product integration only |
 
 ## DOM production target
@@ -122,17 +125,18 @@ The compiled `NodeSystem`, `NodeCard`, `ParameterRow`, `SocketPort` and
 override, use class-free `defineStyles` owner tokens and retain keyed DOM
 identity from canonical entity ids.
 
-### `@nodes/storybook`
+### External development declarations
 
-Each package owns its dev-only stories under `packages/<owner>/storybook/**`.
-The repository Storybook consumes those descriptors and production code only
-through exact public entrypoints. Shared application infrastructure comes from
-exact `@zavx0z/storybook/*` subpaths and remains a private app dependency. Its
-single root Workbench owns one document, canvas, runtime and route tree;
-package implementations remain independent lazy story chunks rather than
-independent user-facing pages. Static output uses `/node/`, copies the accepted
-reference catalog verbatim, and keeps raster evidence outside production
-exports.
+`.storybook/manifest.json` composes the five production owners without creating
+a sixth npm package. Every `packages/<owner>/.storybook/manifest.json` points to
+one data-only catalog, plain `storybook-runtime/1` adapter and owner-local story
+modules. No consumer installs/imports Storybook or owns a server/build/port.
+
+The canonical baseline contains 159 exact leaves. Category and subject route
+overrides preserve historical prefixes; former section prefixes remain variant
+group metadata and map to their subject overview through
+`.storybook/overview-remap.json`. One external origin opens one package per tab
+and derives navigation/search/build lookup from the same normalized graph.
 
 ## Naming and icon associations
 
@@ -175,18 +179,15 @@ to pull another solver into a bundle. Search budgets are fixed and bounded;
 input size may increase work, but consumer options may not unlock an
 unbounded algorithm.
 
-## Static Storybook pipeline
+## External Storybook package sessions
 
-`packages/storybook/build.ts` passes the Node-owned typed app manifest to
-`@zavx0z/storybook/build`. The shared builder emits one root Workbench entry
-with lazy owner/story chunks, writes one HTML shell, copies one exact Engine
-font asset and accepted evidence, emits
-`.nojekyll`, and creates a project-base-aware fail-closed 404 recovery page.
-`storybook-manifest.json` records exact source/dependency revisions, page
-graphs, emitted sizes and SHA-256 hashes. Each shell declares the shared font
-URL once through inert meta; the one document renderer runtime receives the
-Engine-owned font without package-owned font paths.
+The standalone tool discovers this repository through its project declaration.
+Each package session generates literal runtime/story imports, records exact
+module realpaths and publishes immutable candidate/active/last-good revisions.
+An error in one Nodes package leaves the server and other package tabs alive.
+The global landing loads declaration metadata only; package runtime code loads
+only in its own tab and an owner story loads only for an exact variant.
 
-No Pages workflow is stored while the independent DOM/renderer owners have no
-immutable delivered revisions. Static build remains local evidence; publication
-requires a separate owner decision after the exact linked graph is deliverable.
+The Engine font and shared DOM-to-WebGPU renderer belong to the external shell.
+Accepted Blender evidence remains under `packages/ui/.storybook/references/` and
+outside production exports. Pages publication is not part of this repository.

@@ -1,0 +1,530 @@
+{
+  "schemaVersion": 1,
+  "readOnlyBaseline": true,
+  "oldPrivatePackage": "@nodes/storybook",
+  "source": {
+    "projectHead": "9f390945f51f88c6374d5fb8f3215cf5d776e571",
+    "routeCatalog": "packages/storybook/app/dom-catalog.ts",
+    "routeCatalogSha256": "2f2987048361f68a2186cc29500c4225138a3e3b9969e4398d896ba0cf7a77e8",
+    "authority": "current source catalog; dist is not authoritative"
+  },
+  "routeBase": {
+    "developmentBasePath": "",
+    "staticBasePath": "/node",
+    "canonicalRules": {
+      "overviewTrailingSlash": true,
+      "leafTrailingSlash": false,
+      "knownNonCanonicalRedirectStatus": 308,
+      "unknownRouteStatus": 404,
+      "fallbackToFirstLeaf": false
+    }
+  },
+  "leafRoutes": [
+    "core/node-tree/live",
+    "editor/node-tree/live",
+    "layout/fixed/baseline/right",
+    "layout/fixed/baseline/down",
+    "layout/adaptive/shared/right",
+    "layout/adaptive/shared/down",
+    "layout/adaptive/compound/right",
+    "layout/adaptive/compound/down",
+    "layout/dagre-layered/default/default",
+    "layout/coffman-graham/default/default",
+    "worker/fixed/default",
+    "worker/adaptive/default",
+    "worker/dagre-layered/default",
+    "worker/coffman-graham/default",
+    "ui/node-editor/scene/default",
+    "ui/node-editor/scene/compiled-general",
+    "ui/node-editor/scene/selected",
+    "ui/node-editor/scene/rotation-linked",
+    "ui/node-editor/scene/translation-unlinked",
+    "ui/node-editor/scene/output-only",
+    "ui/node-editor/scene/mixed-sides",
+    "ui/node-editor/scene/color-unlinked",
+    "ui/node-editor/scene/inventory",
+    "ui/node-editor/preview/closed",
+    "ui/node-editor/preview/open",
+    "ui/node-editor/preview/global-hidden",
+    "ui/node-editor/preview/alternate",
+    "ui/node-editor/preview/missing",
+    "ui/node-editor/preview/zero",
+    "ui/node-editor/preview/multiple",
+    "ui/node-editor/preview/non-previewable",
+    "ui/node-editor/collapsed/default",
+    "ui/node-editor/collapsed/selected",
+    "ui/node-editor/popup/select-open",
+    "ui/parameter/text/field",
+    "ui/parameter/text/input",
+    "ui/parameter/text/output",
+    "ui/parameter/text/both",
+    "ui/parameter/text/connected",
+    "ui/parameter/number/field",
+    "ui/parameter/number/input",
+    "ui/parameter/number/output",
+    "ui/parameter/number/both",
+    "ui/parameter/number/connected",
+    "ui/parameter/integer/field",
+    "ui/parameter/integer/input",
+    "ui/parameter/integer/output",
+    "ui/parameter/integer/both",
+    "ui/parameter/integer/connected",
+    "ui/parameter/boolean/field",
+    "ui/parameter/boolean/input",
+    "ui/parameter/boolean/output",
+    "ui/parameter/boolean/both",
+    "ui/parameter/boolean/connected",
+    "ui/parameter/enum/field",
+    "ui/parameter/enum/input",
+    "ui/parameter/enum/output",
+    "ui/parameter/enum/both",
+    "ui/parameter/enum/connected",
+    "ui/parameter/color/field",
+    "ui/parameter/color/input",
+    "ui/parameter/color/output",
+    "ui/parameter/color/both",
+    "ui/parameter/color/connected",
+    "ui/parameter/vector/field",
+    "ui/parameter/vector/input",
+    "ui/parameter/vector/output",
+    "ui/parameter/vector/both",
+    "ui/parameter/vector/connected",
+    "ui/parameter/rotation/field",
+    "ui/parameter/rotation/input",
+    "ui/parameter/rotation/output",
+    "ui/parameter/rotation/both",
+    "ui/parameter/rotation/connected",
+    "ui/parameter/matrix/field",
+    "ui/parameter/matrix/input",
+    "ui/parameter/matrix/output",
+    "ui/parameter/matrix/both",
+    "ui/parameter/matrix/connected",
+    "ui/parameter/reference/field",
+    "ui/parameter/reference/input",
+    "ui/parameter/reference/output",
+    "ui/parameter/reference/both",
+    "ui/parameter/reference/connected",
+    "ui/parameter/collection/field",
+    "ui/parameter/collection/input",
+    "ui/parameter/collection/output",
+    "ui/parameter/collection/both",
+    "ui/parameter/collection/connected",
+    "ui/parameter/path/field",
+    "ui/parameter/path/input",
+    "ui/parameter/path/output",
+    "ui/parameter/path/both",
+    "ui/parameter/path/connected",
+    "ui/parameter/readonly/field",
+    "ui/parameter/readonly/input",
+    "ui/parameter/readonly/output",
+    "ui/parameter/readonly/both",
+    "ui/parameter/readonly/connected",
+    "ui/frame/nested/default",
+    "ui/link/orthogonal/selected",
+    "ui/comparison/reference/default",
+    "ui/socket/boolean/input",
+    "ui/socket/boolean/output",
+    "ui/socket/boolean/bidirectional",
+    "ui/socket/float/input",
+    "ui/socket/float/output",
+    "ui/socket/float/bidirectional",
+    "ui/socket/integer/input",
+    "ui/socket/integer/output",
+    "ui/socket/integer/bidirectional",
+    "ui/socket/vector/input",
+    "ui/socket/vector/output",
+    "ui/socket/vector/bidirectional",
+    "ui/socket/rotation/input",
+    "ui/socket/rotation/output",
+    "ui/socket/rotation/bidirectional",
+    "ui/socket/color/input",
+    "ui/socket/color/output",
+    "ui/socket/color/bidirectional",
+    "ui/socket/string/input",
+    "ui/socket/string/output",
+    "ui/socket/string/bidirectional",
+    "ui/socket/menu/input",
+    "ui/socket/menu/output",
+    "ui/socket/menu/bidirectional",
+    "ui/socket/object/input",
+    "ui/socket/object/output",
+    "ui/socket/object/bidirectional",
+    "ui/socket/collection/input",
+    "ui/socket/collection/output",
+    "ui/socket/collection/bidirectional",
+    "ui/socket/image/input",
+    "ui/socket/image/output",
+    "ui/socket/image/bidirectional",
+    "ui/socket/material/input",
+    "ui/socket/material/output",
+    "ui/socket/material/bidirectional",
+    "ui/socket/texture/input",
+    "ui/socket/texture/output",
+    "ui/socket/texture/bidirectional",
+    "ui/socket/geometry/input",
+    "ui/socket/geometry/output",
+    "ui/socket/geometry/bidirectional",
+    "ui/socket/matrix/input",
+    "ui/socket/matrix/output",
+    "ui/socket/matrix/bidirectional",
+    "ui/socket/shader/input",
+    "ui/socket/shader/output",
+    "ui/socket/shader/bidirectional",
+    "ui/socket/bundle/input",
+    "ui/socket/bundle/output",
+    "ui/socket/bundle/bidirectional",
+    "ui/socket/closure/input",
+    "ui/socket/closure/output",
+    "ui/socket/closure/bidirectional",
+    "ui/socket/custom/input",
+    "ui/socket/custom/output",
+    "ui/socket/custom/bidirectional"
+  ],
+  "overviewRoutes": [
+    "",
+    "core",
+    "core/node-tree",
+    "editor",
+    "editor/node-tree",
+    "layout",
+    "layout/fixed",
+    "layout/fixed/baseline",
+    "layout/adaptive",
+    "layout/adaptive/shared",
+    "layout/adaptive/compound",
+    "layout/dagre-layered",
+    "layout/dagre-layered/default",
+    "layout/coffman-graham",
+    "layout/coffman-graham/default",
+    "worker",
+    "worker/fixed",
+    "worker/adaptive",
+    "worker/dagre-layered",
+    "worker/coffman-graham",
+    "ui",
+    "ui/node-editor",
+    "ui/node-editor/scene",
+    "ui/node-editor/preview",
+    "ui/node-editor/collapsed",
+    "ui/node-editor/popup",
+    "ui/parameter",
+    "ui/parameter/text",
+    "ui/parameter/number",
+    "ui/parameter/integer",
+    "ui/parameter/boolean",
+    "ui/parameter/enum",
+    "ui/parameter/color",
+    "ui/parameter/vector",
+    "ui/parameter/rotation",
+    "ui/parameter/matrix",
+    "ui/parameter/reference",
+    "ui/parameter/collection",
+    "ui/parameter/path",
+    "ui/parameter/readonly",
+    "ui/frame",
+    "ui/frame/nested",
+    "ui/link",
+    "ui/link/orthogonal",
+    "ui/comparison",
+    "ui/comparison/reference",
+    "ui/socket",
+    "ui/socket/boolean",
+    "ui/socket/float",
+    "ui/socket/integer",
+    "ui/socket/vector",
+    "ui/socket/rotation",
+    "ui/socket/color",
+    "ui/socket/string",
+    "ui/socket/menu",
+    "ui/socket/object",
+    "ui/socket/collection",
+    "ui/socket/image",
+    "ui/socket/material",
+    "ui/socket/texture",
+    "ui/socket/geometry",
+    "ui/socket/matrix",
+    "ui/socket/shader",
+    "ui/socket/bundle",
+    "ui/socket/closure",
+    "ui/socket/custom"
+  ],
+  "hashes": {
+    "algorithm": "sha256",
+    "routeSerialization": "UTF-8 ordered routes joined by LF with no trailing LF",
+    "leafRoutes": "5ec797ff5b40c7ff276efc13e477db9a3e9a075457271e461758a3942fea9dd2",
+    "overviewRoutes": "cb3ab4f500d1744eeb05a9ce09e7cdf03bbc4c5f5bf79a54149e9a515ff94763",
+    "combinedRoutes": "0addbfc90b31072733de33e95a1c54145a64ba3018a3921e5252f9e35e8a29c3",
+    "ownerResourceSerialization": "UTF-8 path, TAB, sha256 records joined by LF with no trailing LF",
+    "ownerResources": "3a75d1ffd0c049e97b4c54aed04739e4e21dc4b5a03974f9aeb1570793c68a5d"
+  },
+  "ownerResources": [
+    {
+      "path": "README.md",
+      "sha256": "6e7be55bd5e253fedaa1b8227b55b73f5269627e78e3df40e28d1055e1aaa667"
+    },
+    {
+      "path": "packages/core/README.md",
+      "sha256": "5fc1a229bbfbe0e3af3ecaa2571169af52e7cfcd21a49714a9398b99a85a53d9"
+    },
+    {
+      "path": "packages/core/storybook/core-runtime-scenario.test.ts",
+      "sha256": "6bf945ab433ea608e767b110f8b188b7c6b0043c82f7e1c191f21db790b85092"
+    },
+    {
+      "path": "packages/core/storybook/core-runtime-scenario.ts",
+      "sha256": "adb4b449b5a051f111dc92001b492e667ff19c428f29a52e226a81ca49ae2f02"
+    },
+    {
+      "path": "packages/core/storybook/wgsl-shim.d.ts",
+      "sha256": "2c51eda686baf764b617e66cfd1f01ba1cb3f1fa965b3e602b7aca226316f19a"
+    },
+    {
+      "path": "packages/editor/README.md",
+      "sha256": "5b108e81f808ab4b40424a254cb87db4520e5732660e2ec454d88333a06ed8d2"
+    },
+    {
+      "path": "packages/editor/storybook/wgsl-shim.d.ts",
+      "sha256": "2c51eda686baf764b617e66cfd1f01ba1cb3f1fa965b3e602b7aca226316f19a"
+    },
+    {
+      "path": "packages/layout/README.md",
+      "sha256": "e93c300076dbed3221caff361818d6897759179315b83684d9114ccae46e9c22"
+    },
+    {
+      "path": "packages/layout/storybook/dom/layout-case.ts",
+      "sha256": "ebb6ae199e8b507f032c5d3d514f8d4ccb82cfdce32812c8b7232fd1d3d00bf9"
+    },
+    {
+      "path": "packages/layout/storybook/dom/layout-dom-story.test.ts",
+      "sha256": "8921849a107c64c5d04a906caea15d5ef99e1b76262ce56e17617f3ebf97ecb3"
+    },
+    {
+      "path": "packages/layout/storybook/dom/layout-dom-story.ts",
+      "sha256": "ae7bc0b0095d4f09234c82efbeb70c2b2e8049ebe2b6e95093e24c7124d1f375"
+    },
+    {
+      "path": "packages/layout/storybook/dom/layout-provider.ts",
+      "sha256": "f88283a070ce997be152fe3e1a175b807a252e883624bb285b020b3dd5db4de9"
+    },
+    {
+      "path": "packages/layout/storybook/dom/providers/adaptive.ts",
+      "sha256": "aff6dd334079dc7529affcea995cc66ece2dfc080aeea2b6fd04f5e2683be76a"
+    },
+    {
+      "path": "packages/layout/storybook/dom/providers/coffman-graham.ts",
+      "sha256": "88127522cf12dc070d096b1a4acb667e2d844e689672de10450d660065d1aa94"
+    },
+    {
+      "path": "packages/layout/storybook/dom/providers/dagre-layered.ts",
+      "sha256": "931dc69991b90c863c4953d75dc119089b63fe72568ae348cd6818ec1105cf33"
+    },
+    {
+      "path": "packages/layout/storybook/dom/providers/fixed.ts",
+      "sha256": "ec0750baf137e411975b8c082f288feeffb36aca702d6e2bc3fc76fa9d9b050f"
+    },
+    {
+      "path": "packages/layout/storybook/layout-fixtures.ts",
+      "sha256": "5b0f7101fe0c8d5c5a385118f600bc64835507384b63ec7232a46806ff0600b1"
+    },
+    {
+      "path": "packages/layout/storybook/layout-storybook.test.ts",
+      "sha256": "21bdbd10f24007cb1a06d24703b751e9aebcbd80e9273541981f44c09be21fea"
+    },
+    {
+      "path": "packages/layout/storybook/render-layout-svg.ts",
+      "sha256": "e6a77beb200cf0df0566e9645825998710c66f690a02bc980fbe7d1daa83a442"
+    },
+    {
+      "path": "packages/layout/storybook/top-down-dense-fixture.ts",
+      "sha256": "2d37b840206f2584716761f8f3d74f2e50f152eeb7148ef0932344867f738865"
+    },
+    {
+      "path": "packages/layout/storybook/top-down-fixture.ts",
+      "sha256": "08af03cdc05fc34b2aba483dfb071cd04b51a9b014a0f962c3658d6bfe0fcc0c"
+    },
+    {
+      "path": "packages/storybook/README.md",
+      "sha256": "5fb25b980cd27a907c4da341cbf38c00dd1ef2f8639d1899d0a346a093c5ec83"
+    },
+    {
+      "path": "packages/storybook/app/compiled-node-system-story.tsx",
+      "sha256": "a0ea12963d5e742718d767ccdcfbef4bd9b49d2b379ea52f4839a22748898209"
+    },
+    {
+      "path": "packages/storybook/app/dom-catalog.ts",
+      "sha256": "2f2987048361f68a2186cc29500c4225138a3e3b9969e4398d896ba0cf7a77e8"
+    },
+    {
+      "path": "packages/storybook/app/dom-css.ts",
+      "sha256": "fed12477b9e699aab4121b9db82462701f1f61ec53785188caa15e81a68dfd79"
+    },
+    {
+      "path": "packages/storybook/app/dom-entry.ts",
+      "sha256": "8d05a06755dd0cf411299d3cfe42d715fdcd2cac0ce7680f45b9e5e98577f2fd"
+    },
+    {
+      "path": "packages/storybook/app/dom-story.ts",
+      "sha256": "032353b411126a9da1f64f1892263fb3125edb688804e12bb09af6ab1b6fc314"
+    },
+    {
+      "path": "packages/storybook/app/production-node-story.ts",
+      "sha256": "efbba4f2a128ae21b9c1459e29880ecfdf02fe2f59cd18261c6ba1099df1025f"
+    },
+    {
+      "path": "packages/storybook/app/props-inspector.ts",
+      "sha256": "7bf578b3da9e5185bd19c455136182738cd79c41a397d6ae9e2f9ff7716e4976"
+    },
+    {
+      "path": "packages/storybook/app/style.css",
+      "sha256": "136fa2a7325887a2306fa42e59e5cc6ce71ff2d66b9963c6fbc3357257fa5c61"
+    },
+    {
+      "path": "packages/storybook/assets/references/blender-4.5.5-reference.png",
+      "sha256": "a493e1c03591800bb05644963369fca49669aa27f98e67a9971fd91735f2531d"
+    },
+    {
+      "path": "packages/storybook/assets/references/catalog.json",
+      "sha256": "6336fb189b3d3ae7ec4a9189945671e445db6b4a7d22ba3722c2d2a4b9a37cea"
+    },
+    {
+      "path": "packages/ui/README.md",
+      "sha256": "0e598c0194c3af8c34d8e6d9108b71c49b2cd7f0d6a5dc83e79a1fbddd4781d8"
+    },
+    {
+      "path": "packages/ui/storybook/dom/graph-story.test.ts",
+      "sha256": "dbdba75ec7c8be65e525a81203601b8445527da4ecd736e82054b15a06b79038"
+    },
+    {
+      "path": "packages/ui/storybook/dom/graph-story.ts",
+      "sha256": "6d5e1b542a9f3f90920d328153ed489d3eeae080b7cfc3eec48854f497ce6967"
+    },
+    {
+      "path": "packages/ui/storybook/dom/multi-node-story.test.ts",
+      "sha256": "941aabff73bc518c340942277593c0870895ba8333e86374a64e9c340e06654a"
+    },
+    {
+      "path": "packages/ui/storybook/dom/multi-node-story.ts",
+      "sha256": "78eef073de3e3d0c057cd0a831aea704b0f332cfb408f951d90c18c0d5c4d00a"
+    },
+    {
+      "path": "packages/ui/storybook/dom/node-tree-editor-story.test.ts",
+      "sha256": "640d460f8c7262bb3187ee21c66d58a94f4bbbf9a9db9f2f066d4f8f2b2ebbbd"
+    },
+    {
+      "path": "packages/ui/storybook/dom/node-tree-editor-story.ts",
+      "sha256": "d00e6df0f544badcc4728d89daa968112c21848f64e0101269fbfa29053c4e25"
+    },
+    {
+      "path": "packages/ui/storybook/dom/parameter-dom-data.ts",
+      "sha256": "9d466245f13507b66369deb39ff68229db017da1670237eb342479ad2f8c7f05"
+    },
+    {
+      "path": "packages/ui/storybook/dom/parameter-socket-route-story.test.ts",
+      "sha256": "f6d9aeed7c01d0f01fe3b85f70cb0db8d2a31b18bd92b9c6ab51e85bf4e548a5"
+    },
+    {
+      "path": "packages/ui/storybook/dom/parameter-socket-route-story.ts",
+      "sha256": "eec33280663fb7f056525586a094826921302878c0f7c7678b19d9312e6696c8"
+    },
+    {
+      "path": "packages/ui/storybook/dom/parameter-socket-story.test.ts",
+      "sha256": "42e6d360db20b9afa75c3bdfe8b99a49de56be9dc4de9e1804a4efe18e5fa3e2"
+    },
+    {
+      "path": "packages/ui/storybook/dom/parameter-socket-story.ts",
+      "sha256": "f1b2e3e6cdac6e4bcb49f7b53119aabdb3d17f2d83958e441ad105111ecf2ed1"
+    },
+    {
+      "path": "packages/ui/storybook/dom/remaining-dom-data.ts",
+      "sha256": "038ad82d2357b3353a8d40d78d72d33165dc12bc04a3d4195f2f0d66d7bb0fab"
+    },
+    {
+      "path": "packages/ui/storybook/dom/remaining-dom-story.test.ts",
+      "sha256": "9ff9d0c7de56bd24ef6cb5cef57694a4d36df0dd3b2dc1a4f6255ef0beb58657"
+    },
+    {
+      "path": "packages/ui/storybook/dom/remaining-dom-story.ts",
+      "sha256": "479439feaadfdbebc43e73a37c2586a2d7b3b679f5e8ba41c9640ab9ea213281"
+    },
+    {
+      "path": "packages/ui/storybook/dom/remaining-route-catalog.ts",
+      "sha256": "9207b2d5c3fcf6427d21fe29978eaba40aa5a740285bea92bb3f9bac378dbc37"
+    },
+    {
+      "path": "packages/ui/storybook/dom/single-node-story.test.ts",
+      "sha256": "0925f2b0a12639b6d293652832df20fc6d2e09218f57c9c67f257817b0e4943c"
+    },
+    {
+      "path": "packages/ui/storybook/dom/single-node-story.ts",
+      "sha256": "cb6bfb4dc1b7205053ceee6d60eb9ae6c8d6947e40fafa0befa81e76186fe5ac"
+    },
+    {
+      "path": "packages/ui/storybook/dom/socket-dom-data.ts",
+      "sha256": "e986ecd7f415d2c61a47d903567937f1a163917592b2ef41307e031673bda86b"
+    },
+    {
+      "path": "packages/ui/storybook/package-boundary.test.ts",
+      "sha256": "4198214a932f59b392f37f646bbc019f116caa0149d1a494f31c398c1d45fc4b"
+    },
+    {
+      "path": "packages/ui/storybook/parameter-catalog.ts",
+      "sha256": "884c5780eeca117ddff8302f101b0298d04e9627f48c25032d73de0459c8b166"
+    },
+    {
+      "path": "packages/ui/storybook/socket-catalog.ts",
+      "sha256": "1dbc579295e0a835ae7797e70f918f62764085838065cab288d04061acc9edbb"
+    },
+    {
+      "path": "packages/worker/README.md",
+      "sha256": "b381efc1a793e7a7da83b6d3073cf9327f3013f2b9b02dd124db1000bcaea937"
+    },
+    {
+      "path": "packages/worker/storybook/dom/providers/adaptive.ts",
+      "sha256": "775bd4a6bc7f71193ff8f7fd9122f730ce0acfb68128774aad74c60f2301d100"
+    },
+    {
+      "path": "packages/worker/storybook/dom/providers/coffman-graham.ts",
+      "sha256": "e6f4165509125cc3bde277b1e81f4144f2a87c87c56c0ddfb2584077ddd30a82"
+    },
+    {
+      "path": "packages/worker/storybook/dom/providers/dagre-layered.ts",
+      "sha256": "0fb5d7d9be51109639d0232b1946071280b87ee63a58caa378745999fcc06ba3"
+    },
+    {
+      "path": "packages/worker/storybook/dom/providers/fixed.ts",
+      "sha256": "e512181d87da68c15e5d369ef0aa713667342d8d030ea5c753d897ac9d05fcb3"
+    },
+    {
+      "path": "packages/worker/storybook/dom/worker-dom-story.test.ts",
+      "sha256": "c4788289cba03918b4388f4783c848233229ce01e0f2e353738df2161ab2ec68"
+    },
+    {
+      "path": "packages/worker/storybook/dom/worker-dom-story.ts",
+      "sha256": "84df610f2b03d5f627473f43c346931a57b9d98a24a7c7f442cce8b84f7d8fbd"
+    },
+    {
+      "path": "packages/worker/storybook/dom/worker-provider.ts",
+      "sha256": "35bc78eccd9f52734ddc19f0884b483e8ceb9bb305700763a19ea214ce7af0e8"
+    },
+    {
+      "path": "packages/worker/storybook/fixtures/adaptive.ts",
+      "sha256": "2cb5aab86d75fe4a5e3a04032732a2c9a5f3e828dfaf5b321461e9eb391b17a0"
+    },
+    {
+      "path": "packages/worker/storybook/fixtures/coffman-graham.ts",
+      "sha256": "3ee3879f6a3cdfe45e518d893e91bb97fef74a3d4f040f3956816605951d7d39"
+    },
+    {
+      "path": "packages/worker/storybook/fixtures/dagre-layered.ts",
+      "sha256": "30b5a2d4ca02182e5d011cdcaa32e25eddbc39694a8adaab362d573acd6e8240"
+    },
+    {
+      "path": "packages/worker/storybook/fixtures/fixed.ts",
+      "sha256": "d6902983316c0376278d489771d57c4004800fc8cbc81d8c027f46d7d66781ce"
+    },
+    {
+      "path": "packages/worker/storybook/wgsl-shim.d.ts",
+      "sha256": "2c51eda686baf764b617e66cfd1f01ba1cb3f1fa965b3e602b7aca226316f19a"
+    }
+  ]
+}

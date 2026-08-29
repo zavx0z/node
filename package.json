@@ -1,7 +1,7 @@
 {
   "name": "@nodes/workspace",
   "version": "0.1.0",
-  "description": "High-performance node systems, authoring, layout, workers, WebGPU views and static Storybook. Built for MetaFor.",
+  "description": "High-performance node systems, authoring, layout, workers and standard-DOM views. Built for MetaFor.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zavx0z/node.git"
@@ -18,14 +18,13 @@
     "typecheck": "tsc --project tsconfig.json --pretty false",
     "test": "bun test packages tests",
     "bench:node-system": "bun bench/node-system.ts --nodes 1000 && bun bench/node-system.ts --nodes 10000",
-    "check": "bun run typecheck && bun run test && bun run --cwd packages/storybook build"
+    "check": "bun run typecheck && bun run test"
   },
   "devDependencies": {
     "@engine/core": "link:@engine/core",
     "@nodes/core": "workspace:*",
     "@nodes/editor": "workspace:*",
     "@nodes/layout": "workspace:*",
-    "@nodes/storybook": "workspace:*",
     "@nodes/ui": "workspace:*",
     "@nodes/worker": "workspace:*",
     "@types/bun": "^1.4.0",
@@ -35,7 +34,6 @@
     "@zavx0z/renderer-browser": "link:@zavx0z/renderer-browser",
     "@zavx0z/renderer-webgpu": "link:@zavx0z/renderer-webgpu",
     "@zavx0z/react": "link:@zavx0z/react",
-    "@zavx0z/storybook": "link:@zavx0z/storybook",
     "@zavx0z/template": "link:@zavx0z/template",
     "typescript": "^7.0.2"
   }

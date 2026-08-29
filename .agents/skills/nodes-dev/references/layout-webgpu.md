@@ -2,11 +2,12 @@
 
 | Property | Value |
 | --- | --- |
-| Dagre Layered route | `/layout/dagre-layered/default/default` |
-| Coffman–Graham Layered route | `/layout/coffman-graham/default/default` |
-| Other policies | `/layout/fixed/baseline/right`, `/layout/adaptive/shared/right` |
-| Ready | `nodesStorybook=ready`, exact `nodesStorybookStory` |
-| Canvas | `#nodes-storybook-canvas` |
+| Package | `@nodes/layout` |
+| Dagre Layered route | `layout/dagre-layered/default/default` |
+| Coffman–Graham Layered route | `layout/coffman-graham/default/default` |
+| Other policies | `layout/fixed/baseline/right`, `layout/adaptive/shared/right` |
+| Ready | external package ready + exact route |
+| Canvas | shared external Storybook canvas |
 
 This section uses the one shared retained Workbench and exact UI Elements/Components.
 Each lazy story imports one production policy entrypoint. Dagre Layered shows
@@ -17,16 +18,8 @@ Coffman–Graham Layered owns the separate width-bounded large-graph scenario.
 bun test packages/layout/src packages/layout/storybook packages/worker
 bun run --cwd packages/layout typecheck
 bun run typecheck
-$storybook restart @nodes/storybook
-$storybook browser reload @nodes/storybook \
-  --route /layout/coffman-graham/default/default --target-id "$target_id"
-$storybook browser dom @nodes/storybook \
-  --route /layout/coffman-graham/default/default --target-id "$target_id"
-$storybook browser canvas @nodes/storybook \
-  --route /layout/coffman-graham/default/default --target-id "$target_id" \
-  --output /tmp/nodes-layout-coffman-graham.png
-$storybook browser console @nodes/storybook \
-  --route /layout/coffman-graham/default/default --target-id "$target_id"
+$storybook check /Users/zavx0z/repozitarium/webxr-space/projects/node
+$storybook open @nodes/layout layout/coffman-graham/default/default
 ```
 
 DOM evidence proves the exact story route, retained Workbench diagnostics and

@@ -6,14 +6,15 @@ Changes should preserve both sides of that promise: MetaFor receives a precise n
 
 ## Setup
 
-Use Bun `1.4.0` from [`.bun-version`](./.bun-version). Register the sibling Renderer, Engine, and shared Storybook package links described in the [README](./README.md), then run:
+Use Bun `1.4.0` from [`.bun-version`](./.bun-version). Register the sibling Renderer, Engine and UI package links described in the [README](./README.md), then run:
 
 ```bash
 bun install
 bun run check
 ```
 
-Run the catalog with `$storybook ensure @nodes/storybook`.
+Attach `.storybook/manifest.json` with the global external `$storybook`; open
+the exact owning package and route needed for evidence.
 
 ## Ownership
 
@@ -21,8 +22,8 @@ Run the catalog with `$storybook ensure @nodes/storybook`.
 - `packages/editor` owns headless graph authoring.
 - `packages/layout` owns pure numeric placement and routing.
 - `packages/worker` owns structured-clone transport and executor boundaries.
-- `packages/ui` owns retained node views and interaction.
-- `packages/storybook` owns dev/static stories and reference evidence.
+- `packages/ui` owns standard-DOM node views, interaction and accepted visual evidence.
+- Every package owns its dev-only `storybook/` stories and `.storybook/` declarations.
 - Product integration belongs in [MetaFor](https://github.com/zavx0z/metafor).
 
 Read the affected package requirements, public types, and focused tests before changing a contract. A new invariant belongs in its real owner before code and evidence are changed.
@@ -57,19 +58,18 @@ Do not hide a sibling dependency behind a local wrapper. Local Bun links are coo
 
 ## Story and evidence requirements
 
-A Storybook change should preserve route canonicalization, one root entry with lazy story-chunk isolation, WebGPU capability boundaries, and the `/node/` static base. Reference changes must update the asset, SHA-256, viewport, DPR, provenance, compatibility, and acceptance in one manifest change. Automated captures remain candidates until the owner accepts them.
+An external Storybook change must preserve exact package ownership, the 159-leaf route baseline, real overview states, lazy runtime/story boundaries and one shared Workbench. Reference changes update the `@nodes/ui` asset and provenance catalog together. Automated captures remain candidates until the owner accepts them.
 
 ## Checks
 
 ```bash
 bun run typecheck
 bun run test
-bun run --cwd packages/storybook build
 git diff --check
 ```
 
-For visible WebGPU changes, use `$storybook` with `@nodes/storybook` to inspect
-the exact route, canvas, console and retained behavior. A successful static
+For visible WebGPU changes, use external `$storybook` with the exact `@nodes/*`
+package and route to inspect canvas, console and behavior. A successful package
 build does not prove visual correctness.
 
 ## Delivery boundary

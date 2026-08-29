@@ -4,7 +4,7 @@ import {basename, join, relative} from "node:path"
 import {fileURLToPath} from "node:url"
 
 const repositoryRoot = fileURLToPath(new URL("..", import.meta.url))
-const packageNames = ["core", "editor", "layout", "worker", "ui", "storybook"] as const
+const packageNames = ["core", "editor", "layout", "worker", "ui"] as const
 const metaforLink = "https://github.com/zavx0z/metafor"
 
 describe("standalone Nodes repository contract", () => {
@@ -46,7 +46,9 @@ describe("standalone Nodes repository contract", () => {
 
   test("contains no compatibility package names or source-branded production API", async () => {
     const files = await sourceFiles(join(repositoryRoot, "packages"))
-    const productionFiles = files.filter((path) => !path.includes("/storybook/"))
+    const productionFiles = files
+      .filter((path) => !path.includes("/storybook/"))
+      .filter((path) => !path.includes("/.storybook/"))
     const productionUi = await readAll(productionFiles
       .filter((path) => path.startsWith(join(repositoryRoot, "packages/ui")))
       .filter((path) => /\.tsx?$/u.test(path) && !/\.test\.tsx?$/u.test(path)))
