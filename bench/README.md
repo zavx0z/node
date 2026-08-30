@@ -23,7 +23,7 @@ Each process records:
 - surviving Node/Input identities, renderer frame identity and backend plan
   reuse;
 - full RenderFrame diagnostics using the real Engine font. A public
-  `style={{overflow: "visible"}}` removes the viewport clip in this diagnostic
+  `style={css\`& { overflow: visible; }\`}` removes the viewport clip in this diagnostic
   so the default safe backend can prove automatic instancing where it is
   applicable; no `rectInstancing` option or manual GPU hint is supplied.
 

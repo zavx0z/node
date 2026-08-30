@@ -7,7 +7,6 @@ import {
 import {NodeTreeEditor} from "@nodes/editor"
 import {
   NodeSystem,
-  nodeSystemCss,
   type NodeSystemParameterInput,
 } from "@nodes/ui/node-system"
 import {createDocument, type MutationBatch, type StateChangeBatch} from "@zavx0z/dom"
@@ -82,7 +81,7 @@ const mountStarted = performance.now()
 root.render(<NodeSystem
   store={measuredStore}
   viewport={viewport}
-  style={{overflow: "visible"}}
+  style={css`& { overflow: visible; }`}
   onParameterInput={onParameterInput}
 />)
 const mountMs = performance.now() - mountStarted
@@ -96,7 +95,6 @@ const renderer = createDocumentRenderer({
   document,
   root: host,
   viewport: {width: 850, height: 500},
-  styleSheets: [nodeSystemCss],
 })
 const initialRendererStarted = performance.now()
 const initialFrame = renderer.flush()

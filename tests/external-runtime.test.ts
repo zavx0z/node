@@ -1,5 +1,6 @@
 import {describe, expect, test} from "bun:test"
 import {createDocument, type Document} from "@zavx0z/dom"
+import {createRoot} from "@zavx0z/react"
 import {createNodesExternalRuntime} from "../.storybook/runtime.ts"
 
 describe("Nodes structural external runtime", () => {
@@ -7,46 +8,51 @@ describe("Nodes structural external runtime", () => {
     const document = createDocument()
     const lifetime = new AbortController()
     const route = new AbortController()
-    const mounted: unknown[] = []
-    const inspector: unknown[] = []
-    const source: unknown[] = []
-    const props: unknown[] = []
-    let renders = 0
+    const presentations: Readonly<Record<string, unknown>>[] = []
     let disposed = 0
-    const runtime = createNodesExternalRuntime([".owner { color: cyan; }"])
+    const runtime = createNodesExternalRuntime()
     const session = runtime.create({
       document,
       signal: lifetime.signal,
-      mount(node) { mounted.push(node) },
-      publishInspector(value) { inspector.push(value) },
-      publishSource(value) { source.push(value) },
-      publishProps(value) { props.push(value) },
+      present(value) {
+        presentations.push(value)
+        document.appendChild(value.node)
+      },
       reportDiagnostic() {},
-      requestRender() { renders += 1 },
     })
     await session.mount({
       route: "fixture/default",
       signal: route.signal,
       story(ownerDocument: Document, storyRoute: string) {
         const element = ownerDocument.createElement("section")
+        const componentRoot = createRoot(element)
         element.textContent = storyRoute
         return Object.freeze({
           element,
+          componentRoot,
           props: Object.freeze({route: storyRoute}),
-          source: () => Object.freeze({html: "<section></section>", css: ".owner {}", typescript: "export {}"}),
-          dispose() { disposed += 1 },
+          source: () => Object.freeze({html: "<section></section>", typescript: "export {}"}),
+          dispose() {
+            componentRoot.unmount()
+            disposed += 1
+          },
         })
       },
     })
 
-    expect(runtime.protocol).toBe("storybook-runtime/1")
-    expect(session.styleSheets).toEqual([".owner { color: cyan; }"])
-    expect(mounted[0]).toBeInstanceOf(Object)
-    expect((mounted[0] as {ownerDocument: unknown}).ownerDocument).toBe(document)
-    expect(inspector.at(-1)).toMatchObject({props: {route: "fixture/default"}})
-    expect(source).toHaveLength(1)
-    expect(props.at(-1)).toEqual({route: "fixture/default"})
-    expect(renders).toBeGreaterThan(0)
+    expect(runtime.protocol).toBe("storybook-runtime/3")
+    expect("styleSheets" in session).toBeFalse()
+    expect(presentations).toHaveLength(1)
+    expect(presentations[0]).toEqual(expect.objectContaining({
+      protocol: "story-presentation/1",
+      node: document.firstChild,
+      source: {html: "<section></section>", typescript: "export {}"},
+      values: {props: {route: "fixture/default"}},
+    }))
+    expect((presentations[0]?.componentRoot as {readStyleSheets(): unknown}).readStyleSheets()).toEqual({
+      revision: 0,
+      styleSheets: [],
+    })
 
     await session.unmount()
     expect(disposed).toBe(1)
@@ -60,15 +66,11 @@ describe("Nodes structural external runtime", () => {
     const route = new AbortController()
     route.abort()
     let called = false
-    const session = createNodesExternalRuntime([]).create({
+    const session = createNodesExternalRuntime().create({
       document,
       signal: lifetime.signal,
-      mount() {},
-      publishInspector() {},
-      publishSource() {},
-      publishProps() {},
+      present() {},
       reportDiagnostic() {},
-      requestRender() {},
     })
     await session.mount({
       route: "fixture/aborted",

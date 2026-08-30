@@ -3,6 +3,7 @@ import {mkdtemp, readdir, rm} from "node:fs/promises"
 import {tmpdir} from "node:os"
 import {join, relative} from "node:path"
 import {fileURLToPath} from "node:url"
+import {createTemplateJsxBunPlugin} from "@zavx0z/template/bun"
 
 const repositoryRoot = fileURLToPath(new URL("..", import.meta.url))
 const packagesRoot = join(repositoryRoot, "packages")
@@ -51,6 +52,7 @@ describe("universal node-system package boundaries", () => {
       "./node-workbench": "./dom/node-workbench.ts",
       "./parameter-socket": "./dom/parameter-socket.ts",
       "./node-tree-editor": "./dom/node-tree-editor.ts",
+      "./dom.css": "./dom.css",
     })
     expect(packageJson.dependencies).toEqual({
       "@zavx0z/dom": "link:@zavx0z/dom",
@@ -131,6 +133,7 @@ describe("universal node-system package boundaries", () => {
       "./top-down/executor",
       "./transport",
       "./types",
+      "./worker-protocol.css",
     ])
     const layoutManifest = await Bun.file(join(packagesRoot, "layout/package.json")).json() as {
       exports: Record<string, unknown>
@@ -140,6 +143,7 @@ describe("universal node-system package boundaries", () => {
       "./adaptive",
       "./coffman-graham",
       "./fixed",
+      "./layout-presentation.css",
       "./top-down",
       "./types",
     ])
@@ -148,6 +152,7 @@ describe("universal node-system package boundaries", () => {
     }
     expect(Object.keys(uiManifest.exports).sort()).toEqual([
       ".",
+      "./dom.css",
       "./graph-canvas",
       "./link",
       "./node",
@@ -254,6 +259,28 @@ async function buildFixture(name: string): Promise<{
   gzipBytes: number
   sha256: string
 }> {
+  if (name === "dom-ui-consumer.ts") {
+    const result = await Bun.build({
+      entrypoints: [join(fixturesRoot, name)],
+      target: "browser",
+      format: "esm",
+      minify: true,
+      plugins: [createTemplateJsxBunPlugin({
+        sourceRoots: [
+          join(repositoryRoot, "packages/ui"),
+          join(repositoryRoot, "../ui/packages/components"),
+        ],
+      })],
+    })
+    if (!result.success) throw new Error(result.logs.map(({message}) => message).join("\n"))
+    const bytes = new Uint8Array(await result.outputs[0]!.arrayBuffer())
+    return {
+      source: new TextDecoder().decode(bytes),
+      bytes: bytes.byteLength,
+      gzipBytes: Bun.gzipSync(bytes).byteLength,
+      sha256: new Bun.CryptoHasher("sha256").update(bytes).digest("hex"),
+    }
+  }
   const directory = await mkdtemp(join(tmpdir(), "nodes-package-bundle-"))
   const output = join(directory, "bundle.js")
   try {

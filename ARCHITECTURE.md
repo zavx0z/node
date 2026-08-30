@@ -122,15 +122,17 @@ Surface signatures, aliases or compatibility re-exports.
 The compiled `NodeSystem`, `NodeCard`, `ParameterRow`, `SocketPort` and
 `NodeConnection` functions compose those same semantic concepts through
 `@zavx0z/react` and build-time `@zavx0z/template`. They expose one `style`
-override, use class-free `defineStyles` owner tokens and retain keyed DOM
-identity from canonical entity ids.
+override authored as one real `css\`\`` template, publish no style transport and
+retain keyed DOM identity from canonical entity ids.
 
 ### External development declarations
 
 `.storybook/manifest.json` composes the five production owners without creating
 a sixth npm package. Every `packages/<owner>/.storybook/manifest.json` points to
-one data-only catalog, plain `storybook-runtime/1` adapter and owner-local story
-modules. No consumer installs/imports Storybook or owns a server/build/port.
+one data-only catalog, plain `storybook-runtime/3` adapter and owner-local story
+modules. Каждый subject объявляет inherited `story-presentation/1`; runtime
+атомарно публикует `{node, componentRoot, source, values}` без style/source
+transport. No consumer installs/imports Storybook or owns a server/build/port.
 
 The canonical baseline contains 159 exact leaves. Category and subject route
 overrides preserve historical prefixes; former section prefixes remain variant
@@ -189,5 +191,9 @@ The global landing loads declaration metadata only; package runtime code loads
 only in its own tab and an owner story loads only for an exact variant.
 
 The Engine font and shared DOM-to-WebGPU renderer belong to the external shell.
+Workbench, preview and HUD share its one Document/Canvas/Renderer/Space/ViewPoint;
+Nodes stories create no presentation realm. Packages that consume production UI
+declare exact `@ui/components/theme.css` through the verified local dependency
+closure before their own package CSS.
 Accepted Blender evidence remains under `packages/ui/.storybook/references/` and
 outside production exports. Pages publication is not part of this repository.

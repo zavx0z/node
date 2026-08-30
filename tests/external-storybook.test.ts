@@ -77,6 +77,16 @@ describe("Nodes external Storybook declarations", () => {
         catalog: "./catalog.json",
       })
       expect(manifest.$schema).toBe(manifestSchema)
+      const expectedAuthorStyleSheets = owner === "core" || owner === "editor" || owner === "ui"
+        ? [
+          {specifier: "@ui/components/theme.css"},
+          {specifier: "@nodes/ui/dom.css"},
+        ]
+        : owner === "layout"
+          ? [{specifier: "@nodes/layout/layout-presentation.css"}]
+          : [{specifier: "@nodes/worker/worker-protocol.css"}]
+      expect(manifest.authorStyleSheets).toEqual(expectedAuthorStyleSheets)
+      expect(Object.hasOwn(manifest, "widgetContributions")).toBeFalse()
       const packageJson = await json(`packages/${owner}/package.json`)
       expect(packageJson.name).toBe(manifest.id)
       expect(packageJson.exports).not.toHaveProperty("./storybook")
@@ -91,7 +101,13 @@ describe("Nodes external Storybook declarations", () => {
         expect(category).not.toHaveProperty("sections")
         for (const subject of category.subjects) {
           expect(subject).not.toHaveProperty("sections")
+          expect(subject.presentation).toEqual({
+            protocol: "story-presentation/1",
+            projection: "display",
+            widgets: ["props", "source", "diagnostics"],
+          })
           for (const variant of subject.variants) {
+            expect(Object.hasOwn(variant, "presentation"), variant.route).toBeFalse()
             const path = resolve(packageRoot, ".storybook", variant.module.path)
             expect(path.startsWith(packageRoot), `${owner}: ${path}`).toBeTrue()
             await expectModuleExport(path, variant.module.export)
@@ -159,6 +175,11 @@ type Catalog = Readonly<{
     route: string
     subjects: readonly Readonly<{
       route: string
+      presentation: Readonly<{
+        protocol: "story-presentation/1"
+        projection: "display"
+        widgets: readonly ["props", "source", "diagnostics"]
+      }>
       variants: readonly Readonly<{
         route: string
         module: Readonly<{path: string; export: string}>

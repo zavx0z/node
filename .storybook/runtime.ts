@@ -2,14 +2,18 @@ import {Node, type Document, type HTMLElement} from "@zavx0z/dom"
 
 export type NodesExternalStorySource = Readonly<{
   html: string
-  css: string
   typescript: string
+}>
+
+export type NodesExternalComponentRoot = Readonly<{
+  readStyleSheets(): unknown
 }>
 
 export type NodesExternalStory = Readonly<{
   element: HTMLElement
+  componentRoot: NodesExternalComponentRoot
   readonly props?: unknown
-  source?(): NodesExternalStorySource
+  source(): NodesExternalStorySource
   ready?(): Promise<void>
   dispose(): void
 }>
@@ -22,12 +26,14 @@ type NodesExternalStoryFactory = (
 type NodesExternalRuntimeContext = Readonly<{
   document: Document
   signal: AbortSignal
-  mount(node: Node): void
-  publishInspector(value: unknown): void
-  publishSource(value: unknown): void
-  publishProps(value: unknown): void
+  present(value: Readonly<{
+    protocol: "story-presentation/1"
+    node: Node
+    componentRoot: NodesExternalComponentRoot
+    source: NodesExternalStorySource
+    values: Readonly<{props: unknown}>
+  }>): void
   reportDiagnostic(value: unknown): void
-  requestRender(): void
 }>
 
 type NodesExternalStoryInput = Readonly<{
@@ -37,10 +43,9 @@ type NodesExternalStoryInput = Readonly<{
 }>
 
 /** Creates one plain structural adapter without importing Storybook. */
-export function createNodesExternalRuntime(styleSheets: readonly string[]) {
-  const styles = Object.freeze([...styleSheets])
+export function createNodesExternalRuntime() {
   return Object.freeze({
-    protocol: "storybook-runtime/1",
+    protocol: "storybook-runtime/3",
     create(context: NodesExternalRuntimeContext) {
       let current: NodesExternalStory | null = null
       let interactionTarget: HTMLElement | null = null
@@ -48,13 +53,13 @@ export function createNodesExternalRuntime(styleSheets: readonly string[]) {
 
       const publish = (): void => {
         if (current === null) return
-        context.publishInspector(Object.freeze({
-          owner: "nodes",
-          props: current.props ?? null,
+        context.present(Object.freeze({
+          protocol: "story-presentation/1",
+          node: current.element,
+          componentRoot: current.componentRoot,
+          source: current.source(),
+          values: Object.freeze({props: current.props ?? null}),
         }))
-        context.publishProps(current.props ?? null)
-        if (current.source !== undefined) context.publishSource(current.source())
-        context.requestRender()
       }
       const onInteraction = (): void => publish()
       const unmount = async (): Promise<void> => {
@@ -88,6 +93,15 @@ export function createNodesExternalRuntime(styleSheets: readonly string[]) {
         if (typeof story.dispose !== "function") {
           throw new TypeError(`Nodes story has no dispose lifecycle: ${input.route}`)
         }
+        if (story.componentRoot === null || typeof story.componentRoot !== "object" ||
+          typeof story.componentRoot.readStyleSheets !== "function") {
+          story.dispose()
+          throw new TypeError(`Nodes story returned no component stylesheet root: ${input.route}`)
+        }
+        if (typeof story.source !== "function") {
+          story.dispose()
+          throw new TypeError(`Nodes story returned no required source: ${input.route}`)
+        }
         if (story.ready !== undefined) await story.ready()
         if (input.signal.aborted || context.signal.aborted) {
           story.dispose()
@@ -98,12 +112,10 @@ export function createNodesExternalRuntime(styleSheets: readonly string[]) {
         interactionTarget.addEventListener("click", onInteraction)
         interactionTarget.addEventListener("input", onInteraction)
         interactionTarget.addEventListener("change", onInteraction)
-        context.mount(story.element)
         publish()
       }
 
       return Object.freeze({
-        styleSheets: styles,
         mount,
         update: mount,
         unmount,

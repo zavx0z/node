@@ -8,4 +8,8 @@ plugin(createTemplateJsxBunPlugin({
     resolve(import.meta.dir, "packages/ui"),
     resolve(import.meta.dir, "../ui/packages/components"),
   ],
+  styleSourceRootIds: [
+    "@nodes/ui",
+    "@ui/components",
+  ],
 }))
