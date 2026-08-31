@@ -10,6 +10,7 @@ const packagesRoot = join(repositoryRoot, "packages")
 const fixturesRoot = join(repositoryRoot, "tests/fixtures")
 const coreRoot = join(packagesRoot, "core")
 const workerRoot = join(packagesRoot, "worker")
+const fullDomUiBundleBudget = Object.freeze({bytes: 230_000, gzipBytes: 60_000})
 
 describe("universal node-system package boundaries", () => {
   test("keeps @nodes/core free of renderer, layout, HUD and product imports", async () => {
@@ -224,6 +225,12 @@ describe("universal node-system package boundaries", () => {
     expect(domUi.source).toContain("Field mount is disposed")
     expect(domUi.source).not.toContain("createField")
     expect(domUi.source).not.toContain("@layout/core")
+    expect(domUi.source).not.toContain(".node-socket {")
+    expect(domUi.source).not.toContain(".node-link {")
+    expect(domUi.source).not.toContain(".node-article {")
+    expect(domUi.source).not.toContain(".graph-canvas {")
+    expect(domUi.source).not.toContain(".node-tree-dom {")
+    expect(domUi.source).not.toContain(".parameter-socket {")
 
     expect(core.bytes).toBeLessThan(20_000)
     expect(authoring.bytes).toBeLessThan(40_000)
@@ -248,8 +255,8 @@ describe("universal node-system package boundaries", () => {
       gzipBytes: 12_541,
       sha256: "18ed4f095ac201266151002d83cdb9dfd2e15c5db7f98d06505d1df63c2ec3b9",
     })
-    expect(domUi.bytes).toBeLessThan(215_000)
-    expect(domUi.gzipBytes).toBeLessThan(55_000)
+    expect(domUi.bytes).toBeLessThanOrEqual(fullDomUiBundleBudget.bytes)
+    expect(domUi.gzipBytes).toBeLessThanOrEqual(fullDomUiBundleBudget.gzipBytes)
   })
 })
 

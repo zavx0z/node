@@ -137,6 +137,30 @@ describe("Nodes external Storybook declarations", () => {
       .toBe("a493e1c03591800bb05644963369fca49669aa27f98e67a9971fd91735f2531d")
     expect(createHash("sha256").update(readFileSync(catalogPath)).digest("hex"))
       .toBe("6336fb189b3d3ae7ec4a9189945671e445db6b4a7d22ba3722c2d2a4b9a37cea")
+    const referenceCatalog = await json("packages/ui/.storybook/references/catalog.json")
+    expect(referenceCatalog.references).toHaveLength(1)
+    expect(referenceCatalog.references[0]).toMatchObject({
+      id: "accepted-node-editor-4-5-5",
+      storyRoute: "/ui/comparison/reference/default",
+      asset: "blender-4.5.5-reference.png",
+      sha256: "a493e1c03591800bb05644963369fca49669aa27f98e67a9971fd91735f2531d",
+      source: {
+        product: "Blender",
+        version: "4.5.5",
+        revision: "release-4.5.5",
+      },
+      viewport: {width: 1920, height: 1200, dpr: 2},
+      pixelSize: {width: 3840, height: 2400},
+      compatibility: "compatible",
+      acceptance: "accepted",
+      acceptedFrom: {
+        repository: "https://github.com/zavx0z/metafor",
+        revision: "23057c8447e718d441e68e4cd4c86134915b08b8",
+      },
+    })
+    const reference = referenceCatalog.references[0]
+    expect(reference.pixelSize.width).toBe(reference.viewport.width * reference.viewport.dpr)
+    expect(reference.pixelSize.height).toBe(reference.viewport.height * reference.viewport.dpr)
     const uiCatalog = await catalogFor("ui")
     const comparison = uiCatalog.categories.flatMap((category) => category.subjects)
       .flatMap((subject) => subject.variants)
