@@ -48,7 +48,6 @@ export function createNodesExternalRuntime() {
     protocol: "storybook-runtime/3",
     create(context: NodesExternalRuntimeContext) {
       let current: NodesExternalStory | null = null
-      let interactionTarget: HTMLElement | null = null
       let disposed = false
 
       const publish = (): void => {
@@ -61,17 +60,10 @@ export function createNodesExternalRuntime() {
           values: Object.freeze({props: current.props ?? null}),
         }))
       }
-      const onInteraction = (): void => publish()
       const unmount = async (): Promise<void> => {
         if (current === null) return
-        if (interactionTarget !== null) {
-          interactionTarget.removeEventListener("click", onInteraction)
-          interactionTarget.removeEventListener("input", onInteraction)
-          interactionTarget.removeEventListener("change", onInteraction)
-        }
         const previous = current
         current = null
-        interactionTarget = null
         previous.dispose()
       }
       const mount = async (input: NodesExternalStoryInput): Promise<void> => {
@@ -108,10 +100,6 @@ export function createNodesExternalRuntime() {
           return
         }
         current = story
-        interactionTarget = story.element
-        interactionTarget.addEventListener("click", onInteraction)
-        interactionTarget.addEventListener("input", onInteraction)
-        interactionTarget.addEventListener("change", onInteraction)
         publish()
       }
 

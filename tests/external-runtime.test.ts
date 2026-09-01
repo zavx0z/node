@@ -1,5 +1,5 @@
 import {describe, expect, test} from "bun:test"
-import {createDocument, type Document} from "@zavx0z/dom"
+import {Event, createDocument, type Document} from "@zavx0z/dom"
 import {createRoot} from "@zavx0z/react"
 import {createNodesExternalRuntime} from "../.storybook/runtime.ts"
 
@@ -83,6 +83,44 @@ describe("Nodes structural external runtime", () => {
     expect(called).toBeFalse()
     const source = await Bun.file(new URL("../.storybook/runtime.ts", import.meta.url)).text()
     expect(source).not.toMatch(/@zavx0z\/storybook|@nodes\/storybook/u)
+    await session.dispose()
+  })
+
+  test("keeps one atomic presentation while owner interactions mutate live DOM", async () => {
+    const document = createDocument()
+    const lifetime = new AbortController()
+    const route = new AbortController()
+    let presentations = 0
+    const session = createNodesExternalRuntime().create({
+      document,
+      signal: lifetime.signal,
+      present(value) {
+        presentations += 1
+        if (presentations > 1) throw new Error("presentation must remain atomic")
+        document.appendChild(value.node)
+      },
+      reportDiagnostic() {},
+    })
+    await session.mount({
+      route: "fixture/interactive",
+      signal: route.signal,
+      story(ownerDocument: Document) {
+        const element = ownerDocument.createElement("button")
+        const componentRoot = createRoot(element)
+        element.addEventListener("click", () => element.setAttribute("aria-pressed", "true"))
+        return Object.freeze({
+          element,
+          componentRoot,
+          source: () => Object.freeze({html: "<button></button>", typescript: "export {}"}),
+          dispose() { componentRoot.unmount() },
+        })
+      },
+    })
+
+    document.querySelector("button")!.dispatchEvent(new Event("click", {bubbles: true}))
+
+    expect(presentations).toBe(1)
+    expect(document.querySelector("button")?.getAttribute("aria-pressed")).toBe("true")
     await session.dispose()
   })
 })

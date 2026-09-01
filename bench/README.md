@@ -6,11 +6,41 @@ Run both canonical scales from the repository root:
 bun run bench:node-system
 ```
 
+Run retained Path rendering at the two layout-policy edge budgets and the
+synthetic 10k stress scale:
+
+```bash
+bun run bench:node-paths
+```
+
+The Path benchmark materializes exactly one semantic `vector-path` per Link in
+a real `GraphCanvas` with one Frame and six Node siblings. It records initial
+preparation plus warmed 100-sample stable, transform-only, GraphCanvas selection
+and single-route distributions at 512, 2,048 and 10,000 Links. Acceptance
+requires selected-last paint order, one shared path run, stable semantic identity
+and geometry, zero transform uploads, no semantic DOM reparent, one bounded
+CSS-stacking style/order update for
+selection (4-byte width plus moved sampled-order range), only the changed
+route segment fields, and p50/p95/p99 timing with
+interactive p95 inside one 60 Hz frame.
+
+Each scale runs in its own Bun process. This prevents an earlier fixture's
+uncollected retained graph from changing the later scale. Explicit GC is used
+only for retained-heap snapshots outside every measured sample.
+
+Heap evidence separates the retained baseline after initial apply, the raw
+heap after all measured interactions, and the retained heap after yielding out
+of the WeakRef job followed by `Bun.gc(true)`. GC never runs inside a timing
+sample. This makes an accidentally strong predecessor chain across immutable
+10k Link arrays observable without laundering collection time into frame p95.
+
 The benchmark constructs independent 1k and 10k Core `NodeTree` fixtures.
 Every Node has four Parameters, two typed Sockets and participates in one Link
 chain. The compiled `NodeSystem` receives one `850 × 500` viewport and
-materializes six Nodes; fixture construction remains reported separately from
-component interaction timings.
+materializes six Nodes and eight semantic Link Paths: Links remain visible when
+either endpoint is visible or their route bounds cross the viewport. The 1k/10k stores contain
+999/9,999 canonical Links. Fixture construction remains reported separately
+from component interaction timings.
 
 Each process records:
 

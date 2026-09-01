@@ -18,6 +18,7 @@
     "typecheck": "tsc --project tsconfig.json --pretty false",
     "test": "bun test packages tests",
     "bench:node-system": "bun bench/node-system.ts --nodes 1000 && bun bench/node-system.ts --nodes 10000",
+    "bench:node-paths": "bun bench/node-paths.ts",
     "check": "bun run typecheck && bun run test"
   },
   "devDependencies": {

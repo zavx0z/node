@@ -88,6 +88,7 @@ const mountMs = performance.now() - mountStarted
 const mountStats = root.stats()
 const mountMutations = mutationSummary(mutationBatches)
 const mountStateChanges = stateChangeSummary(stateChangeBatches)
+const mountedLinkPaths = [...host.querySelectorAll("vector-path")]
 mutationBatches.length = 0
 stateChangeBatches.length = 0
 
@@ -98,6 +99,7 @@ const renderer = createDocumentRenderer({
 })
 const initialRendererStarted = performance.now()
 const initialFrame = renderer.flush()
+const initialPathGeometry = pathGeometry(initialFrame)
 const initialRendererMs = performance.now() - initialRendererStarted
 const backend = new RendererWebGpuBackend({font, invalidateGeometry() {}})
 const initialBackendStarted = performance.now()
@@ -188,6 +190,7 @@ const valueStats = maxStats(valueSamples.map(sample => sample.stats))
 const valueMutations = maxMutationSummary(valueSamples.map(sample => sample.mutations))
 const valueStateChanges = maxStateChangeSummary(valueSamples.map(sample => sample.stateChanges))
 const valueFrame = valueSamples[valueSamples.length - 1]!.frame
+const valuePathGeometry = pathGeometry(valueFrame)
 const valueBackend = backend.diagnostics
 const valueHeaderBackend = headerBackend.diagnostics
 const valueFlushes = Math.max(...valueSamples.map(sample => sample.flushes))
@@ -242,6 +245,7 @@ stateChangeBatches.length = 0
 const topologyRendererStarted = performance.now()
 const topologySettled = settleRenderer(renderer)
 const topologyFrame = topologySettled.frame
+const topologyPathGeometry = pathGeometry(topologyFrame)
 const topologyRendererMs = performance.now() - topologyRendererStarted
 const topologyBackendStarted = performance.now()
 backend.applyFrame(topologyFrame)
@@ -280,7 +284,18 @@ const correctness = Object.freeze({
   topologyMutationsSkipped: topologyMutations.records === 0 && topologyStateChanges.records === 0,
   rendererFrameReused: offscreenFrame === beforeOffscreenFrame && renderer.flush() === topologyFrame,
   backendPlanReused: offscreenBackend.rectPlanReused && topologyBackend.rectPlanReused,
-  automaticInstancing: initialBackend.rectInstancedInstances > 0 && initialHeaderBackend.rectInstancedDraws === 1,
+  automaticInstancing: initialHeaderBackend.rectInstancedDraws === 1 && initialHeaderBackend.rectInstancedInstances === 6,
+  oneSemanticPathPerVisibleLink: mountedLinkPaths.length === 8 &&
+    mountedLinkPaths.every((path) => path.childNodes.length === 0),
+  retainedPathIdentity: [...host.querySelectorAll("vector-path")].every((path, index) => path === mountedLinkPaths[index]),
+  retainedPathGeometry: samePathGeometry(initialPathGeometry, valuePathGeometry) &&
+    samePathGeometry(valuePathGeometry, topologyPathGeometry),
+  pathBatching: initialBackend.pathDraws === 1 && initialBackend.pathInstancedDraws === 1 &&
+    initialBackend.pathScalarDraws === 0 && initialBackend.pathStyles === 8 && initialBackend.pathSegments === 120,
+  pathNoopUploads: offscreenBackend.pathStyleWriteBytes === 0 &&
+    offscreenBackend.pathSegmentWriteBytes === 0 && offscreenBackend.pathOrderWriteBytes === 0 &&
+    topologyBackend.pathStyleWriteBytes === 0 &&
+    topologyBackend.pathSegmentWriteBytes === 0 && topologyBackend.pathOrderWriteBytes === 0,
 })
 const acceptance = Object.freeze({
   budgets: budgetPass,
@@ -300,6 +315,7 @@ const result = Object.freeze({
     mutations: mountMutations,
     stateChanges: mountStateChanges,
     materializedNodes: host.querySelectorAll("article").length,
+    materializedLinks: mountedLinkPaths.length,
   },
   initialRenderer: {
     ms: round(initialRendererMs),
@@ -355,14 +371,14 @@ const result = Object.freeze({
     rendererNoopFrameReused: renderer.flush() === topologyFrame,
   },
   automaticBackendInstancing: {
-    applicable: initialBackend.rectActiveSlots >= 2,
+    applicable: initialHeaderBackend.rectActiveSlots >= 2,
     compatibleRectSlots: initialBackend.rectActiveSlots,
     instancedDraws: initialBackend.rectInstancedDraws,
     instancedInstances: initialBackend.rectInstancedInstances,
     headerCompatibleRectSlots: initialHeaderBackend.rectActiveSlots,
-    reason: initialBackend.rectActiveSlots >= 2
-      ? "safe compatible rect run available"
-      : "NodeSystem rects are clipped or interleaved; automatic safe instancing does not apply",
+    reason: initialHeaderBackend.rectActiveSlots >= 2
+      ? "safe compatible header Rect run available"
+      : "NodeSystem Rects are clipped or interleaved; automatic safe instancing does not apply",
   },
   budgets,
   correctness,
@@ -489,6 +505,16 @@ function headerRectFrame(frame: RenderFrame): RenderFrame {
     displayList: Object.freeze(frame.displayList.filter(item =>
       item.kind === "rect" && "localName" in item.node && item.node.localName === "header")),
   })
+}
+
+function pathGeometry(frame: RenderFrame): ReadonlyMap<object, object> {
+  return new Map(frame.displayList.flatMap((item) => item.kind === "path"
+    ? [[item.node as object, item.geometry as object] as const]
+    : []))
+}
+
+function samePathGeometry(previous: ReadonlyMap<object, object>, next: ReadonlyMap<object, object>): boolean {
+  return previous.size === next.size && [...previous].every(([node, geometry]) => next.get(node) === geometry)
 }
 
 function settleRenderer(renderer: Readonly<{flush(): RenderFrame}>): Readonly<{

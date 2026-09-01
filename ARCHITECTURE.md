@@ -172,6 +172,11 @@ structurally shared topology snapshot. Offscreen changes must produce no DOM
 mutation or renderer plan, while applicable unclipped Rect runs are discovered
 by the backend's default safe instancing rather than UI hints.
 
+Every visible semantic Link is one keyed `vector-path`, never a set of DOM
+segment rectangles. Dense 512/2,048/10,000-Link evidence separately proves one
+shared transform/clip draw run, retained geometry on pan/zoom, bounded one-Link
+style/route uploads and interaction p50/p95/p99.
+
 Production layout policies are optimized as isolated artifacts rather than as
 branches of one universal engine. Under the pinned build toolchain, adding a
 policy must preserve the exact bytes, hashes and source markers of existing
