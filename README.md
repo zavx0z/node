@@ -26,7 +26,7 @@ The accepted implementation was migrated from `pkg/nodes` at MetaFor revision `2
 | `@nodes/editor` | Headless transactional authoring and explicit layout freshness gates | `@nodes/core` | Internal |
 | `@nodes/layout` | Pure numeric placement and orthogonal routing policies | none | Internal |
 | `@nodes/worker` | Serializable fixed/adaptive/top-down worker clients, transports, and executors | `@nodes/layout` | Internal |
-| `@nodes/ui` | Blender-like DOM Node, Parameter, Socket, Link, NodeEditor, GraphCanvas and compiled NodeSystem views | `@zavx0z/dom`, `@zavx0z/react`, `@zavx0z/template`, exact `@ui/components/field` | Internal |
+| `@nodes/ui` | Blender-like DOM Node, Parameter, Socket, Link, NodeEditor, GraphCanvas and compiled NodeSystem views | `@zavx0z/dom`, `@zavx0z/react`, `@zavx0z/template`, exact `@ui/components/fields/*` | Internal |
 
 Every package is `private: true`. Repository separation does not imply registry publication or a compatibility promise.
 
@@ -38,8 +38,10 @@ package manifest, catalog, structural runtime and story resources. One external
 server/origin supplies the shared Workbench; one package opens per browser tab.
 No Nodes package installs or imports Storybook or owns a server/port/build.
 
-All 159 historical leaf route strings remain explicit catalog routes. Package,
-category and subject overviews are real states; former section prefixes are
+All 159 historical leaf route strings remain explicit catalog routes. Thirteen
+socketless Parameter leaves retain the route metadata id `field`, but present
+the human label «Без сокетов»; this historical id is not a generic production
+Field API. Package, category and subject overviews are real states; former section prefixes are
 variant grouping metadata with documented remaps in
 `.storybook/overview-remap.json`. Unknown routes fail closed and never select a
 first descendant.
@@ -50,19 +52,19 @@ first descendant.
 | --- | --- |
 | [Renderer](https://github.com/zavx0z/renderer) | HTML DOM realm, CPU CSS/layout/hit pipeline and browser/WebGPU adapters |
 | [Engine](https://github.com/zavx0z/engine) | Target-neutral WebGPU rendering primitives |
-| [UI](https://github.com/zavx0z/ui) | Shared DOM components and Field controls |
+| [UI](https://github.com/zavx0z/ui) | Shared concrete DOM Fields and reusable Controls |
 | [Nodes](https://github.com/zavx0z/node) | Graph runtime, authoring, layout policies, workers and DOM node views |
 | [MetaFor](https://github.com/zavx0z/metafor) | Product integration and immersive domain projections |
 
 Dependencies point toward their real owner. `@nodes/ui` consumes the DOM owner
-and the exact universal Field component; applications compose Engine/Renderer
+and exact concrete Field components; applications compose Engine/Renderer
 explicitly. No upstream repository imports Nodes or product semantics.
 
 ## Requirements
 
 - [Bun](https://bun.sh/) `1.4.0`
 - sibling `engine` and `renderer` checkouts registered through Bun links
-- sibling `ui` checkout registered for `@ui/components/field`
+- sibling `ui` checkout registered for exact `@ui/components/fields/*` exports
 - a WebGPU-capable browser for Editor and UI stories
 
 ## Development

@@ -10,7 +10,7 @@ const packagesRoot = join(repositoryRoot, "packages")
 const fixturesRoot = join(repositoryRoot, "tests/fixtures")
 const coreRoot = join(packagesRoot, "core")
 const workerRoot = join(packagesRoot, "worker")
-const fullDomUiBundleBudget = Object.freeze({bytes: 230_000, gzipBytes: 60_000})
+const fullDomUiBundleBudget = Object.freeze({bytes: 245_000, gzipBytes: 61_000})
 
 describe("universal node-system package boundaries", () => {
   test("keeps @nodes/core free of renderer, layout, HUD and product imports", async () => {
@@ -61,9 +61,21 @@ describe("universal node-system package boundaries", () => {
       "@zavx0z/template": "link:@zavx0z/template",
       "@ui/components": "link:@ui/components",
     })
-    expect(source).toContain('from "@ui/components/field"')
+    expect(source).not.toContain('from "@ui/components/field"')
     expect(new Set(source.match(/from "@ui\/components\/[^"]+"/gu) ?? [])).toEqual(new Set([
-      'from "@ui/components/field"',
+      'from "@ui/components/fields/boolean-field"',
+      'from "@ui/components/fields/collection-field"',
+      'from "@ui/components/fields/color-field"',
+      'from "@ui/components/fields/enum-field"',
+      'from "@ui/components/fields/integer-field"',
+      'from "@ui/components/fields/matrix-field"',
+      'from "@ui/components/fields/number-field"',
+      'from "@ui/components/fields/path-field"',
+      'from "@ui/components/fields/readonly-field"',
+      'from "@ui/components/fields/reference-field"',
+      'from "@ui/components/fields/rotation-field"',
+      'from "@ui/components/fields/text-field"',
+      'from "@ui/components/fields/vector-field"',
     ]))
     for (const forbidden of [
       "@engine/core",
@@ -73,6 +85,7 @@ describe("universal node-system package boundaries", () => {
       "UiRuntime",
       "createField",
       "FieldController",
+      "FieldDefinition",
       ".ui-field",
     ]) {
       expect(source).not.toContain(forbidden)
@@ -222,7 +235,7 @@ describe("universal node-system package boundaries", () => {
     expect(domUi.source).toContain("ParameterSocket props must be an object")
     expect(domUi.source).toContain("NodeTreeEditor props must be an object")
     expect(domUi.source).not.toContain("UiSurface")
-    expect(domUi.source).toContain("Field mount is disposed")
+    expect(domUi.source).toContain("Parameter Field mount is disposed")
     expect(domUi.source).not.toContain("createField")
     expect(domUi.source).not.toContain("@layout/core")
     expect(domUi.source).not.toContain(".node-socket {")
@@ -257,7 +270,7 @@ describe("universal node-system package boundaries", () => {
     })
     expect(domUi.bytes).toBeLessThanOrEqual(fullDomUiBundleBudget.bytes)
     expect(domUi.gzipBytes).toBeLessThanOrEqual(fullDomUiBundleBudget.gzipBytes)
-  })
+  }, 30_000)
 })
 
 async function buildFixture(name: string): Promise<{

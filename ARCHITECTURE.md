@@ -7,7 +7,7 @@
 ```text
 MetaFor product integration
   └─ @nodes/ui and product adapters
-       ├─ @nodes/ui ────────────────> @zavx0z/dom + @zavx0z/react + @zavx0z/template + @ui/components/field
+       ├─ @nodes/ui ────────────────> @zavx0z/dom + @zavx0z/react + @zavx0z/template + @ui/components/fields/*
        ├─ @nodes/editor ────────────> @nodes/core
        ├─ @nodes/worker ────────────> @nodes/layout
        └─ @nodes/layout + @nodes/core
@@ -28,7 +28,7 @@ Cross-repository owners:
 | Renderer | [zavx0z/renderer](https://github.com/zavx0z/renderer) | `@zavx0z/dom`, CPU renderer and browser/WebGPU adapters |
 | Engine | [zavx0z/engine](https://github.com/zavx0z/engine) | `@engine/core` WebGPU primitives and default font |
 | External Storybook | standalone `zavx0z/storybook` tool | declaration schemas, one server/origin, shared Workbench, package sessions and generated loaders; no consumer dependency |
-| UI | [zavx0z/ui](https://github.com/zavx0z/ui) | exact universal `@ui/components/field` used inside Parameters and Node properties |
+| UI | [zavx0z/ui](https://github.com/zavx0z/ui) | exact concrete `@ui/components/fields/*` used inside Parameters |
 | Nodes | [zavx0z/node](https://github.com/zavx0z/node) | graph, editor, solver, worker, DOM view and owner declaration packages |
 | Product | [zavx0z/metafor](https://github.com/zavx0z/metafor) | authorized product integration only |
 
@@ -49,7 +49,7 @@ structure and geometry belong to HTML/CSS flow.
 The production UI now exposes natural DOM owners for Node, Parameter, Socket,
 Link and NodeEditor in addition to GraphCanvas, NodeWorkbench and NodeTree.
 NodeEditor preserves compact coloured headers, collapse/preview, embedded
-universal Fields, typed socket endpoints, Frame/Link/Node selection, grid,
+concrete Fields, typed socket endpoints, Frame/Link/Node selection, grid,
 fit/pan/zoom, culling and stable keyed identity without restoring Surface
 signatures or a second runtime hierarchy. Package-private
 `packages/ui/dom/single-node-canvas.ts` and multi-node controllers remain
@@ -71,13 +71,14 @@ through `packages/worker/dom/worker-protocol.ts`. Neither projection is a
 public solver/transport entrypoint, and neither imports generic `@layout/core`
 or retained UI Elements.
 
-`packages/ui/dom/parameter.ts` embeds the exact universal
-`@ui/components/field` owner, so composite color/vector/rotation/matrix,
-reference, collection and path values retain their real controlled contracts.
+`packages/ui/dom/parameter.ts` exposes a Node-owned discriminated Parameter
+definition and mounts the matching exact `@ui/components/fields/*` owner, so
+composite color/vector/rotation/matrix, reference, collection and path values
+retain their real controlled contracts without a generic Field facade.
 `packages/ui/dom/socket.ts` independently owns typed kind, direction, side,
 shape and color presets. The older `parameter-socket.ts` remains a bounded
 catalog controller, not the production Node composition or a string substitute
-for universal Fields.
+for concrete Fields.
 
 ## Workspace boundaries
 
